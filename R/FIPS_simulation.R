@@ -70,11 +70,11 @@ get_FIPS_pred_cols <- function (x) {
 }
 
 
-#' print.FIPS_simulation
-#'
-#' @method print FIPS_simulation
-#'
-#' @export
+# print.FIPS_simulation
+#
+# @method print FIPS_simulation
+#
+# @export
 print.FIPS_simulation <- function(x) {
   help_function = switch(get_FIPS_modeltype(x),
                          TPM = "help(FIPS::TPM_make_pvec)",
@@ -92,11 +92,11 @@ print.FIPS_simulation <- function(x) {
   print(as_tibble(x[,c("datetime","time","wake_status","sim_hours",get_FIPS_pred_cols(x))]))
 }
 
-#' summary.FIPS_simulation
-#'
-#' @method summary FIPS_simulation
-#'
-#' @export
+# summary.FIPS_simulation
+#
+# @method summary FIPS_simulation
+#
+# @export
 summary.FIPS_simulation <- function(x) {
 
   help_function = switch(get_FIPS_modeltype(x),

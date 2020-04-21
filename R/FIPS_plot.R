@@ -106,7 +106,7 @@ FIPS_plot <- function(dats,
 #'
 #' S3 plot method for FIPS_simulation
 #'
-#' @param .FIPS_simulation A valid .FIPS_simulation series that has been simulated
+#' @param x A valid .FIPS_simulation series that has been simulated
 #' @param from The starting datetime to be plotted
 #' @param to The ending datetime to be plotted
 #' @param plot_stat Which variables to plot
@@ -116,7 +116,7 @@ FIPS_plot <- function(dats,
 #'
 #' @export
 plot.FIPS_simulation <- function(
-  .FIPS_simulation,
+  x,
   from = NULL,
   to = NULL,
   plot_stat = NULL,
@@ -125,7 +125,7 @@ plot.FIPS_simulation <- function(
   observed_y = NULL,
   ...) {
   FIPS_plot(
-    dat = .FIPS_simulation,
+    dats = x,
     from = from,
     to = to,
     plot_stat = plot_stat,

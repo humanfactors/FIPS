@@ -17,10 +17,6 @@
 #' @param sleep.end.col The column name in the dataframe containing the sleep end times
 #' @param sleep.id.col A column name specifying the sleep id sequence (i.e., `1:n()`)
 #'
-#' @return FIPS_df
-#'
-#' @export
-#' @md
 #' @examples
 #'
 #'  my_sleeptimes = tibble::tribble(
@@ -29,11 +25,12 @@
 #'    2L, "2018-05-21 23:00:00", "2018-05-22 04:00:00",
 #'    3L, "2018-05-23 01:00:00", "2018-05-23 09:00:00") %>%
 #'    dplyr::mutate(
-#'      sleep.start = lubridate::ymd_hms(sleep.start, tz = perth),
-#'      sleep.end = lubridate::ymd_hms(sleep.end, tz = perth))
+#'      sleep.start = lubridate::ymd_hms(sleep.start),
+#'      sleep.end = lubridate::ymd_hms(sleep.end))
 #'
-#'  my_simstart = ymd_hms('2018-05-20 22:00:00', tz = perth)
-#'  my_simend   = ymd_hms('2018-05-23 10:00:00', tz = perth)
+#'  my_simstart = lubridate::ymd_hms('2018-05-20 22:00:00')
+#'  my_simend   = lubridate::ymd_hms('2018-05-23 10:00:00')
+#'
 #'  my_FIPS_df = parse_sleeptimes(
 #'    sleeptimes = my_sleeptimes,
 #'    series.start = my_simstart,
@@ -43,7 +40,12 @@
 #'    sleep.id.col = "sleep.id",
 #'    roundvalue = 5)
 #'
+#' @return FIPS_df
 #'
+#' @export
+#' @importFrom rlang :=
+#' @md
+
 #'
 parse_sleeptimes <- function(sleeptimes, series.start, series.end,
                              roundvalue = 5, sleep.start.col, sleep.end.col, sleep.id.col) {
@@ -158,6 +160,7 @@ generate_postwake_times <- function(simulationend, lastwake, expand_by = 5) {
 #' Round times by column
 #'
 #' @param .data The sleeptimes dataframe
+#' @param colname the column required to be rounded
 #' @param round_by Amount (in minutes) to round sleep times to
 #'
 #' @return The sleep dataframe with all sleep.start and sleep.end rounded to X minute interval
@@ -175,7 +178,7 @@ round_times <- function(.data, colname, round_by = 5) {
 #'
 #' Turns the paired sleeptimes into a long single vectored datetime sequence
 #'
-#' @param sleepdataframe The sleeptimes dataframe
+#' @param .data A sleeptimes dataframe
 #' @param expand_by Amount (in minutes) to expand sleep times by
 #'
 #' @return Sleeptimedataframe with single columns vector for datetime and wake status

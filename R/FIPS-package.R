@@ -10,7 +10,7 @@
 #' @importFrom tibble tibble as_tibble
 #' @importFrom dplyr mutate bind_rows ungroup group_by
 #' @import lubridate
-#' @importFrom rlang sym ensym
+#' @importFrom rlang sym ensym :=
 #' @importFrom tidyr expand complete pivot_longer
 #' @importFrom checkmate assert_posixct assert_true
 "_PACKAGE"

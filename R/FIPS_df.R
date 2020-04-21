@@ -1,6 +1,6 @@
 # Generic Function for as_FIPS_df
-as_FIPS_df <- function (object, ...) {
-  UseMethod("as_FIPS_df", object)
+as_FIPS_df <- function (x, ...) {
+  UseMethod("as_FIPS_df", x)
 }
 
 as_FIPS_df.data.frame <- function(df) {
@@ -12,6 +12,8 @@ as_FIPS_df.data.frame <- function(df) {
 #' All models implemented in FIPS are implemented to be run on a `FIPS_df` ---
 #' a dataframe containing a time series of all variables required to run [FIPS_simulate] to
 #' generate a FIPS_simulation object.
+#' 
+#' @param .data A dataframe that matches the required FIPS_df structure
 #'
 #' @description
 #'
