@@ -2,12 +2,13 @@
 title: "Sleep Data Generation and Processing and a Three Process Simulation"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Sleep-Data}
+  %\VignetteIndexEntry{Data and Model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r, include=FALSE}
+library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -20,10 +21,14 @@ This vignette demonstrates how to conduct a minimalist generation of a sleep tim
 
 Note that in future releases, we may seek to create functions that explicitly generate these sleep times for you. Furthermore, it is possible to simply create the sleeptimes in Excel or another program and transform to the format shown here. Therefore, the sleep generation features are presented here for practical purposes.
 
-```{r setup}
+```{r setup, include=FALSE}
 library(FIPS)
-library(tidyverse)
+library(dplyr)
+library(tibble)
+library(ggplot2)
 library(lubridate)
+library(colorspace)
+library(tidyr)
 ```
 
 ## Data Generation
@@ -163,8 +168,6 @@ if (!requireNamespace("colorspace", quietly = TRUE)) {
     stop("Package \"colorspace\" needed for this example to work. Please install it.",
       call. = FALSE)
   }
-
-library(colorspace)
 
 plot3_w = TPM.simulation.results %>%
   # Change epoch to 30 minutes for this plot (optional)

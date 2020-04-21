@@ -8,15 +8,18 @@ vignette: >
 ---
 
 ```{r, include = FALSE}
+library(knitr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-```{r setup}
+```{r setup, include=FALSE}
 library(FIPS)
-library(tidyverse)
+library(dplyr)
+library(tibble)
+library(ggplot2)
 library(lubridate)
 ```
 
