@@ -7,9 +7,9 @@
 expand_sleep_series(.data, expand_by = 5)
 }
 \arguments{
-\item{expand_by}{Amount (in minutes) to expand sleep times by}
+\item{.data}{A sleeptimes dataframe}
 
-\item{sleepdataframe}{The sleeptimes dataframe}
+\item{expand_by}{Amount (in minutes) to expand sleep times by}
 }
 \value{
 Sleeptimedataframe with single columns vector for datetime and wake status

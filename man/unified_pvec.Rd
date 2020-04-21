@@ -4,7 +4,9 @@
 \name{unified_pvec}
 \alias{unified_pvec}
 \title{Unified Model Default (pvec) Parameters}
-\format{An object of class \code{numeric} of length 11.}
+\format{
+An object of class \code{numeric} of length 11.
+}
 \usage{
 unified_pvec
 }

@@ -5,7 +5,9 @@
 \alias{pvec.threeprocess}
 \title{pvec.threeprocess
 Here for compatability - will likely remove soon}
-\format{An object of class \code{numeric} of length 15.}
+\format{
+An object of class \code{numeric} of length 15.
+}
 \usage{
 pvec.threeprocess
 }

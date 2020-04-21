@@ -9,6 +9,8 @@ round_times(.data, colname, round_by = 5)
 \arguments{
 \item{.data}{The sleeptimes dataframe}
 
+\item{colname}{the column required to be rounded}
+
 \item{round_by}{Amount (in minutes) to round sleep times to}
 }
 \value{

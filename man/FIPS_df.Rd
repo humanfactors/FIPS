@@ -6,6 +6,9 @@
 \usage{
 FIPS_df(.data)
 }
+\arguments{
+\item{.data}{A dataframe that matches the required FIPS_df structure}
+}
 \description{
 The only input \emph{required} to generate this is a series of sleep/wake times.
 The FIPS_df is a tibble with the following variables (columns):

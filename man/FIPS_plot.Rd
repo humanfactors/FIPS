@@ -4,8 +4,15 @@
 \alias{FIPS_plot}
 \title{FIPS Time Series Plot}
 \usage{
-FIPS_plot(dats, from = NULL, to = NULL, plot_stat = NULL,
-  fatigue_CIs = FALSE, observed = NULL, observed_y = NULL)
+FIPS_plot(
+  dats,
+  from = NULL,
+  to = NULL,
+  plot_stat = NULL,
+  fatigue_CIs = FALSE,
+  observed = NULL,
+  observed_y = NULL
+)
 }
 \arguments{
 \item{dats}{A FIPS_df simulation results (i.e., \code{.simulation$FIPS_df})}

@@ -5,11 +5,25 @@
 \alias{sleeptimes_to_FIPSdf}
 \title{Parse Sleep Times to FIPS_df}
 \usage{
-parse_sleeptimes(sleeptimes, series.start, series.end, roundvalue = 5,
-  sleep.start.col, sleep.end.col, sleep.id.col)
+parse_sleeptimes(
+  sleeptimes,
+  series.start,
+  series.end,
+  roundvalue = 5,
+  sleep.start.col,
+  sleep.end.col,
+  sleep.id.col
+)
 
-sleeptimes_to_FIPSdf(sleeptimes, series.start, series.end,
-  roundvalue = 5, sleep.start.col, sleep.end.col, sleep.id.col)
+sleeptimes_to_FIPSdf(
+  sleeptimes,
+  series.start,
+  series.end,
+  roundvalue = 5,
+  sleep.start.col,
+  sleep.end.col,
+  sleep.id.col
+)
 }
 \arguments{
 \item{sleeptimes}{A dataframe in the sleep time format (see help for more info)}
@@ -18,7 +32,7 @@ sleeptimes_to_FIPSdf(sleeptimes, series.start, series.end,
 
 \item{series.end}{A POSIXct object indicating the end datetime of the simulation}
 
-\item{roundvalue}{A value to round the sleep times to in minutes (\code{default = 5 minutes})}
+\item{roundvalue}{A value to round the sleep times to in minutes (\verb{default = 5 minutes})}
 
 \item{sleep.start.col}{The column in the dataframe containing the sleep start times}
 
@@ -49,11 +63,12 @@ It is crucial that that following conditions are met for all arguments:
    2L, "2018-05-21 23:00:00", "2018-05-22 04:00:00",
    3L, "2018-05-23 01:00:00", "2018-05-23 09:00:00") \%>\%
    dplyr::mutate(
-     sleep.start = lubridate::ymd_hms(sleep.start, tz = perth),
-     sleep.end = lubridate::ymd_hms(sleep.end, tz = perth))
+     sleep.start = lubridate::ymd_hms(sleep.start),
+     sleep.end = lubridate::ymd_hms(sleep.end))
 
- my_simstart = ymd_hms('2018-05-20 22:00:00', tz = perth)
- my_simend   = ymd_hms('2018-05-23 10:00:00', tz = perth)
+ my_simstart = lubridate::ymd_hms('2018-05-20 22:00:00')
+ my_simend   = lubridate::ymd_hms('2018-05-23 10:00:00')
+
  my_FIPS_df = parse_sleeptimes(
    sleeptimes = my_sleeptimes,
    series.start = my_simstart,
@@ -62,7 +77,5 @@ It is crucial that that following conditions are met for all arguments:
    sleep.end.col = "sleep.end",
    sleep.id.col = "sleep.id",
    roundvalue = 5)
-
-
 
 }

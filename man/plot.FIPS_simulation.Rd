@@ -4,12 +4,19 @@
 \alias{plot.FIPS_simulation}
 \title{plot.FIPS_simulation}
 \usage{
-\method{plot}{FIPS_simulation}(.FIPS_simulation, from = NULL,
-  to = NULL, plot_stat = NULL, fatigue_CIs = FALSE,
-  observed = NULL, observed_y = NULL, ...)
+\method{plot}{FIPS_simulation}(
+  x,
+  from = NULL,
+  to = NULL,
+  plot_stat = NULL,
+  fatigue_CIs = FALSE,
+  observed = NULL,
+  observed_y = NULL,
+  ...
+)
 }
 \arguments{
-\item{.FIPS_simulation}{A valid .FIPS_simulation series that has been simulated}
+\item{x}{A valid .FIPS_simulation series that has been simulated}
 
 \item{from}{The starting datetime to be plotted}
 

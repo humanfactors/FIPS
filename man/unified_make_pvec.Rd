@@ -4,9 +4,19 @@
 \alias{unified_make_pvec}
 \title{Make Model Default (pvec) Parameters}
 \usage{
-unified_make_pvec(U0 = 24.12, L0 = 0, S0 = 0, phi = 2.02,
-  kappa = 4.13, tau_s = 1, tau_w = 40, tau_la = 4.06 * 24,
-  sigma = 1, wc = 1.14, wd = -0.46)
+unified_make_pvec(
+  U0 = 24.12,
+  L0 = 0,
+  S0 = 0,
+  phi = 2.02,
+  kappa = 4.13,
+  tau_s = 1,
+  tau_w = 40,
+  tau_la = 4.06 * 24,
+  sigma = 1,
+  wc = 1.14,
+  wd = -0.46
+)
 }
 \arguments{
 \item{U0}{Upper asymptote (defaults to = 24.12)}

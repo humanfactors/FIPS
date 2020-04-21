@@ -4,10 +4,23 @@
 \alias{TPM_make_pvec}
 \title{Make Three Process Model (TPM) Parameter Vector}
 \usage{
-TPM_make_pvec(la = 2.4, ha = 14.3, d = -0.0353, g = log((14.3 -
-  14)/(14.3 - 7.96))/8, bl = 12.2, Cm = 0, Ca = 2.5, p = 16.8,
-  Um = -0.5, Ua = 0.5, Wc = -5.72, Wd = -1.51, S0 = 7.96,
-  KSS_intercept = 10.6, KSS_beta = -0.6)
+TPM_make_pvec(
+  la = 2.4,
+  ha = 14.3,
+  d = -0.0353,
+  g = log((14.3 - 14)/(14.3 - 7.96))/8,
+  bl = 12.2,
+  Cm = 0,
+  Ca = 2.5,
+  p = 16.8,
+  Um = -0.5,
+  Ua = 0.5,
+  Wc = -5.72,
+  Wd = -1.51,
+  S0 = 7.96,
+  KSS_intercept = 10.6,
+  KSS_beta = -0.6
+)
 }
 \arguments{
 \item{la}{Low asymptote. Minimum alertness allowed by homeostatic process (S)}
