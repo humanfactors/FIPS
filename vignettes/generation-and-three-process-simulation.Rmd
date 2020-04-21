@@ -1,0 +1,190 @@
+---
+title: "Sleep Data Generation and Processing and a Three Process Simulation"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sleep-Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+This vignette demonstrates how to conduct a minimalist generation of a sleep times dataframe, and then proceed to process this for modeling. The code here demonstrates the usage from a higher-level user perspective.
+
+Note that in future releases, we may seek to create functions that explicitly generate these sleep times for you. Furthermore, it is possible to simply create the sleeptimes in Excel or another program and transform to the format shown here. Therefore, the sleep generation features are presented here for practical purposes.
+
+```{r setup}
+library(FIPS)
+library(tidyverse)
+library(lubridate)
+```
+
+## Data Generation
+
+The dataframe below shows a prototypical FIPS 'sleep' dataframe. In the example, we want to simulate a scenario where an individual obtains exactly 7.5 hours of sleep per night for 6 nights. There are likely multiple ways to achieve this, but the generation function below allows 
+sufficient flexibility to have continuously offset sleeptimes (e.g., by changing `by != 24`).
+
+The sleeptimes should correspond to only one participant (multiple people are not currently supported in FIPS without map functions). The default column names for this dataframe are `sleep.id`, `sleep.start`, and `sleep.end`. It is recommended that you explicitly specify timezones in all functions to avoid any silent errors relating to time zone specifications.
+
+```{r}
+example.sleeptimes <- tibble::tibble(
+  sleep.start = seq(
+    from = lubridate::ymd_hms('2018-05-01 23:00:00', tz = "Australia/Perth"), 
+    to = lubridate::ymd_hms('2018-05-07 17:00:00', tz = "Australia/Perth"),
+    by = '24 hours'),
+  sleep.end = sleep.start + lubridate::dhours(7.5),
+  sleep.id = rank(sleep.start))
+
+print(example.sleeptimes)
+
+```
+
+Prior to actually conducting the simulation, you _must_ convert the sleep times to the "Continuous FIPS Format". This format is a continuous time series style dataframe that contains calculated variables to be interpreted by the FIPS model functions. This dataframe contains the following headings: `datetime, sleep.id, wake_status, wake_status_int, change_point, switch_direction, status_duration, total_prev, time, day, sim_hours`. Information regarding these will be presented in the section below, but first let's quickly run through how to generate the FIPS dataframe from sleep times.
+
+The `parse_sleeptimes` function from FIPS will takes in 'sleep times' generated previously, and note the arguments below.
+
+- `sleeptimes` — The sleep times dataframe generated previously
+- `series.start` — This is the start datetime of the entire simulation series.
+- `series.end` — This will be the datetime of the entire simulation series
+- `sleep.start.col` — This is the name of your `sleep.start` column in sleep times if changed from default above
+- `sleep.end.col` — This is the name of your `sleep.end` column in sleep times if changed from default above
+- `sleep.id.col` — This is the name of your `sleep.id` column in sleep times if changed from default above
+- `roundvalue` — The epoch of the series (i.e., rounding value). Please read further information below!
+
+*The setting of `roundvalue` is critically important.* It determines the epoch or spacing between observations in your dataset (in minutes). At a value of `1`, the simulation is updated every 1 minute. Consequently, this will increase the size (in rows) of your dataset by a factor of 5 (relative to `5` minutes). In most cases, 5, 10 or even 15 minutes should be sufficient.
+
+Moreover, note that all sleep observations will have their datetime rounded to this value. For example, with a `roundvalue = 5` the datetime `2018-05-07 21:02:02` would be rounded to `2018-05-07 21:00:00`. For this reason, it is ideal if your `series.start` and `series.end` are rounded to the same epoch value as you request. Seconds should never be included in your datetime (biomathematical models are not sensitive to this time resolution anyway).
+
+
+
+```{r}
+# Simulation start date time (i.e., when you want first predictions to begin)
+simulation.start = lubridate::ymd_hms('2018-05-01 07:00:00', tz = "Australia/Perth")
+
+# Simulation end date time (i.e., when you want predictions to end)
+# In this case it ends 
+simulation.end = lubridate::ymd_hms('2018-05-07 21:00:00', tz = "Australia/Perth")
+
+# The Continuous FIPS_df dataframe format
+# This creates the format ready for simulation
+simulated.dataframe = parse_sleeptimes(
+  sleeptimes = example.sleeptimes,
+  series.start = simulation.start,
+  series.end = simulation.end,
+  sleep.start.col = "sleep.start",
+  sleep.end.col = "sleep.end",
+  sleep.id.col = "sleep.id",
+  roundvalue = 5)
+
+print(simulated.dataframe)
+```
+
+## Modelling and the Simulation Dataframe
+
+Now that you have generated the FIPS format, you can now apply the FIPS simulation functions to this to actually run BMM predictions on the series. In the example below, we will run a Three Process Model simulation over the `FIPS_df` series we just created. To do this, we will use the `FIPS_simulation` function, which takes in three arguments: a `FIPS_df` object, a specification of a `modeltype` (see help for model types currently implemented), and a `pvec` which is a vector of parameters for the model.
+
+The parameter vectors provided by default in the package are those reported by [Ingre et al. (2014)](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0108679). Please see the help files for citations and further information. These defaults are customisable, and if you are using Rstudio or Emacs ESS, you will get full autocompletion with descriptions of each parameter (See `help("TPM_make_pvec", "FIPS")`).
+
+We will use the default parameter vector for the Three process model created by `FIPS::TPM_make_pvec()`, which takes on the following values:
+
+```{r results="asis", echo=FALSE}
+
+pdf <- data.frame("Parameter" = names(TPM_make_pvec()),
+                  "Value" = unname(TPM_make_pvec()))
+
+knitr::kable(list(pdf[1:7,], pdf[8:15,]), row.names=FALSE, digits=3)
+```
+
+Calling `FIPS_simulate()` will the produces a `FIPS_df` with model predictions and predicted model parameter values (e.g., `s`, `c`). The returned `FIPS_df` will also now inherit the `FIPS_simulation` class.  A `FIPS_simulation` object has attributes containing the parameter vector, the `modeltype` string, and the `pvec` used, and several other values used internally. A custom print function of the object will reveal all this information. Note that this print function does mask some of the columns for ease of reading.
+
+```{r}
+# Run a simulation with the three process model
+TPM.simulation.results = FIPS_simulate(
+  FIPS_df = simulated.dataframe, # The FIPS_df
+  modeltype = "TPM",             # three process model
+  pvec = TPM_make_pvec()       # parameter vector
+  )
+
+TPM.simulation.results
+```
+
+- `datetime` = vector of datetime stamps separated at equidistance intervals.
+- `sleep.id` = a supplementary variable indicating sleep episode identifier.
+- `wake_status` =  Awake (`T`) or asleep (`F`) at that epoch interval/epoch
+- `wake_status_int` = Awake (1) or asleep (0) at that epoch interval/epoch
+- `change_point` = Whether the individual changed wake status at that interval/epoch.
+- `switch_direction` = Whether switch was to sleep or to wake
+- `status_duration` = How long individual has been in status at that current time point
+- `total_prev` = If a switch has occured, how long were that in the previous status.
+- `time` = time of day in decimal hour
+- `day` =  days into simulation
+- `sim_hours` = hours simulation has run for total
+- `s` — Estimate of S (homeostatic) process at that time
+- `l` — Estimate of l (lower asmytope) process at that time
+- `c` — Estimate of C (24-hour circadian) process at that time
+- `w` — Estimate of W (sleep intertia) process at that time
+- `u` — Estimate of U (12-hour circadian) process at that time
+- `alertness` — Currently just `s + c + u`
+- `KSS` — This is equal to `10.6 + -0.6 * (alertness)`
+
+# Plotting
+### Plot 1: Parameter Plots
+
+FIPS provides a default plot method to visualize model predictions and parameters over time, discussed in detail
+[in this vignette](plotting.html).These plots aid with debugging and understanding how the different model parameters contribute to predictions. 
+
+```{r fig.width=7}
+# Plot the whole time series
+plot(TPM.simulation.results, plot_stat=c("alertness", "s", "c"))
+
+#Narrow in on the first 90 hours
+plot(TPM.simulation.results, plot_stat=c("alertness", "s", "c"),
+      from= '2018-05-01 23:00:00',
+      to= as_datetime('2018-05-01 23:00:00') + hours(90))
+
+```
+
+### Plot 2: Heatmap Prediction Plots
+
+There are many other ways that visualizations could help inform theory and practice.
+The below heat plot is an example of how dangerous times in a mission, according to the TPM predictions, 
+could be visualized. In the example below, the regions in deep orange indicate a greatly increased risk of fatigue. However, the fact that the increased fatigue occurs at the start of the mission indicates the initalisation parameters (e.g., `S0`) are to blame, so this isn't a cause for significant concern.
+
+```{r fig.width=5, fig.height=5}
+
+if (!requireNamespace("colorspace", quietly = TRUE)) {
+    stop("Package \"colorspace\" needed for this example to work. Please install it.",
+      call. = FALSE)
+  }
+
+library(colorspace)
+
+plot3_w = TPM.simulation.results %>%
+  # Change epoch to 30 minutes for this plot (optional)
+  mutate(time = strftime(datetime, format = "%H:%M")) %>% 
+  separate(time, into = c("plot_hour", "plot_minute"), ":") %>%
+  mutate(halfhour = if_else(plot_minute < 30, 0, 0.5) + as.numeric(plot_hour)) %>% 
+  group_by(day, plot_hour, halfhour) %>% 
+  summarise(KSS = mean(KSS)) %>% 
+  filter(day > 1) %>% 
+  # Start Plot
+  ggplot(aes(day, halfhour, fill = KSS)) +
+  geom_tile(aes(fill = KSS), color = "white") +
+  scale_x_continuous(breaks = seq(0,7,1)) +
+  scale_y_continuous(breaks = seq(0,23,1)) +
+  labs(y = "Hour of Day", x = "Day of Mission") +
+  colorspace::scale_fill_continuous_divergingx(name = "KSS", palette = "Zissou 1", limits = c(1,9), mid = 5, end = 9) +
+  ggtitle(label = "Three Process Model (KSS) - 3WS", subtitle = "Heatmap of TPM predicted performance by 0.5hr") +
+  theme(axis.title = element_text(size = 12)) 
+
+plot3_w
+
+```
+

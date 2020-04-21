@@ -1,8 +1,10 @@
-# FIPS
+# Fatigue Impairment Prediction Suite (FIPS)
 
-The Fatigue Impairment Prediction Suite (FIPS) provides a comprehensive set of functions for estimating and applying bio-mathematical models (BMMs) of fatigue. FIPS is currently under development and implemented in the R programming language. 
+<img align="right" src="inst/logo/FIPS_logo.png?raw=true" alt="FIPSLOGO" width="200"/> 
 
-BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. These models are frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs.
+FIPS provides researchers and practitioners comprehensive set of functions for applying bio-mathematical models (BMMs) of fatigue. FIPS is under active development and implemented in the R programming language. FIPS provides a set of well-documented functions for transforming sleep and actigraphy data to formats required for applying BMMs, as well as a set of functions for simulating and interpreting BMMs with several kinds of models and customisable parameter settings. 
+
+BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. These models are frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs. Although there are several different implementations of BMMs, most have their roots in Borbély's (1982) two process model which models sleepiness/performance impairment as the sum of two processes: a circadian process and a homeostatic process.
 
 ## Installation
 To install the latest development version of FIPS:
@@ -13,6 +15,8 @@ remotes::install_github("humanfactors/FIPS")
 ```
 
 ## Using FIPS
+
+Full walkthroughs for using FIPS can be found at
 
 Currently all FIPS simulations **must** start with the *Sleep Data Format*  unless you are able to directly create a dataframe compliant with the *FIPS data format*.
 
@@ -36,8 +40,9 @@ FIPS::parsed.dats = parse_sleeptimes(
   sleep.start.col = "sleep.start",
   sleep.end.col = "sleep.end",
   sleep.id.col = "sleep.id",
-  roundvalue = 5,
+  roundvalue = 5
 )
+
 ```
 This dataframe can then be sent to one of the simulation functions. The simulation functions require a parameter vector/list (pvec). Currently no debugging is documentation is provided around dramatically customising these values, but just `dput` the `FIPS::pvec.threeprocess` if you want to see the required parameters.
 
