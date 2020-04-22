@@ -1,6 +1,6 @@
-#' FIPS: The Fatigue Prediction Suite
+#' FIPS: The Fatigue Impairment Prediction Suite
 #'
-#' The “Fatigue Impairment Prediction Suite (FIPS) is currently under development and implemented in the R programming language. FIPS aims to provide practitioners a comprehensive set of functions for estimating and applying bio-mathematical models (BMMs).
+#' The "Fatigue Impairment Prediction Suite" (FIPS) is currently under development and implemented in the R programming language. FIPS aims to provide practitioners a comprehensive set of functions for estimating and applying bio-mathematical models (BMMs).
 #'
 #' FIPS provides researchers and practitioners comprehensive set of functions for applying bio-mathematical models (BMMs) of fatigue. FIPS is under active development and implemented in the R programming language. FIPS provides a set of well-documented functions for transforming sleep and actigraphy data to formats required for applying BMMs, as well as a set of functions for simulating and interpreting BMMs with several kinds of models and customisable parameter settings.
 #'

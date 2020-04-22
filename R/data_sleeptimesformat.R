@@ -43,10 +43,9 @@
 #' @return FIPS_df
 #'
 #' @export
-#' @importFrom rlang :=
 #' @md
-
 #'
+#' @importFrom rlang :=
 parse_sleeptimes <- function(sleeptimes, series.start, series.end,
                              roundvalue = 5, sleep.start.col, sleep.end.col, sleep.id.col) {
 
