@@ -21,7 +21,7 @@ In addition to the rights stipulated in the GNU AFFERO GENERAL PUBLIC LICENSE, w
 
 ## Using FIPS
 
-Full walkthroughs for using FIPS can be found at
+Full walkthroughs for using FIPS can be found in the vignettes: `vignette("plotting","FIPS")` and `vignette("generation-and-three-process-simulation","FIPS")` or by accessing the source rmarkdown files under `./vignettes`
 
 Currently all FIPS simulations **must** start with the *Sleep Data Format*  unless you are able to directly create a dataframe compliant with the *FIPS data format*.
 
