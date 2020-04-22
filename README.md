@@ -1,18 +1,27 @@
-# FIPS
+# Fatigue Impairment Prediction Suite (FIPS)
 
-The Fatigue Impairment Prediction Suite (FIPS) provides a comprehensive set of functions for estimating and applying bio-mathematical models (BMMs) of fatigue. FIPS is currently under development and implemented in the R programming language. 
+<img align="right" src="inst/logo/FIPS_logo.png?raw=true" alt="FIPSLOGO" width="200"/> 
 
-BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. These models are frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs.
+FIPS provides researchers and practitioners comprehensive set of functions for applying bio-mathematical models (BMMs) of fatigue. FIPS is under active development and implemented in the R programming language. FIPS provides a set of well-documented functions for transforming sleep and actigraphy data to formats required for applying BMMs, as well as a set of functions for simulating and interpreting BMMs with several kinds of models and customisable parameter settings. 
+
+BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. These models are frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs. Although there are several different implementations of BMMs, most have their roots in Borbély's (1982) two process model which models sleepiness/performance impairment as the sum of two processes: a circadian process and a homeostatic process.
 
 ## Installation
 To install the latest development version of FIPS:
 
 ```R
 # install.packages('remotes') # if remotes not installed
-remotes::install_github("humanfactors/FIPS")
+remotes::install_github("humanfactors/FIPS", build_vignettes = TRUE)
 ```
 
+It is highly recommended to build the vignettes (though do note this has additional dependencies).
+
+## Additional Terms for Academic Usage
+In addition to the rights stipulated in the GNU AFFERO GENERAL PUBLIC LICENSE, we request that all work leveraging FIPS provide a direct citation to the software package. Please contact the authors for this citation (as of 22/04/2020). We aim to have a manuscript for citation soon.
+
 ## Using FIPS
+
+Full walkthroughs for using FIPS can be found at
 
 Currently all FIPS simulations **must** start with the *Sleep Data Format*  unless you are able to directly create a dataframe compliant with the *FIPS data format*.
 
@@ -30,19 +39,43 @@ Ideally, you should use these column names and format to avoid conflicts with th
 You can generate the FIPS format (from a sleep data format) with the  `parse_sleeptimes` function.
 
 ```R
-FIPS::parsed.dats = parse_sleeptimes(
-  sleeptimes = dats,
-  series.start = ymd_hms("2018-05-11 5:07:00", tz = "Australia/Perth"),
+# Simulation start date time (i.e., when you want first predictions to begin)
+simulation.start = lubridate::ymd_hms('2018-05-01 07:00:00', tz = "Australia/Perth")
+# Simulation end date time (i.e., when you want predictions to end)
+simulation.end = lubridate::ymd_hms('2018-05-07 21:00:00', tz = "Australia/Perth")
+# The Continuous FIPS_df dataframe format
+# This creates the format ready for simulation
+simulated.dataframe = parse_sleeptimes(
+  sleeptimes = example.sleeptimes,
+  series.start = simulation.start,
+  series.end = simulation.end,
   sleep.start.col = "sleep.start",
   sleep.end.col = "sleep.end",
   sleep.id.col = "sleep.id",
-  roundvalue = 5,
-)
+  roundvalue = 5
+  )
+
 ```
-This dataframe can then be sent to one of the simulation functions. The simulation functions require a parameter vector/list (pvec). Currently no debugging is documentation is provided around dramatically customising these values, but just `dput` the `FIPS::pvec.threeprocess` if you want to see the required parameters.
+The resulting dataframe output (of class `FIPS_df`) can then be sent the simulation dispatch function `FIPS_simulate()`. The simulation functions require a parameter vector/list (pvec). Please see `TPM_make_pvec()` or `unified_make_pvec()` to generate these vectors.
+
+In the example below, we will run a Three Process Model simulation over the `FIPS_df` series we just created. To do this, we will use the `FIPS_simulation` function, which takes in three arguments: a `FIPS_df` object, a specification of a `modeltype` (see help for model types currently implemented), and a `pvec` which is a vector of parameters for the model.
+
+Calling `FIPS_simulate()` will the produces a `FIPS_df` with model predictions and predicted model parameter values (e.g., `s`, `c`). The returned `FIPS_df` will also now inherit the `FIPS_simulation` class.  A `FIPS_simulation` object has attributes containing the parameter vector, the `modeltype` string, and the `pvec` used, and several other values used internally. A custom print function of the object will reveal all this information. Note that this print function does mask some of the columns for ease of reading.
+
+```r
+# Run a simulation with the three process model
+TPM.simulation.results = FIPS_simulate(
+  FIPS_df = simulated.dataframe, # The FIPS_df
+  modeltype = "TPM",             # three process model
+  pvec = TPM_make_pvec()       # parameter vector with defaults
+  )
+```
+
+You now can access printing, summary and plot methods for the FIPS_simulation object. Note that further transformations to the object in dplyr and similar Tidyverse packages will remove attributes.
 
 ```R
-predicted.data = FIPS::simulate_TPM(pvec = FIPS::pvec.threeprocess, dat = test.dats)
-
+plot(TPM.simulation.results)
+summary(TPM.simulation.results)
+print(TPM.simulation.results)
 ```
 

@@ -1,0 +1,32 @@
+Package: FIPS
+Type: Package
+Title: Fatigue Impairment Prediction Suite (FIPS)
+Version: 0.1.0
+Date: 2020-04-20
+Authors@R: c(
+    person("Michael David", "Wilson", email = "michael.d.wilson@curtin.edu.au", role = c("aut", "cre")),
+    person("Luke", "Strickland", email = "luke.strickland@curtin.edu.au", role = c("aut")),
+    person("Timothy", "Ballard", email = "timothy.ballard@uq.edu.au", role = c("aut")))
+Maintainer: Michael David Wilson <michael.d.wilson@curtin.edu.au>
+Description: FIPS provides functions for running bio-mathematical models of fatigue and alertness (BMMs).
+License: AGPL-3 + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends: R (>= 3.5.0)
+Imports: 
+    dplyr (>= 0.8.0),
+    tidyr,
+    ggplot2,
+    lubridate (>= 1.7.4),
+    checkmate,
+    rlang (>= 0.4.0),
+    magrittr,
+    tibble
+Suggests:
+    roxygen2,
+    colorspace,
+    testthat (>= 2.1.0),
+    rmarkdown (>= 2.0),
+    knitr
+RoxygenNote: 7.1.0
+VignetteBuilder: knitr
