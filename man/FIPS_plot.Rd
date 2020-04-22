@@ -15,7 +15,7 @@ FIPS_plot(
 )
 }
 \arguments{
-\item{dats}{A FIPS_df simulation results (i.e., \code{.simulation$FIPS_df})}
+\item{dats}{A FIPS_simulation object (i.e., FIPS_df with simulation results)}
 
 \item{from}{The starting datetime to be plotted}
 

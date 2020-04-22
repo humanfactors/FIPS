@@ -16,6 +16,9 @@ remotes::install_github("humanfactors/FIPS", build_vignettes = TRUE)
 
 It is highly recommended to build the vignettes (though do note this has additional dependencies).
 
+## Additional Terms for Academic Usage
+In addition to the rights stipulated in the GNU AFFERO GENERAL PUBLIC LICENSE, we request that all work leveraging FIPS provide a direct citation to the software package. Please contact the authors for this citation (as of 22/04/2020). We aim to have a manuscript for citation soon.
+
 ## Using FIPS
 
 Full walkthroughs for using FIPS can be found at

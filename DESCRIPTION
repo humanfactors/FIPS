@@ -9,7 +9,7 @@ Authors@R: c(
     person("Timothy", "Ballard", email = "timothy.ballard@uq.edu.au", role = c("aut")))
 Maintainer: Michael David Wilson <michael.d.wilson@curtin.edu.au>
 Description: FIPS provides functions for running bio-mathematical models of fatigue and alertness (BMMs).
-License: AGPL-3  
+License: AGPL-3 + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends: R (>= 3.5.0)

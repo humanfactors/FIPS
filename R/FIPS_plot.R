@@ -43,15 +43,15 @@ FIPS_plot <- function(dats,
 
   # Filter based on selected datetimes from and to
   if (!is.null(from)) {
-    dats <- dats %>% filter(datetime > from)
+    dats <- dats %>% dplyr::filter(datetime > from)
     if (!is.null(observed))
-      observed <- observed %>% filter(datetime > from)
+      observed <- observed %>% dplyr::filter(datetime > from)
     }
 
   if (!is.null(to)) {
-    dats <- dats %>% filter(datetime < to)
+    dats <- dats %>% dplyr::filter(datetime < to)
     if (!is.null(observed))
-      observed <- observed %>% filter(datetime < to)
+      observed <- observed %>% dplyr::filter(datetime < to)
   }
 
   if(!any((get_FIPS_pred_stat(dats) %in% plot_stat)) & fatigue_CIs == TRUE){
@@ -129,8 +129,7 @@ plot.FIPS_simulation <- function(
   plot_stat = NULL,
   fatigue_CIs = FALSE,
   observed = NULL,
-  observed_y = NULL,
-  ...) {
+  observed_y = NULL) {
   FIPS_plot(
     dats = x,
     from = from,
@@ -138,7 +137,6 @@ plot.FIPS_simulation <- function(
     plot_stat = plot_stat,
     fatigue_CIs = fatigue_CIs,
     observed = observed,
-    observed_y = observed_y,
-    ...
+    observed_y = observed_y
   )
 }

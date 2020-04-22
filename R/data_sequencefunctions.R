@@ -1,11 +1,10 @@
 
-#' Generate Decimal Time dates from a timedate object
-#'
-#' Requires a datetime.col, will return the time day and hours since first timedate
-#' all in decimal time
-#'
-#'
-#' @export
+# Generate Decimal Time dates from a timedate object
+#
+# Requires a datetime.col, will return the time day and hours since first timedate
+# all in decimal time
+#
+#
 generate_decimal_timeunits <- function(.data, datetime.col) {
   datetime.col = rlang::ensym(datetime.col)
   .data %>%

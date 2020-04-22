@@ -11,8 +11,7 @@
   plot_stat = NULL,
   fatigue_CIs = FALSE,
   observed = NULL,
-  observed_y = NULL,
-  ...
+  observed_y = NULL
 )
 }
 \arguments{
