@@ -86,7 +86,7 @@ FIPS_Simulation_lost_attributes <- function(x) {
 print.FIPS_simulation <- function(x) {
 
   if(FIPS_Simulation_lost_attributes(x)) {
-    message("Warning: Your FIPS_Simulation object has lost attributes (have you wrangled the dataframe with dplyr?). Dispatching method onwards.")
+    warning("Your FIPS_Simulation object has lost attributes (have you wrangled the dataframe with dplyr?). Dispatching method onwards.")
     NextMethod()
   } else {
     help_function = switch(get_FIPS_modeltype(x),
@@ -115,7 +115,7 @@ print.FIPS_simulation <- function(x) {
 summary.FIPS_simulation <- function(x) {
 
   if(FIPS_Simulation_lost_attributes(x)) {
-    message("Warning: Your FIPS_Simulation object has lost attributes (have you wrangled the dataframe with dplyr?). Dispatching method onwards.")
+    warning("Your FIPS_Simulation object has lost attributes (have you wrangled the dataframe with dplyr?). Dispatching method onwards.")
     NextMethod()
   } else {
       help_function = switch(get_FIPS_modeltype(x),

@@ -33,8 +33,10 @@ test_that("Simulate runs and can access attributes post simulation", {
 
 test_that("Attribute loss is handled", {
 
-  expect_error()
-    test_mutate = mutate(test_simulation_unified, cw = c + w)
+  test_mutate = mutate(test_simulation_unified, cw = c + w)
+  expect_warning(capture_output({print(test_mutate)}))
+  expect_warning(capture_output({summary(test_mutate)}))
+  expect_error(plot(test_mutate))
 
 })
 
