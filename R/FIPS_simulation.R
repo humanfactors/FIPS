@@ -69,6 +69,14 @@ get_FIPS_pred_cols <- function (x) {
   return(mt)
 }
 
+# Tidyverse functions will remove attributes, this returns FALSE if attributes
+# of Simulation have been lost, so that generic functions dispatch onwards.
+FIPS_Simulation_lost_attributes <- function(x) {
+  inherits(x, "FIPS_simulation") & any(
+    is.null(attr(x, "pred_stat", T)), is.null(attr(x, "modeltype", T)), is.null(attr(x, "pvec", T))
+    )
+}
+
 
 # print.FIPS_simulation
 #
@@ -76,21 +84,28 @@ get_FIPS_pred_cols <- function (x) {
 #
 # @export
 print.FIPS_simulation <- function(x) {
-  help_function = switch(get_FIPS_modeltype(x),
-                         TPM = "help(FIPS::TPM_make_pvec)",
-                         unified = "help(FIPS::unified_make_pvec)")
 
-  cat("---------\n")
-  cat(paste("Model Type:"), get_FIPS_modeltype(x), "\n")
-  cat(paste("Epoch Value:"), (x$sim_hours[2] - x$sim_hours[1])*60, "minutes \n")
-  cat(paste("Simulation duration:"), (max(x$sim_hours)), "hours \n")
-  cat(paste("Time points:"), nrow(x), "\n")
-  cat("Parameters used (pvec input):\n")
-  print(get_FIPS_pvec(x))
-  cat("For descriptions of these parameters, inspect: ", help_function, "\n")
-  cat("---------\n")
-  print(as_tibble(x[,c("datetime","time","wake_status","sim_hours",get_FIPS_pred_cols(x))]))
+  if(FIPS_Simulation_lost_attributes(x)) {
+    message("Warning: Your FIPS_Simulation object has lost attributes (have you wrangled the dataframe with dplyr?). Dispatching method onwards.")
+    NextMethod()
+  } else {
+    help_function = switch(get_FIPS_modeltype(x),
+                           TPM = "help(FIPS::TPM_make_pvec)",
+                           unified = "help(FIPS::unified_make_pvec)")
+    cat("---------\n")
+    cat(paste("Model Type:"), get_FIPS_modeltype(x), "\n")
+    cat(paste("Epoch Value:"), (x$sim_hours[2] - x$sim_hours[1])*60, "minutes \n")
+    cat(paste("Simulation duration:"), (max(x$sim_hours)), "hours \n")
+    cat(paste("Time points:"), nrow(x), "\n")
+    cat("Parameters used (pvec input):\n")
+    print(get_FIPS_pvec(x))
+    cat("For descriptions of these parameters, inspect: ", help_function, "\n")
+    cat("---------\n")
+    print(tibble::as_tibble(x[,c("datetime","time","wake_status","sim_hours",get_FIPS_pred_cols(x))]))
+  }
 }
+
+
 
 # summary.FIPS_simulation
 #
@@ -99,18 +114,22 @@ print.FIPS_simulation <- function(x) {
 # @export
 summary.FIPS_simulation <- function(x) {
 
-  help_function = switch(get_FIPS_modeltype(x),
-         TPM = "help(FIPS::TPM_make_pvec)",
-         unified = "help(FIPS::unified_make_pvec)")
-
-  cat("---------\n")
-  cat(paste("Model Type:"), get_FIPS_modeltype(x), "\n")
-  cat(paste("Epoch Value:"), (x$sim_hours[2] - x$sim_hours[1])*60, "minutes \n")
-  cat(paste("Simulation duration:"), (max(x$sim_hours)), "hours \n")
-  cat(paste("Time points:"), nrow(x), "\n")
-  cat("Parameters used (pvec input):\n")
-  print(get_FIPS_pvec(x))
-  cat("For descriptions of these parameters, inspect: ", help_function, "\n")
-  cat("---------\n")
-  summary.data.frame(x[,c("datetime","time","wake_status","sim_hours",get_FIPS_pred_cols(x))])
+  if(FIPS_Simulation_lost_attributes(x)) {
+    message("Warning: Your FIPS_Simulation object has lost attributes (have you wrangled the dataframe with dplyr?). Dispatching method onwards.")
+    NextMethod()
+  } else {
+      help_function = switch(get_FIPS_modeltype(x),
+                           TPM = "help(FIPS::TPM_make_pvec)",
+                           unified = "help(FIPS::unified_make_pvec)")
+    cat("---------\n")
+    cat(paste("Model Type:"), get_FIPS_modeltype(x), "\n")
+    cat(paste("Epoch Value:"), (x$sim_hours[2] - x$sim_hours[1])*60, "minutes \n")
+    cat(paste("Simulation duration:"), (max(x$sim_hours)), "hours \n")
+    cat(paste("Time points:"), nrow(x), "\n")
+    cat("Parameters used (pvec input):\n")
+    print(get_FIPS_pvec(x))
+    cat("For descriptions of these parameters, inspect: ", help_function, "\n")
+    cat("---------\n")
+    summary.data.frame(x[,c("datetime","time","wake_status","sim_hours",get_FIPS_pred_cols(x))])
+  }
 }

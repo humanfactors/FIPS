@@ -1,6 +1,6 @@
 #' FIPS Time Series Plot
 #'
-#' @param dats A FIPS_df simulation results (i.e., `.simulation$FIPS_df`)
+#' @param dats A FIPS_simulation object (i.e., FIPS_df with simulation results)
 #' @param from The starting datetime to be plotted
 #' @param to The ending datetime to be plotted
 #' @param plot_stat Which variables to plot
@@ -18,6 +18,13 @@ FIPS_plot <- function(dats,
                       fatigue_CIs = FALSE,
                       observed = NULL,
                       observed_y = NULL) {
+
+
+  if(FIPS_Simulation_lost_attributes(dats)) {
+    stop("Your FIPS_Simulation object has lost attributes (have you wrangled the dataframe with dplyr?).
+          No plot method availble. Please manually save attributes if plotting essential.")
+  }
+
 
   if(!is_FIPS_simulation(dats)) {
     stop("Requires a FIPS_df which has had model simulation run on it")

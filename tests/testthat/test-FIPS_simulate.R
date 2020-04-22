@@ -30,3 +30,13 @@ test_that("Simulate runs and can access attributes post simulation", {
   expect_true(attr(tpmrun, "simmed"))
 
 })
+
+test_that("Attribute loss is handled", {
+
+  expect_error()
+    test_mutate = mutate(test_simulation_unified, cw = c + w)
+
+})
+
+
+
