@@ -79,3 +79,8 @@ summary(TPM.simulation.results)
 print(TPM.simulation.results)
 ```
 
+# Authors
+
+- Dr. Michael David Wilson (Future of Work Institute ― Curtin University)
+- Dr. Luke Strickland (Future of Work Institute ― Curtin University)
+- Dr. Timothy Ballard (University of Queensland)
