@@ -10,26 +10,35 @@ FIPS_df(.data)
 \item{.data}{A dataframe that matches the required FIPS_df structure}
 }
 \description{
-The only input \emph{required} to generate this is a series of sleep/wake times.
-The FIPS_df is a tibble with the following variables (columns):
-
-\code{datetime} = vector of datetime stamps separated at equidistance intervals.
-\code{sleep.id} = a supplementary variable indicating sleep episode identifier.
-\code{wake_status} =  Awake (\code{T}) or asleep (\code{F}) at that epoch interval/epoch
-\code{wake_status_int} = Awake (1) or asleep (0) at that epoch interval/epoch
-\code{change_point} = Whether the individual changed wake status at that interval/epoch.
-\code{switch_direction} = Whether switch was to sleep or to wake
-\code{status_duration} = How long individual has been in status at that current time point
-\code{total_prev} = If a switch has occured, how long were that in the previous status.
-\code{time} = time of day in decimal hour
-\code{day} =  days into simulation
-\code{sim_hours} = hours simulation has run for total
-}
-\details{
-All models implemented in FIPS are implemented to be run on a \code{FIPS_df} ---
+All models implemented in FIPS are implemented to be run on a \code{FIPS_df} onject ---
 a dataframe containing a time series of all variables required to run \link{FIPS_simulate} to
-generate a FIPS_simulation object.
+generate a \code{FIPS_simulation} object (a subclass of \code{FIPS_df}).
 }
+\section{Specification}{
+
+The specification for a \code{FIPS_df} is a dataframe object that contains the following
+variables (columns). The only input \emph{required} to generate this is a series of sleep/wake times.
+The FIPS_df is a tibble with the following variables (columns):
+\itemize{
+\item \code{datetime} = vector of datetime stamps separated at equidistance intervals.
+\item \code{sleep.id} = a supplementary variable indicating sleep episode identifier.
+\item \code{wake_status} =  Awake (\code{T}) or asleep (\code{F}) at that epoch interval/epoch
+\item \code{wake_status_int} = Awake (1) or asleep (0) at that epoch interval/epoch
+\item \code{change_point} = Whether the individual changed wake status at that interval/epoch.
+\item \code{switch_direction} = Whether switch was to sleep or to wake
+\item \code{status_duration} = How long individual has been in status at that current time point
+\item \code{total_prev} = If a switch has occured, how long were that in the previous status.
+\item \code{time} = time of day in decimal hour
+\item \code{day} =  days into simulation
+\item \code{sim_hours} = hours simulation has run for total
+}
+
+Note that is theoretically possible to generate a dataframe yourself and apply the \code{FIPS:::as_FIPS_df()} method.
+Be cautious however that as of FIPS 0.1.0 there is no validator at object instantiation time. This is because the validation occurs
+in internal functions specified in the \link{parse_sleeptimes}. If the API for creating your own \code{FIPS_df}
+objects is opened to the user end this will be addressed.
+}
+
 \seealso{
 See FIPS_simulation (internal) for additional columns added after a simulation is run.
 
