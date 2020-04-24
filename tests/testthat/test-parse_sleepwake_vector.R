@@ -9,8 +9,9 @@ unit_sleeptimes = tibble::tribble(
     sleep.start = lubridate::ymd_hms(sleep.start, tz = "Australia/Perth"),
     sleep.end = lubridate::ymd_hms(sleep.end, tz = "Australia/Perth"))
 
-unit_simstart = ymd_hms('2018-05-20 22:00:00', tz = "Australia/Perth")
-unit_simend   = ymd_hms('2018-05-23 10:00:00', tz = "Australia/Perth")
+## Base = as.POSIXct("2018-05-20 22:00:00", tz = "Australia/Perth"))
+unit_simstart = lubridate::ymd_hms('2018-05-20 22:00:00', tz = "Australia/Perth")
+unit_simend   = lubridate::ymd_hms('2018-05-23 10:00:00', tz = "Australia/Perth")
 
 unit_parsedtimes = parse_sleeptimes(
   sleeptimes = unit_sleeptimes,
@@ -25,7 +26,7 @@ unit_sequence = unit_parsedtimes$wake_status_int
 
 test_that("Sleep wake vector parsing produces same results as from sleep times format", {
 
-    unit_vecseq_parsed = parse_sleepwake_sequence(unit_sequence, 5, as.POSIXct("2018-05-20 22:00:00", tz = "Australia/Perth"))
+    unit_vecseq_parsed = parse_sleepwake_sequence(unit_sequence, 5, unit_simstart)
 
     expect_equal(unit_parsedtimes$datetime, unit_vecseq_parsed$datetime)
     expect_equal(unit_parsedtimes$wake_status, unit_vecseq_parsed$wake_status)
@@ -42,7 +43,7 @@ test_that("Sleep wake vector parsing produces same results as from sleep times f
 
 test_that("Sleep wake vector format can be modelled", {
 
-  unit_vecseq_parsed = parse_sleepwake_sequence(unit_sequence, 5, as.POSIXct("2018-05-20 22:00:00", tz = "Australia/Perth"))
+  unit_vecseq_parsed = parse_sleepwake_sequence(unit_sequence, 5, unit_simstart)
   tpmrun = FIPS_simulate(unit_vecseq_parsed, "TPM", TPM_make_pvec())
 
   expect_equal(nrow(tpmrun), 721)
@@ -53,7 +54,21 @@ test_that("Sleep wake vector format can be modelled", {
 
 })
 
+test_that("Sleep wake vector error handlers operating", {
 
+  expect_error(parse_sleepwake_sequence(c(1,2,3), 5, unit_simstart),
+               "Binary sequence must only contain")
+
+  expect_error(parse_sleepwake_sequence("Cats", 5, unit_simstart),
+               "Binary sequence must only contain")
+
+  expect_warning(parse_sleepwake_sequence(c(1,1,1,1,0,0,0,0), 85, unit_simstart),
+                 regexp = "You have specified an epoch length longer than 30 minutes")
+
+  expect_error(parse_sleepwake_sequence(c(1,1,1,1,0,0,0,0), 5.5, unit_simstart),
+               "Epoch value must be an integer")
+
+})
 
 
 
