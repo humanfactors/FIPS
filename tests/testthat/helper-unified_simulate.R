@@ -1,5 +1,3 @@
-  library(tidyverse)
-
   sleeptimes_common <- tibble::tibble(
     sleep.start = seq(
       from = lubridate::ymd_hms('2018-05-09 23:00:00', tz = "Australia/Perth"),
@@ -35,7 +33,7 @@
   )
 
 simulation_df <- simulation_df %>%
-  filter(datetime>=sleeptimes$sleep.start[1])
+  dplyr::filter(datetime>=sleeptimes$sleep.start[1])
 
   test_simulation_unified <- FIPS_simulate(
     FIPS_df = simulation_df ,

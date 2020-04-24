@@ -29,14 +29,14 @@ change_points <- function(statevec) {
 # Identify if change was them going to Sleep or Waking
 # This would be used by model_sim functions
 status_dir <- function(statevec, changevec) {
-  directionality = rep(0, length(statevec))
+  directionality = rep("0", length(statevec))
   for (i in 2:length(changevec)) {
     v_i = statevec[i]; v_lag = statevec[i-1]
     if (changevec[i]) {
       directionality[i] = ifelse(v_i - v_lag == -1, "Sleep", "Wake")
     }
   }
-  return(directionality)
+  return(as.character(directionality))
 }
 
 # This shows how long has been in that status, meaning we don't need $taw and $tas.
