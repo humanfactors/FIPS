@@ -10,10 +10,14 @@ FIPS includes a set of well documented functions for transforming sleep and acti
 
 BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. There are several different BMM implementations, but most have their roots in Borbély's (1982) two process model which stipulates that sleepiness/performance impairment functions in response to two processes: a circadian process and a homeostatic process. BMMs enable hypothesis testing of the latent factors underlying the relationships between sleep, fatigue, and human performance. For example, they enable researchers to estimate the relative contributions of homeostatic processes on fatigue, relative to endogenous circadian processes. These models are also frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs. 
 
+## What is FIPS?
+
+FIPS is an R package which allows users to conduct bio-mathematical modelling. FIPS makes it easy to conduct simulations from BMMs. The FIPS data structures also make parameter estimation more reproducible and standardised. All features of FIPS are based in `S3` classes, making extensions straightforward.
+
 ## Installation
 To install the latest development version of FIPS:
 
-```R
+```r
 # install.packages('remotes') # if remotes not installed
 remotes::install_github("humanfactors/FIPS")
 ```
@@ -23,7 +27,13 @@ We highly recommended building the vignettes (with `build_vignettes = TRUE`; tho
 
 Full walkthroughs for using FIPS can be found in the vignettes: `vignette("plotting","FIPS")` and `vignette("generation-and-three-process-simulation","FIPS")` or by accessing the source Rmarkdown files under `./vignettes`.
 
-Currently all FIPS simulations start with the *Sleep Data Format*, which is shown below. Importantly, the datetimes in the columns must be POSIXct datetime objects. We suggest leveraging lubridate for a simple datetime interface. Ideally, you should use these column names and format to avoid conflicts with the generated column names. 
+All FIPS simulations require a `FIPS_df` object (see, `?FIPS::FIPS_df`), which is a form of data frame. There are two methods for generating a `FIPS_df` from existing data:
+
+- `parse_sleepwake_sequence` can be used to convert a sequence of sleep wake statuses (e.g., binary sequence with equidistance temporal spacing. This is the format used by other proprietary BMM software as well as several actigraphy-based sleep detection algorithms. 
+- `parse_sleeptimes` can be used to convert a data frame of sleep and wake times (and a sleep identifier) to a `FIPS_df` object.
+- Note that advanced users should be able to create a data frame compliant with the *FIPS data format*. See `help("FIPS_df")`. 
+
+For this example, we will run through a `parse_sleeptimes` example. You must start with a data frame in the *Sleep Data Format*, which is shown below. Importantly, the datetimes in the columns must be POSIXct datetime objects. We suggest leveraging lubridate for a simple datetime interface. Ideally, you should use these column names and format to avoid conflicts with the generated column names. 
 
 **The Sleep Data Format** looks as follows:
 
@@ -34,9 +44,9 @@ Currently all FIPS simulations start with the *Sleep Data Format*, which is show
 |2018-05-14 01:55:00 |2018-05-14 06:29:00 |        3|
 |2018-05-14 13:30:00 |2018-05-14 14:58:00 |        4|
 
-For testing purposes, the following snippet shows how to generate a FIPS compliant sleep data frame.
+For testing purposes, the following snippet shows how to generate a FIPS compliant sleep data frame (as shown above).
 
-```{r}
+```r
 example.sleeptimes <- tibble::tibble(
   sleep.start = seq(
     from = lubridate::ymd_hms('2018-05-01 23:00:00', tz = "Australia/Perth"), 
@@ -45,11 +55,10 @@ example.sleeptimes <- tibble::tibble(
   sleep.end = sleep.start + lubridate::dhours(7.5),
   sleep.id = rank(sleep.start))
 ```
-Advanced users may be able to create a dataframe compliant with the *FIPS data format* by examining `help("FIPS_df")`. There are plans to offer additional methods for transforming data types to the `FIPS_df` format (e.g., binary sequence with equidistance temporal spacing).
 
 Now that you have the correct sleep times input structure, you can generate the `FIPS_df` from the sleep data format via the `parse_sleeptimes` function.
 
-```R
+```r
 # Simulation start date time (i.e., when you want first predictions to start)
 simulation.start = lubridate::ymd_hms('2018-05-01 07:00:00', tz = "Australia/Perth")
 # Simulation end date time (i.e., when you want predictions to end)
@@ -65,7 +74,6 @@ simulated.dataframe = parse_sleeptimes(
   sleep.id.col = "sleep.id",
   roundvalue = 5
   )
-
 ```
 The resulting dataframe output (of class `FIPS_df`) can then be sent the simulation dispatch function `FIPS_simulate()`. The simulation functions require a parameter vector/list (pvec). Please see help for `TPM_make_pvec()` or `unified_make_pvec()` for more information on generating these vectors.
 
@@ -84,14 +92,14 @@ TPM.simulation.results = FIPS_simulate(
 
 You now can access printing, summary and plot methods for the FIPS_simulation object. Note that further transformations to the object in dplyr and similar Tidyverse packages will remove attributes.
 
-```R
+```r
 plot(TPM.simulation.results)
 summary(TPM.simulation.results)
 print(TPM.simulation.results)
 ```
 
 ## Notes on Design Choices
-As of version 0.1.0, parts of the interface should be considered relatively unstable (i.e., subject to future change). A number of difficult decisions had to be made regarding the design of FIPS objects and models which we acknowledge are not "perfect". To understand the challenges, it is important to understand how dynamic models are processed analytically.
+As of version 0.1.0, aspects of the object structure may be subject to changes. A number of difficult decisions had to be made regarding the design of FIPS objects and models which we acknowledge are not "perfect". To understand the challenges, it is important to understand how dynamic models are processed analytically.
 
 BMMs can be best described as "dynamic process models". This class of models require the calculation of _time varying process variables_ prior to model fitting or simulation. For instance, the functions to caclulate the `S` (homeostatic) parameter require information on how long the individual has been awake or asleep at that time. Moreover, the input to `S` functions also require knowledge of the past states of `S`, such that these operations cannot be trivially vectorised (if at all).
 
