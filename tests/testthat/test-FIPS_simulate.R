@@ -9,7 +9,6 @@ test_that("Error handling working correctly", {
   expect_error(FIPS_simulate(test_simulation_unified, "TPM", TPM_make_pvec()),
                regexp = "You have already run a simulation on this FIPS_df.")
 
-
   expect_error(FIPS_simulate(simulation_df, "choccytoppy", unified_make_pvec()),
                regexp = "'arg' should be one of")
 

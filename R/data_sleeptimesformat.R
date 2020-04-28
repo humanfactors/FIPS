@@ -2,6 +2,9 @@
 #' Parse Sleep Times to FIPS_df
 #'
 #' This function parses a standardised sleeptime dataframe into the full FIPS format, ready for simulation and modelling.
+#' The sleeptime format requires a sleep.id column (vector), a series of sleep times, and a series of corresponding wake times.
+#' This format is the simplest to work with for human-readable or human-generated dataframes. See [parse_sleepwake_sequence] for
+#' binary input methods.
 #'
 #' It is crucial that that following conditions are met for all arguments:
 #' * Ensure that all specified datetimes for all datetime arguments are in an identical timezone.
@@ -40,6 +43,9 @@
 #'    sleep.id.col = "sleep.id",
 #'    roundvalue = 5)
 #'
+#' @seealso 
+#' For binary input parsing see: [parse_sleepwake_sequence]
+#' 
 #' @return FIPS_df
 #'
 #' @export

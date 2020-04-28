@@ -45,6 +45,9 @@ FIPS_df
 }
 \description{
 This function parses a standardised sleeptime dataframe into the full FIPS format, ready for simulation and modelling.
+The sleeptime format requires a sleep.id column (vector), a series of sleep times, and a series of corresponding wake times.
+This format is the simplest to work with for human-readable or human-generated dataframes. See \link{parse_sleepwake_sequence} for
+binary input methods.
 }
 \details{
 It is crucial that that following conditions are met for all arguments:
@@ -78,4 +81,7 @@ It is crucial that that following conditions are met for all arguments:
    sleep.id.col = "sleep.id",
    roundvalue = 5)
 
+}
+\seealso{
+For binary input parsing see: \link{parse_sleepwake_sequence}
 }
