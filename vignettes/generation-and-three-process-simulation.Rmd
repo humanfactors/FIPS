@@ -184,7 +184,7 @@ plot3_w = TPM.simulation.results %>%
   scale_y_continuous(breaks = seq(0,23,1)) +
   labs(y = "Hour of Day", x = "Day of Mission") +
   colorspace::scale_fill_continuous_divergingx(name = "KSS", palette = "Zissou 1", limits = c(1,9), mid = 5, end = 9) +
-  ggtitle(label = "Three Process Model (KSS) - 3WS", subtitle = "Heatmap of TPM predicted performance by 0.5hr") +
+  ggtitle(label = "Three Process Model (KSS)", subtitle = "Heatmap of TPM predicted performance by 0.5hr") +
   theme(axis.title = element_text(size = 12)) 
 
 plot3_w

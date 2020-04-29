@@ -98,15 +98,22 @@ summary(TPM.simulation.results)
 print(TPM.simulation.results)
 ```
 
-## Notes on Design Choices
-As of version 0.1.0, aspects of the object structure may be subject to changes. A number of difficult decisions had to be made regarding the design of FIPS objects and models which we acknowledge are not "perfect". To understand the challenges, it is important to understand how dynamic models are processed analytically.
+# Contributing and Support
 
-BMMs can be best described as "dynamic process models". This class of models require the calculation of _time varying process variables_ prior to model fitting or simulation. For instance, the functions to caclulate the `S` (homeostatic) parameter require information on how long the individual has been awake or asleep at that time. Moreover, the input to `S` functions also require knowledge of the past states of `S`, such that these operations cannot be trivially vectorised (if at all).
-
-This requires rigid data structures in formats R is not particularly suitable for. As such, some design choices in the package may seem inflexible (e.g., requirement to start with sleep times data structure), but are in place to ensure consistency and reliability in the code. It would be extremely challenging to develop validators for arbitrary user generated data structures (as can be done in `lme4` and `brms`). Doing so would could also greatly increase the complexity of the API (as users would need to need to specify all variables used for calculations). However, a future goal of the project will be to iteratively allow more input formats (so if you have any requests please file an issue).
+We welcome contributions great or small from the community. It would incredibly useful to receive feedback via Github Issues for anything regarding the package, including: installation issues, bugs or unexpected behaviour, usability, feature requests or inquiries, or even something you don't understand in the tutorials about this class of models more generally. Please file a Github issue for any general support queries too.
 
 # Additional Terms for Academic Usage
-In addition to the rights stipulated in the GNU Affero GPL-3, we request that all work leveraging FIPS provide a direct citation to the software package. Please contact the authors for a citation (as of 22/04/2020). We aim to have a manuscript for citation soon.
+In addition to the rights stipulated in the GNU Affero GPL-3, we request that all academic work leveraging FIPS provide a direct citation to the software package. A complete citation and DOI are intended to be produced soon, but in the interim please use the following: 
+
+```tex
+@misc{wilson_fips_2020,
+	title = {{FIPS}: {Fatigue} {Impairment} {Prediction} {Suite}},
+	copyright = {AGPL-3},
+	url = {https://github.com/humanfactors/FIPS},
+	author = {Wilson, M.D. and Strickland, L. and Ballard, T.},
+	year = {2020}
+}
+```
 
 # Authors
 
