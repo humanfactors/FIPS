@@ -107,7 +107,7 @@ pdf <- data.frame("Parameter" = names(TPM_make_pvec()),
 knitr::kable(list(pdf[1:7,], pdf[8:15,]), row.names=FALSE, digits=3)
 ```
 
-Calling `FIPS_simulate()` will the produces a `FIPS_df` with model predictions and predicted model parameter values (e.g., `s`, `c`). The returned `FIPS_df` will also now inherit the `FIPS_simulation` class.  A `FIPS_simulation` object has attributes containing the parameter vector, the `modeltype` string, and the `pvec` used, and several other values used internally. A custom print function of the object will reveal all this information. Note that this print function does mask some of the columns for ease of reading.
+Calling `FIPS_simulate()` will the produces a `FIPS_df` with model predictions and predicted time-varying process variables (e.g., `s`, `c`). The returned `FIPS_df` will also now inherit the `FIPS_simulation` class.  A `FIPS_simulation` object has attributes containing the parameter vector, the `modeltype` string, and the `pvec` used, and several other values used internally. A custom print function of the object will reveal all this information. Note that this print function does mask some of the columns for ease of reading.
 
 ```{r}
 # Run a simulation with the three process model
@@ -142,8 +142,8 @@ TPM.simulation.results
 # Plotting
 ### Plot 1: Parameter Plots
 
-FIPS provides a default plot method to visualize model predictions and parameters over time, discussed in detail
-[in this vignette](plotting.html).These plots aid with debugging and understanding how the different model parameters contribute to predictions. 
+FIPS provides a default plot method to visualize model predictions and time-varying process estimates over time, discussed in detail
+[in the plotting vignette](plotting.html). These plots aid with debugging and understanding how the different model parameters contribute to predictions. 
 
 ```{r fig.width=7}
 # Plot the whole time series

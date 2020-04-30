@@ -29,6 +29,8 @@ In this vignette we briefly demonstrate how to use the FIPS
 plotting function. Below we create sleeptimes and simulate an example 
 sleep scenario to plot. This example includes initial sleep deprivation.
 
+(Note: you should read `vignette("generation-and-three-process-simulation","FIPS")` first).
+
 ```{r}
 # Simulation start date time (i.e., when you want first predictions to begin)
 simulation.start = lubridate::ymd_hms('2018-05-01 11:00:00', tz = "Australia/Perth")
@@ -69,7 +71,7 @@ plot(unified.simulation.results)
 ```
 
 Often it will be helpful to restrict the plotting between certain datetimes,
-and plot additional data such as dynamic model parameters:
+and plot additional data such as the model's time-varying process estimates (e.g., c, s):
 
 ```{r fig.width=7}
 plot(unified.simulation.results, from='2018-05-03 13:30:00',
@@ -83,15 +85,12 @@ then adding some random noise to make some 'pretend' observed data.
 
 ```{r fig.width=7}
 
-pretend_ratings <- unified.simulation.results %>% filter(wake_status) 
+pretend_ratings <- unified.simulation.results %>% dplyr::filter(wake_status) 
 
 pretend_ratings <- pretend_ratings[sample(1:length(pretend_ratings$datetime), 100),
                    c("datetime", "sim_hours", "fatigue")]
 
-pretend_ratings$fatigue <- pretend_ratings$fatigue + rnorm(length
-                                                                         (pretend_ratings$fatigue),
-                                                                         0,
-                                                                         0.7)
+pretend_ratings$fatigue <- pretend_ratings$fatigue + rnorm(length(pretend_ratings$fatigue),0,0.7)
 
 plot(unified.simulation.results, from='2018-05-03 13:30:00',
                      to = "2018-05-07 18:30:00", plot_stat=c("fatigue", "s", "c", "l"),

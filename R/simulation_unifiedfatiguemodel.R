@@ -27,7 +27,6 @@ unified_check_pvec <- function(pvec) {
 #' (2016). A Unified Model of Performance: Validation of its Predictions
 #' across Different Sleep/Wake Schedules. \emph{Sleep}, \emph{39}(1),
 #' 249--262. \url{https://doi.org/10.5665/sleep.5358}
-
 #' @param U0 Upper asymptote (defaults to = 24.12)
 #' @param L0 Lower asymptote(defaults to = 0,   # (0.88 * 3 - 2)*1.74)
 #' @param S0 Initial starting point of S process (defaults to = 0,   # 1.11 + (1.74-1.11)*0.64)
