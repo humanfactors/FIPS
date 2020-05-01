@@ -29,7 +29,7 @@ In this vignette we briefly demonstrate how to use the FIPS
 plotting function. Below we create sleeptimes and simulate an example 
 sleep scenario to plot. This example includes initial sleep deprivation.
 
-(Note: you should read `vignette("generation-and-three-process-simulation","FIPS")` first).
+(Note: you should read `vignette("FIPS-simulation-walkthrough","FIPS")` first).
 
 ```{r}
 # Simulation start date time (i.e., when you want first predictions to begin)

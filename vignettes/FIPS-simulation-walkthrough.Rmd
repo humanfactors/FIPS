@@ -1,8 +1,8 @@
 ---
-title: "Sleep Data Generation and Processing and a Three Process Simulation"
+title: "FIPS Simulation Walkthrough"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Data and Model}
+  %\VignetteIndexEntry{FIPS Simulation Walkthrough}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This vignette demonstrates how to conduct a minimalist generation of a sleep times dataframe, and then proceed to process this for modeling. The code here demonstrates the usage from a higher-level user perspective.
+This vignette demonstrates how to generate a sleep times dataframe and then proceed to process this for modeling with the Three Process Model of Fatigue. The code here demonstrates the usage from a higher-level user perspective. 
 
 Note that in future releases, we may seek to create functions that explicitly generate these sleep times for you. Furthermore, it is possible to simply create the sleeptimes in Excel or another program and transform to the format shown here. Therefore, the sleep generation features are presented here for practical purposes.
 

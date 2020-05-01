@@ -25,7 +25,7 @@ We highly recommended building the vignettes (with `build_vignettes = TRUE`; tho
 
 ## Simple Use Case
 
-Full walkthroughs for using FIPS can be found in the vignettes: `vignette("plotting","FIPS")` and `vignette("generation-and-three-process-simulation","FIPS")` or by accessing the source Rmarkdown files under `./vignettes`.
+Full walkthroughs for using FIPS can be found in the vignette `vignette("FIPS-simulation-walkthrough","FIPS")`, with further information about plotting in `vignette("plotting","FIPS")`. These files can also be directly accessed from the source Rmarkdown files under `./vignettes`.
 
 All FIPS simulations require a `FIPS_df` object (see, `?FIPS::FIPS_df`), which is a form of data frame. There are two methods for generating a `FIPS_df` from existing data:
 
