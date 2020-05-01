@@ -110,23 +110,23 @@ modelling of fatigue. The package includes:
     points. The visualisations are publication-ready, but flexibly
     adjusted via the `ggplot2` package.
 
-The package contains two vignettes: a walk-through of a sleep simulation
+The package also contains two vignettes: a walk-through of a sleep simulation
 scenario which includes generating, transforming and analyzing the data;
 and a detailed tutorial in plotting model outputs.
 
 # FIPS Interface and Data Structures
 
-Conducting a BMM simulation in FIPS requires users to generate a
-`FIPS_df`, a tidy data frame containing a time series of all variables
-required to conduct BMM research, based on sleep history. FIPS supports
-two sleep data formats with corresponding functions that automatically
-perform all required transformations to the required `FIPS_df`:
+Conducting a BMM simulation in FIPS requires users to generate a `FIPS_df`, a
+tidy data frame containing a time series (based on sleep history) of all
+variables required to conduct BMM research. FIPS supports two sleep data
+formats, each format associated with a corresponding function that automatically
+performs all required transformations to the `FIPS_df` format:
 
--   The `parse_sleeptimes` function transforms a data frame containing
-    three vectors: sleep onset times, sleep end times (i.e., awakening),
-    and the sleep episode sequence identifier. This format is human
-    readable and well suited to individuals manually generated sleep
-    history (e.g., from a paper sleep diary).
+-   The `parse_sleeptimes` function transforms a data frame containing three
+    vectors: sleep onset times, sleep end times (i.e., awakening), and the sleep
+    episode sequence identifier. This format is human readable and well suited
+    for individuals who are manually entering sleep history data (e.g., from a
+    paper sleep diary)[^1].
 
 -   The `parse_sleepwake_sequence` function transforms a bit vector
     representing sleep (0) and wake (1) statuses, with each bit
@@ -169,3 +169,5 @@ This project is licensed under the "GNU Affero General Public License"
 version 3 - see the LICENSE file for details
 
 # References
+
+[^1]: It should be noted that the `parse_sleeptimes` function may also be useful to users wishing to convert a set of human-readable sleep times (e.g., manually entered from a sleep diary) to a bit vector (i.e., a list of `1` or `0` values). This is because the `FIPS_df` contains a column representing the series as a bit vector (see `FIPS_df$wake_status_int`).
