@@ -2,7 +2,7 @@
 
 <img align="right" src="inst/logo/FIPS_logo.png?raw=true" alt="FIPSLOGO" width="200"/> 
 
-FIPS provides researchers and practitioners comprehensive set of functions for applying bio-mathematical models (BMMs) of fatigue. FIPS is a young project under active development and is implemented in the R programming language. 
+FIPS provides researchers and practitioners comprehensive set of functions for applying bio-mathematical models (BMMs) of fatigue. FIPS is a young project under active development and is implemented in the R programming language. If you are tracking people's sleep history (e.g.,  conducting an experience sampling study) or are interested in fatigue prediction, this package is likely to be helpful to you.
 
 FIPS includes a set of well documented functions for transforming sleep and actigraphy data to the data frame structure (called a `FIPS_df`) required for executing BMM simulations. Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the Unified Model and Three Process Model. All models are extendable and include customisable parameters. 
 
