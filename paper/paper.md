@@ -126,7 +126,7 @@ performs all required transformations to the `FIPS_df` format:
     vectors: sleep onset times, sleep end times (i.e., awakening), and the sleep
     episode sequence identifier. This format is human readable and well suited
     for individuals who are manually entering sleep history data (e.g., from a
-    paper sleep diary)[^1].
+    paper sleep diary).[^1]	
 
 -   The `parse_sleepwake_sequence` function transforms a bit vector
     representing sleep (0) and wake (1) statuses, with each bit
@@ -135,6 +135,8 @@ performs all required transformations to the `FIPS_df` format:
     and their corresponding sleep/wake status algorithms (e.g.,
     Cole--Kripke). Consequently, this format is often supported by other
     proprietary BMM software.
+
+[^1]: It should be noted that the `parse_sleeptimes` function may also be useful to users wishing to convert a set of human-readable sleep times (e.g., manually entered from a sleep diary) to a bit vector (i.e., a list of `1` or `0` values). This is because the `FIPS_df` contains a column representing the series as a bit vector (see `FIPS_df$wake_status_int`).
 
 The resulting `FIPS_df` dataframe can then be sent to the simulation
 dispatch function `FIPS_simulate` to execute a specific model. This
@@ -170,4 +172,3 @@ version 3 - see the LICENSE file for details
 
 # References
 
-[^1]: It should be noted that the `parse_sleeptimes` function may also be useful to users wishing to convert a set of human-readable sleep times (e.g., manually entered from a sleep diary) to a bit vector (i.e., a list of `1` or `0` values). This is because the `FIPS_df` contains a column representing the series as a bit vector (see `FIPS_df$wake_status_int`).
