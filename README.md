@@ -107,13 +107,17 @@ We welcome contributions great or small from the community. It would incredibly 
 # Additional Terms for Academic Usage
 In addition to the rights stipulated in the GNU Affero GPL-3, we request that all academic work leveraging FIPS provide a direct citation to the software package. A complete citation and DOI are intended to be produced soon, but in the interim please use the following: 
 
+Wilson, M. D., Strickland, L. J. G., & Ballard, T. (2020, May 7). FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment. https://doi.org/10.31234/osf.io/43ya9 
+ 
 ```tex
-@misc{wilson_fips_2020,
-	title = {{FIPS}: {Fatigue} {Impairment} {Prediction} {Suite}},
-	copyright = {AGPL-3},
-	url = {https://github.com/humanfactors/FIPS},
-	author = {Wilson, M.D. and Strickland, L. and Ballard, T.},
-	year = {2020}
+@misc{wilson_strickland_ballard_2020,
+ title={FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment},
+ url={psyarxiv.com/43ya9},
+ DOI={10.31234/osf.io/43ya9},
+ publisher={PsyArXiv},
+ author={Wilson, Michael David and Strickland, Luke J G and Ballard, Timothy},
+ year={2020},
+ month={May}
 }
 ```
 
