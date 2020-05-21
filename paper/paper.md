@@ -1,5 +1,5 @@
 ---
-title: 'FIPS: An R package for biomathematical modelling human fatigue impairment'
+title: 'FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment'
 tags:
   - R
   - psychobiology
