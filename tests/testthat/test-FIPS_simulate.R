@@ -1,7 +1,7 @@
 test_that("Error handling working correctly", {
 
   expect_error(FIPS_simulate(c(1,2,3), "unified", unified_make_pvec()),
-               regexp = "This FIPS_df isn't of FIPS_df class.")
+               regexp = "This dataframe isn't of FIPS_df class.")
 
   expect_error(FIPS_simulate(test_simulation_unified, "unified", unified_make_pvec()),
                regexp = "You have already run a simulation on this FIPS_df.")
@@ -31,13 +31,12 @@ test_that("Simulate runs and can access attributes post simulation", {
 })
 
 test_that("Attribute loss is handled", {
-
-  test_mutate = mutate(test_simulation_unified, cw = c + w)
-  expect_warning(capture_output({print(test_mutate)}))
-  expect_warning(capture_output({summary(test_mutate)}))
-  expect_error(plot(test_mutate))
-
+    skip_if(('dplyr') >= "1.0.0", "Attribute loss issues are resolved in dplyr 1.0.0")
+    test_mutate = mutate(test_simulation_unified, cw = c + w)
+    expect_warning(capture_output({print(test_mutate)}))
+    expect_warning(capture_output({summary(test_mutate)}))
+    expect_error(plot(test_mutate))
+  # }
 })
-
 
 

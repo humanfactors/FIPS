@@ -15,7 +15,7 @@
 FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec) {
 
   if(!is_FIPS_df(FIPS_df)) {
-    stop("This FIPS_df isn't of FIPS_df class. Please double check you got this right...")
+    stop("This dataframe isn't of FIPS_df class. Please double check you got this right...")
   }
 
   if(is_simmed_FIPS_df(FIPS_df)) {
