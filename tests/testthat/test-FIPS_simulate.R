@@ -31,7 +31,7 @@ test_that("Simulate runs and can access attributes post simulation", {
 })
 
 test_that("Attribute loss is handled", {
-    skip_if(('dplyr') >= "1.0.0", "Attribute loss issues are resolved in dplyr 1.0.0")
+    skip_if(packageVersion('dplyr') >= "1.0.0", "Attribute loss issues are resolved in dplyr 1.0.0")
     test_mutate = mutate(test_simulation_unified, cw = c + w)
     expect_warning(capture_output({print(test_mutate)}))
     expect_warning(capture_output({summary(test_mutate)}))
