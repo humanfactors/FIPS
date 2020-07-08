@@ -126,6 +126,7 @@ sleeptimes_to_FIPSdf = parse_sleeptimes
 #' @param firstsleep first sleep in the sleep dataframe
 #' @param expand_by expand
 #' @return returns expanded tibble containing sleep.id = NA (due to waking) and wake_status = T
+#' @keywords internal
 generate_presleep_times <- function(simulationstart, firstsleep, expand_by = 5) {
     if (simulationstart >= firstsleep)
       stop("[Developer] Simulation Start must before first sleep if using this function")
@@ -148,7 +149,7 @@ generate_presleep_times <- function(simulationstart, firstsleep, expand_by = 5) 
 #' @param expand_by expand value
 #'
 #' @return returns expanded tibble containing sleep.id = NA (due to waking) and wake_status = T
-#'
+#' @keywords internal
 #' @importFrom tibble tibble
 generate_postwake_times <- function(simulationend, lastwake, expand_by = 5) {
   if (simulationend <= lastwake)
@@ -187,6 +188,7 @@ round_times <- function(.data, colname, round_by = 5) {
 #' @param expand_by Amount (in minutes) to expand sleep times by
 #'
 #' @return Sleeptimedataframe with single columns vector for datetime and wake status
+#' @keywords internal
 expand_sleep_series <- function(.data, expand_by = 5) {
 
   emins = paste(expand_by, "mins")
