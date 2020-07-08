@@ -76,8 +76,7 @@ simulated.dataframe = parse_sleeptimes(
   sleep.start.col = "sleep.start",
   sleep.end.col = "sleep.end",
   sleep.id.col = "sleep.id",
-  roundvalue = 5
-  )
+  roundvalue = 5)
 ```
 The resulting dataframe output (of class `FIPS_df`) can then be sent the simulation dispatch function `FIPS_simulate()`. The simulation functions require a parameter vector/list (pvec). Please see help for `TPM_make_pvec()` or `unified_make_pvec()` for more information on generating these vectors.
 
@@ -90,8 +89,7 @@ Calling `FIPS_simulate()` will produce a `FIPS_df` with model predictions and pr
 TPM.simulation.results = FIPS_simulate(
   FIPS_df = simulated.dataframe, # The FIPS_df
   modeltype = "TPM",             # three process model
-  pvec = TPM_make_pvec()       # parameter vector with defaults
-  )
+  pvec = TPM_make_pvec())       # parameter vector with defaults
 ```
 
 You now can access printing, summary and plot methods for the FIPS_simulation object. Note that further transformations to the object in dplyr and similar Tidyverse packages will remove attributes.
@@ -119,8 +117,7 @@ Wilson, M. D., Strickland, L. J. G., & Ballard, T. (2020, May 7). FIPS: An R Pac
  publisher={PsyArXiv},
  author={Wilson, Michael David and Strickland, Luke J G and Ballard, Timothy},
  year={2020},
- month={May}
-}
+ month={May}}
 ```
 
 # Authors
