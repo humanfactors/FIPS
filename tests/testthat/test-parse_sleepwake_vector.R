@@ -34,6 +34,7 @@ test_that("Sleep wake vector parsing produces same results as from sleep times f
     expect_equal(unit_parsedtimes$change_point, unit_vecseq_parsed$change_point)
     expect_equal(unit_parsedtimes$switch_direction, unit_vecseq_parsed$switch_direction)
     expect_equal(unit_parsedtimes$status_duration, unit_vecseq_parsed$status_duration)
+    expect_equal(unit_parsedtimes$sleep.id, unit_vecseq_parsed$sleep.id)
     expect_equal(unit_parsedtimes$total_prev, unit_vecseq_parsed$total_prev)
     expect_equal(unit_parsedtimes$time, unit_vecseq_parsed$time)
     expect_equal(unit_parsedtimes$day, unit_vecseq_parsed$day)

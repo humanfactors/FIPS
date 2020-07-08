@@ -4,6 +4,8 @@
 
 FIPS provides researchers and practitioners comprehensive set of functions for applying bio-mathematical models (BMMs) of fatigue. FIPS is a young project under active development and is implemented in the R programming language. 
 
+> If you are tracking people's sleep history (e.g.,  conducting an experience sampling study) or are interested in fatigue prediction, this package is likely to be helpful to you.
+
 FIPS includes a set of well documented functions for transforming sleep and actigraphy data to the data frame structure (called a `FIPS_df`) required for executing BMM simulations. Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the Unified Model and Three Process Model. All models are extendable and include customisable parameters. 
 
 ## What are BMMs?
@@ -79,7 +81,7 @@ The resulting dataframe output (of class `FIPS_df`) can then be sent the simulat
 
 In the example below, we will run a Three Process Model simulation over the `FIPS_df` series we just created. To do this, we will use the `FIPS_simulation` function, which takes in three arguments: a `FIPS_df` object, a specification of a `modeltype` (see help for model types currently implemented), and a `pvec` which is a vector of parameters for the model.
 
-Calling `FIPS_simulate()` will the produces a `FIPS_df` with model predictions and predicted model parameter values (e.g., `s`, `c`). The returned `FIPS_df` will also now inherit the `FIPS_simulation` class.  A `FIPS_simulation` object has attributes containing the parameter vector, the `modeltype` string, and the `pvec` used, and several other values used internally. A custom print function of the object will reveal all this information. Note that this print function does mask some of the columns for ease of reading.
+Calling `FIPS_simulate()` will produce a `FIPS_df` with model predictions and predicted model parameter values (e.g., `s`, `c`). The returned `FIPS_df` will also now inherit the `FIPS_simulation` class.  A `FIPS_simulation` object has attributes containing the parameter vector, the `modeltype` string, and the `pvec` used, and several other values used internally. A custom print function of the object will reveal all this information. Note that this print function does mask some of the columns for ease of reading.
 
 ```r
 # Run a simulation with the three process model
@@ -105,13 +107,17 @@ We welcome contributions great or small from the community. It would incredibly 
 # Additional Terms for Academic Usage
 In addition to the rights stipulated in the GNU Affero GPL-3, we request that all academic work leveraging FIPS provide a direct citation to the software package. A complete citation and DOI are intended to be produced soon, but in the interim please use the following: 
 
+Wilson, M. D., Strickland, L. J. G., & Ballard, T. (2020, May 7). FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment. https://doi.org/10.31234/osf.io/43ya9 
+ 
 ```tex
-@misc{wilson_fips_2020,
-	title = {{FIPS}: {Fatigue} {Impairment} {Prediction} {Suite}},
-	copyright = {AGPL-3},
-	url = {https://github.com/humanfactors/FIPS},
-	author = {Wilson, M.D. and Strickland, L. and Ballard, T.},
-	year = {2020}
+@misc{wilson_strickland_ballard_2020,
+ title={FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment},
+ url={psyarxiv.com/43ya9},
+ DOI={10.31234/osf.io/43ya9},
+ publisher={PsyArXiv},
+ author={Wilson, Michael David and Strickland, Luke J G and Ballard, Timothy},
+ year={2020},
+ month={May}
 }
 ```
 
