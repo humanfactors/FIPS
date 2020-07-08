@@ -1,3 +1,5 @@
+[![Travis build status](https://travis-ci.com/humanfactors/FIPS.svg?branch=master)](https://travis-ci.com/humanfactors/FIPS)
+
 # Fatigue Impairment Prediction Suite (FIPS)
 
 <img align="right" src="inst/logo/FIPS_logo.png?raw=true" alt="FIPSLOGO" width="200"/> 

@@ -3,3 +3,4 @@
 ^paper$
 ^\.dir-locals\.el$
 ^\.vscode$
+^\.travis\.yml$
