@@ -31,10 +31,11 @@ library(colorspace)
 library(tidyr)
 ```
 
-## Data Generation
+## Data Preparation
 
-The dataframe below shows a prototypical FIPS 'sleep' dataframe. In the example, we want to simulate a scenario where an individual obtains exactly 7.5 hours of sleep per night for 6 nights. There are likely multiple ways to achieve this, but the generation function below allows 
-sufficient flexibility to have continuously offset sleeptimes (e.g., by changing `by != 24`).
+### Sleep Times Format
+
+The dataframe below shows a prototypical FIPS 'sleep times' dataframe. This form of dataframe is intended for individuals who are manually inputting sleep history (e.g., from pencil forms to a spreadsheet). Below, we generate this data structure ourselves for convenience. Specifically, we want to simulate a scenario where an individual obtains exactly 7.5 hours of sleep per night for 6 nights. There are likely multiple ways to achieve this, but the generation function below allows sufficient flexibility to have continuously offset sleeptimes (e.g., by changing `by = '24 hours'` to another value).
 
 The sleeptimes should correspond to only one participant (multiple people are not currently supported in FIPS without map functions). The default column names for this dataframe are `sleep.id`, `sleep.start`, and `sleep.end`. It is recommended that you explicitly specify timezones in all functions to avoid any silent errors relating to time zone specifications.
 
@@ -48,10 +49,9 @@ example.sleeptimes <- tibble::tibble(
   sleep.id = rank(sleep.start))
 
 print(example.sleeptimes)
-
 ```
 
-Prior to actually conducting the simulation, you _must_ convert the sleep times to the "Continuous FIPS Format". This format is a continuous time series style dataframe that contains calculated variables to be interpreted by the FIPS model functions. This dataframe contains the following headings: `datetime, sleep.id, wake_status, wake_status_int, change_point, switch_direction, status_duration, total_prev, time, day, sim_hours`. Information regarding these will be presented in the section below, but first let's quickly run through how to generate the FIPS dataframe from sleep times.
+Prior to actually conducting the simulation, you _must_ convert the sleep times to the continuous "FIPS_df" format. This format is a continuous time series style dataframe that contains calculated variables to be interpreted by the FIPS model functions. This dataframe contains the following headings: `datetime, sleep.id, wake_status, wake_status_int, change_point, switch_direction, status_duration, total_prev, time, day, sim_hours`. Information regarding these will be presented in the section below, but first let's quickly run through how to generate the FIPS dataframe from sleep times.
 
 The `parse_sleeptimes` function from FIPS will takes in 'sleep times' generated previously, and note the arguments below.
 
@@ -66,8 +66,6 @@ The `parse_sleeptimes` function from FIPS will takes in 'sleep times' generated 
 *The setting of `roundvalue` is critically important.* It determines the epoch or spacing between observations in your dataset (in minutes). At a value of `1`, the simulation is updated every 1 minute. Consequently, this will increase the size (in rows) of your dataset by a factor of 5 (relative to `5` minutes). In most cases, 5, 10 or even 15 minutes should be sufficient.
 
 Moreover, note that all sleep observations will have their datetime rounded to this value. For example, with a `roundvalue = 5` the datetime `2018-05-07 21:02:02` would be rounded to `2018-05-07 21:00:00`. For this reason, it is ideal if your `series.start` and `series.end` are rounded to the same epoch value as you request. Seconds should never be included in your datetime (biomathematical models are not sensitive to this time resolution anyway).
-
-
 
 ```{r}
 # Simulation start date time (i.e., when you want first predictions to begin)
@@ -89,6 +87,27 @@ simulated.dataframe = parse_sleeptimes(
   roundvalue = 5)
 
 print(simulated.dataframe)
+```
+### Bitvector Sequence Format
+
+It is common to represent sleep history information as a bitvector (i.e., a sequence of 1's and 0's). In bitvectors, sleep and wake times are represented by 1's or 0's, with each bit representing an equal time duration (e.g., 1 minute in that status). The bitvector sequence also must be relative to a *start datetime*. This format is commonly outputted from actigraphy devices (a form of wearable sleep tracker) and corresponding sleep detection algorithms (e.g., Cole-Kripke). Other proprietary software packages (e.g., SAFTE-FAST) require imported data to be in bit vector form (though the exact required formats do vary).
+
+`FIPS` expects bitvectors to repesent **sleep as 0** and **wake as 1**. The `parse_sleepwake_sequence` function can transform a bit vector sequence to a compliant `FIPS_df`. Below, an example of this data and steps to transform are provided, however, note that we do not use this dataframe again within this vignette.
+
+```{r}
+# Simulation start date time (i.e., when you want first predictions to begin)
+simulation.start = lubridate::ymd_hms('2018-05-01 10:00:00', tz = "Australia/Perth")
+
+# Example bitvector sequence. This typically would be imported directly via a textfile.
+# Here we generate, though typically this would be returned by a ReadLines/read.delim/read.table
+bv.sleep.sequence = rep(rep(c(1,0), 6), sample(20:40, 12))
+
+bv.sim.dataframe = parse_sleepwake_sequence(
+  seq = bv.sleep.sequence,
+  series.start = simulation.start,
+  epoch = 15)
+
+print(bv.sim.dataframe)
 ```
 
 ## Modelling and the Simulation Dataframe
