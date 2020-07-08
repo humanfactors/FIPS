@@ -21,3 +21,4 @@ The last wake moment is unlikely to also be the end of the series.
 This function fills constructs a tibble with the all times between
 the final wake episode and the end of the series, intervaled by `expand_by` minutes
 }
+\keyword{internal}
