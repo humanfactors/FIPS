@@ -43,9 +43,9 @@
 #'    sleep.id.col = "sleep.id",
 #'    roundvalue = 5)
 #'
-#' @seealso 
+#' @seealso
 #' For binary input parsing see: [parse_sleepwake_sequence]
-#' 
+#'
 #' @return FIPS_df
 #'
 #' @export
@@ -56,9 +56,11 @@ parse_sleeptimes <- function(sleeptimes, series.start, series.end,
                              roundvalue = 5, sleep.start.col, sleep.end.col, sleep.id.col) {
 
   # Assert that series.start <= min(sleep.start.col) & length 1 & is a datetime & same timezones
-  checkmate::assert_posixct(series.start, upper = min(sleeptimes[[sleep.start.col]]), len = 1, .var.name = "series start datetime")
+  checkmate::assert_posixct(series.start, upper = min(sleeptimes[[sleep.start.col]]),
+                            len = 1, .var.name = "series start datetime")
   # Assert that simulation end time >= max(sleep.end.col) & length 1 & is a datetime & same timezones
-  checkmate::assert_posixct(series.end, lower = max(sleeptimes[[sleep.end.col]]), len = 1, .var.name = "series end datetime")
+  checkmate::assert_posixct(series.end, lower = max(sleeptimes[[sleep.end.col]]),
+                            len = 1, .var.name = "series end datetime")
   # Assert all sleep ends are less than simulation end times
   checkmate::assert_posixct(sleeptimes[[sleep.end.col]], upper = series.end, .var.name = "sleep.end datetimes")
   # Assert all sleep start times are less than sleep end times

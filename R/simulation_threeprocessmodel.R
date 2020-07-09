@@ -8,11 +8,11 @@
 TPM_check_pvec <- function(pvec) {
   accepted_names = c("la", "ha", "d", "g", "bl", "Cm", "Ca", "p", "Um", "Ua", "Wc", "Wd", "S0", "KSS_intercept", "KSS_beta")
   diffvals = setdiff(names(pvec), accepted_names)
-  if(length(diffvals) > 0) {
+  if (length(diffvals) > 0) {
     error_msg = sprintf("Three Process Model fit halted!:\n [%s] \n is/are unsupported parameters\n Please remove these parameters before continuing.", diffvals)
     stop(call. = F, error_msg)
   }
-  if(!all(accepted_names %in% names(pvec))) {
+  if (!all(accepted_names %in% names(pvec))) {
     stop(call. = F, "Three Process Model fit halted!:
          You have parameters missing (or renamed) in the supplied pvec.
          Please see help(TPM_make_pvec) for information about the required parameters.")

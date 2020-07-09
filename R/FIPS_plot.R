@@ -72,7 +72,8 @@ FIPS_plot <- function(dats,
   sim_results$eod[sim_results$eod > max(sim_results$sim_hours)] <- NA
 
   plot_out <- ggplot2::ggplot(sim_results, aes(x = sim_hours)) +
-    geom_rect(aes(xmin = sleepstart, xmax = sleepend, ymin = -Inf, ymax = Inf, fill = 'Sleep'), alpha = 0.1, na.rm = T) +
+    geom_rect(aes(xmin = sleepstart, xmax = sleepend,
+                  ymin = -Inf, ymax = Inf, fill = 'Sleep'), alpha = 0.1, na.rm = T) +
     scale_fill_manual('Sleep', name = "", values = 'grey80', guide = guide_legend(override.aes = list(alpha = 1))) +
     geom_vline(aes(xintercept = eod), linetype = 2, na.rm = T) +
     theme_classic() +
