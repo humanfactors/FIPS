@@ -16,6 +16,7 @@ r_packages:
   - tibble
   - testthat
   - roxygen2
+  - covr
 
 after_success:
   - Rscript -e 'covr::codecov()'
