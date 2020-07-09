@@ -117,9 +117,9 @@ and a detailed tutorial in plotting model outputs.
 # FIPS Interface and Data Structures
 
 Conducting a BMM simulation in FIPS requires users to generate a `FIPS_df`, a
-tidy data frame containing a time series (based on sleep history) of all
+tidy data frame containing a time series (based on sleep history data) of all
 variables required to conduct BMM research. FIPS supports two sleep data
-formats, each format associated with a corresponding function that automatically
+formats, each format is associated with a corresponding function that automatically
 performs all required transformations to the `FIPS_df` format:
 
 -   The `parse_sleeptimes` function transforms a data frame containing three
