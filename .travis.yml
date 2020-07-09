@@ -5,7 +5,7 @@ cache: packages
 warnings_are_errors: false
 r: release
 
-r_packages: 
+r_packages:
   - dplyr
   - tidyr
   - ggplot2
@@ -16,6 +16,9 @@ r_packages:
   - tibble
   - testthat
   - roxygen2
+
+after_success:
+  - Rscript -e 'covr::codecov()'
 
 # environment variables set for all builds
 env:
