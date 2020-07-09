@@ -44,6 +44,6 @@ A brief list of coding conventions, which are somewhat atypical:
 - When naming objects, abbreviations and parameter names should use capitals as a first priority (e.g., `TPM_make_pvec` not `tpm_make_pvec`; but `unified_make_pvec` is fine).
 
 Development should be conducted on a separate branch. Tests are run using the `testthat` package automatically with Rstudio default.
-This can be envoked by pressing `ctrl + shift + T` in Windows or Linux. `Roxygen2` is used for all documentation.
+This can be invoked by pressing `ctrl + shift + T` in Windows or Linux. `roxygen2` is used for all documentation.
 
 Thankyou!
