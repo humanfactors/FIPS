@@ -1,4 +1,4 @@
-[![Travis build status](https://travis-ci.com/humanfactors/FIPS.svg?branch=master)](https://travis-ci.com/humanfactors/FIPS)
+[![Travis build status](https://travis-ci.com/humanfactors/FIPS.svg?branch=master)](https://travis-ci.com/humanfactors/FIPS) [![codecov](https://codecov.io/gh/humanfactors/FIPS/branch/master/graph/badge.svg)](https://codecov.io/gh/humanfactors/FIPS)
 
 # Fatigue Impairment Prediction Suite (FIPS)
 
