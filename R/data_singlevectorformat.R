@@ -31,11 +31,18 @@ validate_epoch <- function(e) {
 #' @param seq A sequence of `0` (sleep) and `1` (wake) integers indicating sleep/wake status at that moment.
 #' @param epoch Integer expressing length of each observations in the series (minutes).
 #' @param series.start A POSIXct object indicating the start datetime of the simulation (i.e., pre-first sleep waking duration)
-#'
 #' @md
 #' @return `FIPS_df` formatted dataframe
 #' @export
-#'
+#' 
+#' @examples  
+#' start_date = as.POSIXct("2018-05-01 10:00:00")
+#' bitvector_sequence = rep(rep(c(1,0), 6), sample(20:40, 12))
+#' FIPSdf_from_bitvec = parse_sleepwake_sequence(
+#'  seq = bitvector_sequence,
+#'  series.start = start_date,
+#'  epoch = 15)
+#' 
 parse_sleepwake_sequence <- function(seq, epoch, series.start) {
 
     # Argument validation

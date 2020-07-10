@@ -1,0 +1,31 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+cache: packages
+warnings_are_errors: false
+r: release
+
+r_packages:
+  - dplyr
+  - tidyr
+  - ggplot2
+  - lubridate
+  - checkmate
+  - rlang
+  - magrittr
+  - tibble
+  - testthat
+  - roxygen2
+  - covr
+
+after_success:
+  - Rscript -e 'covr::codecov()'
+
+# environment variables set for all builds
+env:
+  global:
+    - R_BUILD_ARGS="--no-build-vignettes --no-manual"
+    - R_CHECK_ARGS="--no-build-vignettes --no-manual"  ## do not build vignettes or manual
+
+r_build_args: --no-build-vignettes --no-manual
+r_check_args: --no-build-vignettes --no-manual
