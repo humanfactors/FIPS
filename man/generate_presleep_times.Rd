@@ -21,3 +21,4 @@ The first sleep is unlikely to also be the start of the mission simulation
 Thus, this function fills the start of the tibble with the all times between
 The mission start time and the first instance of sleep, intervaled by X minutes
 }
+\keyword{internal}

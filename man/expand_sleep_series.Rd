@@ -17,3 +17,4 @@ Sleeptimedataframe with single columns vector for datetime and wake status
 \description{
 Turns the paired sleeptimes into a long single vectored datetime sequence
 }
+\keyword{internal}

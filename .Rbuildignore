@@ -3,3 +3,6 @@
 ^paper$
 ^\.dir-locals\.el$
 ^\.vscode$
+^\.travis\.yml$
+^ CONTRIBUTING\.md$
+^\.github$

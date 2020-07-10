@@ -21,3 +21,13 @@ It is common to have sleep wake history information in the form of a binary sequ
 This is the format used by SAFTE-FAST and other proprietary software.
 Further, this format is often easily exported by actigraphy measurement software.
 }
+\examples{
+ 
+start_date = as.POSIXct("2018-05-01 10:00:00")
+bitvector_sequence = rep(rep(c(1,0), 6), sample(20:40, 12))
+FIPSdf_from_bitvec = parse_sleepwake_sequence(
+ seq = bitvector_sequence,
+ series.start = start_date,
+ epoch = 15)
+
+}

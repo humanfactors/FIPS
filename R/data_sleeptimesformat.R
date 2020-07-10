@@ -43,9 +43,9 @@
 #'    sleep.id.col = "sleep.id",
 #'    roundvalue = 5)
 #'
-#' @seealso 
+#' @seealso
 #' For binary input parsing see: [parse_sleepwake_sequence]
-#' 
+#'
 #' @return FIPS_df
 #'
 #' @export
@@ -56,9 +56,11 @@ parse_sleeptimes <- function(sleeptimes, series.start, series.end,
                              roundvalue = 5, sleep.start.col, sleep.end.col, sleep.id.col) {
 
   # Assert that series.start <= min(sleep.start.col) & length 1 & is a datetime & same timezones
-  checkmate::assert_posixct(series.start, upper = min(sleeptimes[[sleep.start.col]]), len = 1, .var.name = "series start datetime")
+  checkmate::assert_posixct(series.start, upper = min(sleeptimes[[sleep.start.col]]),
+                            len = 1, .var.name = "series start datetime")
   # Assert that simulation end time >= max(sleep.end.col) & length 1 & is a datetime & same timezones
-  checkmate::assert_posixct(series.end, lower = max(sleeptimes[[sleep.end.col]]), len = 1, .var.name = "series end datetime")
+  checkmate::assert_posixct(series.end, lower = max(sleeptimes[[sleep.end.col]]),
+                            len = 1, .var.name = "series end datetime")
   # Assert all sleep ends are less than simulation end times
   checkmate::assert_posixct(sleeptimes[[sleep.end.col]], upper = series.end, .var.name = "sleep.end datetimes")
   # Assert all sleep start times are less than sleep end times
@@ -126,6 +128,7 @@ sleeptimes_to_FIPSdf = parse_sleeptimes
 #' @param firstsleep first sleep in the sleep dataframe
 #' @param expand_by expand
 #' @return returns expanded tibble containing sleep.id = NA (due to waking) and wake_status = T
+#' @keywords internal
 generate_presleep_times <- function(simulationstart, firstsleep, expand_by = 5) {
     if (simulationstart >= firstsleep)
       stop("[Developer] Simulation Start must before first sleep if using this function")
@@ -148,7 +151,7 @@ generate_presleep_times <- function(simulationstart, firstsleep, expand_by = 5) 
 #' @param expand_by expand value
 #'
 #' @return returns expanded tibble containing sleep.id = NA (due to waking) and wake_status = T
-#'
+#' @keywords internal
 #' @importFrom tibble tibble
 generate_postwake_times <- function(simulationend, lastwake, expand_by = 5) {
   if (simulationend <= lastwake)
@@ -187,6 +190,7 @@ round_times <- function(.data, colname, round_by = 5) {
 #' @param expand_by Amount (in minutes) to expand sleep times by
 #'
 #' @return Sleeptimedataframe with single columns vector for datetime and wake status
+#' @keywords internal
 expand_sleep_series <- function(.data, expand_by = 5) {
 
   emins = paste(expand_by, "mins")
