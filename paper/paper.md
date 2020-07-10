@@ -162,8 +162,7 @@ in the framework.
 
 # Acknowledgments
 
-The Future of Work Institute at Curtin University supported the
-development of this package.
+The development of this package was supported by the Future of Work Institute at Curtin University and the Maritime Division of the Australian Defence Science and Technology Group (DSTG).
 
 # License
 
