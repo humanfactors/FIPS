@@ -63,7 +63,7 @@ performance and fatigue based on sleep history
 [@Akerstedt2008; @peng18_improved; @ramakrishnan16_unified_model; @hursh_fatigue_2004].
 
 ![A parameter sensitivity plot of the Three Process Model. The _x_ axis
-represents a 24 hour day, with the dark gray plot regions indcating sleep and
+represents a 24 hour day, with the dark gray plot regions indicating sleep and
 the light gray indicating wake. The top panel shows the homeostatic process with
 five variations of the $\tau_{d}$ parameter and the centre panel shows the
 circadian process with five variations of the $\varphi_{phase}$ parameter. The
