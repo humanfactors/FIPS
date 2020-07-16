@@ -111,14 +111,18 @@ In addition to the rights stipulated in the GNU Affero GPL-3, we request that al
 Wilson, M. D., Strickland, L. J. G., & Ballard, T. (2020, May 7). FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment. https://doi.org/10.31234/osf.io/43ya9 
  
 ```tex
-@misc{wilson_strickland_ballard_2020,
- title={FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment},
- url={psyarxiv.com/43ya9},
- DOI={10.31234/osf.io/43ya9},
- publisher={PsyArXiv},
- author={Wilson, Michael David and Strickland, Luke J G and Ballard, Timothy},
- year={2020},
- month={May}}
+@article{Wilson2020,
+  doi = {10.21105/joss.02340},
+  url = {https://doi.org/10.21105/joss.02340},
+  year = {2020},
+  publisher = {The Open Journal},
+  volume = {5},
+  number = {51},
+  pages = {2340},
+  author = {Michael David Wilson and Luke Strickland and Timothy Ballard},
+  title = {FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment},
+  journal = {Journal of Open Source Software}
+}
 ```
 
 # Authors
