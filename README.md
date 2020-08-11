@@ -1,4 +1,5 @@
-[![Travis build status](https://travis-ci.com/humanfactors/FIPS.svg?branch=master)](https://travis-ci.com/humanfactors/FIPS) [![codecov](https://codecov.io/gh/humanfactors/FIPS/branch/master/graph/badge.svg)](https://codecov.io/gh/humanfactors/FIPS)
+[![Travis build status](https://travis-ci.com/humanfactors/FIPS.svg?branch=master)](https://travis-ci.com/humanfactors/FIPS)
+[![codecov](https://codecov.io/gh/humanfactors/FIPS/branch/master/graph/badge.svg)](https://codecov.io/gh/humanfactors/FIPS)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.02340/status.svg)](https://doi.org/10.21105/joss.02340)
 
 # Fatigue Impairment Prediction Suite (FIPS)
