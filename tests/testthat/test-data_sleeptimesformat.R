@@ -16,6 +16,9 @@ unit_sleeptimes = tibble::tribble(
 unit_simstart = ymd_hms('2018-05-20 22:00:00', tz = perth)
 unit_simend   = ymd_hms('2018-05-23 10:00:00', tz = perth)
 
+unit_sleeptimes_renamed = unit_sleeptimes %>%
+  dplyr::rename(sleep_id = sleep.id, sleep_start = sleep.start, sleep_end = sleep.end)
+
 test_that(
   "parse_sleeptimes executes and expands out correctly.", {
     unit_parsedtimes = parse_sleeptimes(
@@ -44,6 +47,37 @@ test_that(
     # all switch directions to sleep should be associated with a wake_status of F
     expect_true(all(dplyr::filter(unitpar_switches, wake_status == F)[["switch_direction"]] == "Sleep"))
   })
+
+
+test_that("parse_sleeptimes handles series.start and ends named differently from default", {
+
+  unit_parsedtimes = parse_sleeptimes(
+    sleeptimes = unit_sleeptimes_renamed,
+    series.start = unit_simstart,
+    series.end = unit_simend,
+    sleep.start.col = "sleep_start",
+    sleep.end.col = "sleep_end",
+    sleep.id.col = "sleep_id",
+    roundvalue = 5)
+
+  expect_s3_class(unit_parsedtimes, "FIPS_df")
+
+})
+
+test_that("If column name not found, a useful error message is provided", {
+  expect_error(
+    parse_sleeptimes(
+    sleeptimes = unit_sleeptimes_renamed,
+    series.start = unit_simstart,
+    series.end = unit_simend,
+    sleep.start.col = "sleep_start",
+    sleep.end.col = "sleep_end",
+    sleep.id.col = "sleep_x_id",
+    roundvalue = 5), regexp = "At least one of the column")
+
+})
+
+
 
 
 test_that("parse_sleeptimes handles series.start and ends that are identical to max/min sleeps", {

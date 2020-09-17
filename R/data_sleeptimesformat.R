@@ -55,6 +55,15 @@
 parse_sleeptimes <- function(sleeptimes, series.start, series.end,
                              roundvalue = 5, sleep.start.col, sleep.end.col, sleep.id.col) {
 
+  # Assert all colnames specified are actually in sleeptimes
+  valid_names = checkmate::check_names(
+    names(sleeptimes), permutation.of = c(sleep.id.col, sleep.start.col, sleep.end.col), what = "colnames")
+
+  # Let's give a very useful message for this one.
+  if(valid_names != T) {
+    stop("At least one of the column strings you have specified does not exist in the sleeptimes dataframe. ",
+         valid_names)}
+
   # Assert that series.start <= min(sleep.start.col) & length 1 & is a datetime & same timezones
   checkmate::assert_posixct(series.start, upper = min(sleeptimes[[sleep.start.col]]),
                             len = 1, .var.name = "series start datetime")
@@ -85,8 +94,8 @@ parse_sleeptimes <- function(sleeptimes, series.start, series.end,
     dplyr::mutate(sleep.end = sleep.end - lubridate::minutes(roundvalue))
 
   # Assign minimum sleep start
-  minimum.sleepstart = min(rounded.sleeptimes[[sleep.start.col]])
-  maximum.sleepend = max(rounded.sleeptimes[[sleep.end.col]])
+  minimum.sleepstart = min(rounded.sleeptimes[["sleep.start"]])
+  maximum.sleepend = max(rounded.sleeptimes[["sleep.end"]])
 
   # Now expand out the series of sleep wake times
   processed.sleeptimes <- expand_sleep_series(rounded.sleeptimes, expand_by = roundvalue)
@@ -202,3 +211,4 @@ expand_sleep_series <- function(.data, expand_by = 5) {
     dplyr::ungroup() %>%
     tidyr::complete(datetime = seq(min(datetime), max(datetime), by = emins), fill = list(wake_status = T))
 }
+
