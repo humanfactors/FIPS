@@ -125,9 +125,3 @@ Wilson et al., (2020). FIPS: An R Package for Biomathematical Modelling of Human
   journal = {Journal of Open Source Software}
 }
 ```
-
-# Authors
-
-- Dr. Michael David Wilson (Future of Work Institute ― Curtin University)
-- Dr. Luke Strickland (Future of Work Institute ― Curtin University)
-- Dr. Timothy Ballard (University of Queensland)
