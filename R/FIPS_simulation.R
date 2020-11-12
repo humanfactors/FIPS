@@ -1,13 +1,13 @@
 # Internal function for instantiation of a FIPS_simulation
 # Must be called at the end of a model loop run in a simulation_*.R file
-FIPS_simulation <- function(dat, modeltype, pvec, pred_stat_name, pred_cols, pred_stat_default = NULL, pred_stat_used = NULL) {
+FIPS_simulation <- function(dat, modeltype, pvec, pred_stat_name, pred_cols, pred_stat_default = NULL, pred_stat_custom = NULL) {
   class(dat) <- append("FIPS_simulation", class(dat))
   attr(dat, "simmed") = TRUE
   attr(dat, "modeltype") = modeltype
   attr(dat, "pvec") = pvec
   attr(dat, "pred_stat_default") = pred_stat_default
-  attr(dat, "pred_stat_used") = pred_stat_used
   attr(dat, "pred_stat_name") = pred_stat_name
+  attr(dat, "pred_stat_custom") = pred_stat_custom
   attr(dat, "pred_cols") = pred_cols
   return(dat)
 }
@@ -60,6 +60,20 @@ get_FIPS_pred_stat_name <- function (x) {
   }
   return(mt)
 }
+
+# Alias get_FIPS_pred_stat_name
+get_pred_stat_name <- get_FIPS_pred_stat_name
+
+# internal only
+get_pred_stat_default <- function (x) {
+  if(is_FIPS_simulation(x)) {
+    mt = attr(x, "pred_stat_default", T)
+  } else {
+    stop("Cannot extract extract pred_stat_default from an unsimmed FIPS_df")
+  }
+  return(mt)
+}
+
 
 # internal only
 get_FIPS_pred_cols <- function (x) {
