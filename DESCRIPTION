@@ -28,5 +28,5 @@ Suggests:
     testthat (>= 2.1.0),
     rmarkdown (>= 2.0),
     knitr
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
