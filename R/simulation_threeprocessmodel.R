@@ -291,8 +291,8 @@ TPM_simulate <- function(pvec, dat) {
     dat$c[i] = TPM_Cfun(Cm = pvec["Cm"], Ca = pvec["Ca"], p = pvec["p"],tod = dat$time[i])
     dat$u[i] = TPM_Ufun(Um = pvec["Um"], Ua = pvec["Ua"], p = pvec["p"],tod = dat$time[i])
 
-    dat$alertness[i] = dat$s[i] + dat$c[i] + dat$u[i]
-    dat$KSS[i] = pvec["KSS_intercept"] + pvec["KSS_beta"] * (dat$s[i] + dat$c[i] + dat$u[i])
+    dat$alertness[i] = dat$s[i] + dat$c[i] + dat$u[i] + dat$w[i]
+    dat$KSS[i] = pvec["KSS_intercept"] + pvec["KSS_beta"] * (dat$s[i] + dat$c[i] + dat$u[i] + dat$w[i])
 
   }
 
