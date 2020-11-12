@@ -230,7 +230,12 @@ unified_simulate <- function(pvec, dat) {
 
 
   # Assign as FIPS_simulation given the simulation is now successful
-  dat <- FIPS_simulation(dat, modeltype = "unified", pvec = pvec, pred_stat_name = "fatigue", pred_cols = unified_cols)
+  dat <- FIPS_simulation(dat,
+    modeltype = "unified",
+    pvec = pvec,
+    pred_stat_name = "fatigue",
+    pred_stat_default_formula = "s + pvec[\"kappa\"] * c",
+    pred_cols = unified_cols)
 
 
   return(dat)
