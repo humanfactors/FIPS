@@ -37,7 +37,7 @@ FIPS_plot <- function(dats,
   }
 
   # Figure out appropriate default plot_stat and observed_y based on modeltype
-  if(is.null(plot_stat)) plot_stat <- get_FIPS_pred_stat(dats)
+  if(is.null(plot_stat)) plot_stat <- get_FIPS_pred_stat_name(dats)
   # Make observation variable plot_stat unless otherwise specified
   if(is.null(observed_y)) observed_y <- plot_stat
 
@@ -54,7 +54,7 @@ FIPS_plot <- function(dats,
       observed <- observed %>% dplyr::filter(datetime < to)
   }
 
-  if(!any((get_FIPS_pred_stat(dats) %in% plot_stat)) & fatigue_CIs == TRUE){
+  if(!any((get_FIPS_pred_stat_name(dats) %in% plot_stat)) & fatigue_CIs == TRUE){
     warning("Will not plot fatigue CIs without a predicted model value (alertness/fatigue)")
     fatigue_CIs = FALSE
   }

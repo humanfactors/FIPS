@@ -21,11 +21,11 @@ test_that("Simulate runs and can access attributes post simulation", {
 
   expect_equal(nrow(simrun), 2821)
   expect_equal(get_FIPS_pvec(simrun), unified_make_pvec())
-  expect_true(get_FIPS_pred_stat(simrun) == "fatigue")
+  expect_true(get_FIPS_pred_stat_name(simrun) == "fatigue")
   expect_true(attr(simrun, "simmed"))
 
   expect_equal(get_FIPS_pvec(tpmrun), TPM_make_pvec())
-  expect_true(get_FIPS_pred_stat(tpmrun) == "alertness")
+  expect_true(get_FIPS_pred_stat_name(tpmrun) == "alertness")
   expect_true(attr(tpmrun, "simmed"))
 
 })

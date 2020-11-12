@@ -49,7 +49,7 @@ test_that("Sleep wake vector format can be modelled", {
 
   expect_equal(nrow(tpmrun), 721)
   expect_equal(get_FIPS_pvec(tpmrun), TPM_make_pvec())
-  expect_true(get_FIPS_pred_stat(tpmrun) == "alertness")
+  expect_true(get_FIPS_pred_stat_name(tpmrun) == "alertness")
   expect_true(attr(tpmrun, "simmed"))
 
 

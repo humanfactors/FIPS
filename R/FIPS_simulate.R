@@ -8,11 +8,13 @@
 #' @param FIPS_df A valid FIPS_df series that has not already been modelled
 #' @param modeltype String: either `"TPM"` (Three Process Model) or `"unified"`.
 #' @param pvec Parameter vector (named list), see default pvecs for guidance.
+#' @param metric_formula A string formula to be parsed by dplyr::mutate to
+#' calculate the overall fatigue/alertness score.
 #'
 #' @md
 #' @return a FIPS_simulation object
 #' @export
-FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec) {
+FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec, metric_formula = NULL) {
 
   if(!is_FIPS_df(FIPS_df)) {
     stop("This dataframe isn't of FIPS_df class. Please double check you got this right...")
@@ -28,8 +30,10 @@ FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec) {
 
   if (modeltype == "unified") {
     sim = unified_simulate(dat = FIPS_df, pvec = pvec)
+    # sim = metric_output(sim, metric_formula)
   } else if (modeltype == "TPM") {
     sim = TPM_simulate(dat = FIPS_df, pvec = pvec)
+    # sim = metric_output(sim, metric_formula)
   }
   return(sim)
 }

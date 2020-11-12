@@ -297,7 +297,7 @@ TPM_simulate <- function(pvec, dat) {
   }
 
   # Assign as FIPS_simulation given the simulation is now successful
-  dat <- FIPS_simulation(dat, modeltype = "TPM", pvec = pvec, pred_stat = "alertness", pred_cols = TPM_cols)
+  dat <- FIPS_simulation(dat, modeltype = "TPM", pvec = pvec, pred_stat_name = "alertness", pred_cols = TPM_cols)
 
   return(dat)
 
