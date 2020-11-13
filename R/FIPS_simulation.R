@@ -89,7 +89,7 @@ get_FIPS_pred_cols <- function (x) {
 # of Simulation have been lost, so that generic functions dispatch onwards.
 FIPS_Simulation_lost_attributes <- function(x) {
   inherits(x, "FIPS_simulation") & any(
-    is.null(attr(x, "pred_stat", T)), is.null(attr(x, "modeltype", T)), is.null(attr(x, "pvec", T))
+    is.null(attr(x, "pred_stat_name", T)), is.null(attr(x, "modeltype", T)), is.null(attr(x, "pvec", T))
     )
 }
 

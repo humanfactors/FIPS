@@ -29,10 +29,32 @@ metric_output = function(FIPS_simulation, formula_argument) {
   check_formula_argument(FIPS_simulation, formula_argument)
   pvec = get_FIPS_pvec(FIPS_simulation)
   # Mutate dataframe to include output as formula
-  return(pvec)
   if(is.null(formula_argument)) return(FIPS_simulation)
+
+
 
   FIPS_simulation %>%
     dplyr::mutate(pred_stat = !!rlang::parse_expr(formula_argument))
 }
+
+
+
+
+# replace_string_dsl = function(FIPS_simulation, string) {
+#
+#   ipvec = get_FIPS_pvec(FIPS_simulation)
+#   string = gsub("@Ca", r"{ipvec["Ca"]}", string)
+#   FIPS_simulation %>%
+#     dplyr::mutate(pred_stat = !!rlang::parse_expr(string))
+#
+# }
+#
+#
+# replace_string_dsl(tpmrun, "c * @Ca + @kappa")
+#
+# gsub("@(\\w+)",
+#      "ipvec[\"\\1\"]",
+#      "c * @Ca + (@Kappa)")
+
+
 
