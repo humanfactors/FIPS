@@ -79,6 +79,34 @@ test_that("If column name not found, a useful error message is provided", {
 
 
 
+test_that("If user supplies roundvalue > 1 and not whole number, it is handled.", {
+
+  expect_warning(
+    parse_sleeptimes(
+      sleeptimes = unit_sleeptimes,
+      series.start = unit_simstart,
+      series.end = unit_simend,
+      sleep.start.col = "sleep.start",
+      sleep.end.col = "sleep.end",
+      sleep.id.col = "sleep.id",
+      roundvalue = 6.3), regexp = "roundvalue must be a whole number")
+
+})
+
+
+test_that("If user supplies roundvalue < 1, error handled and thrown.", {
+  expect_error(
+    parse_sleeptimes(
+      sleeptimes = unit_sleeptimes,
+      series.start = unit_simstart,
+      series.end = unit_simend,
+      sleep.start.col = "sleep.start",
+      sleep.end.col = "sleep.end",
+      sleep.id.col = "sleep.id",
+      roundvalue = 0.5), regexp = "roundvalue must be a whole number")
+
+})
+
 
 test_that("parse_sleeptimes handles series.start and ends that are identical to max/min sleeps", {
 

@@ -32,13 +32,13 @@ sleeptimes_to_FIPSdf(
 
 \item{series.end}{A POSIXct object indicating the end datetime of the simulation}
 
-\item{roundvalue}{A value to round the sleep times to in minutes (\verb{default = 5 minutes})}
+\item{roundvalue}{An whole numeric (integer) value to round the sleep times to in minutes (\verb{default = 5 minutes}). Second precision not supported.}
 
-\item{sleep.start.col}{The column in the dataframe containing the sleep start times}
+\item{sleep.start.col}{\link{string} The column in the dataframe containing the sleep start times}
 
-\item{sleep.end.col}{The column name in the dataframe containing the sleep end times}
+\item{sleep.end.col}{\link{string} The column name in the dataframe containing the sleep end times}
 
-\item{sleep.id.col}{A column name specifying the sleep id sequence (i.e., \code{1:n()})}
+\item{sleep.id.col}{\link{string} A column name specifying the sleep id sequence (i.e., \code{1:n()})}
 }
 \value{
 FIPS_df
