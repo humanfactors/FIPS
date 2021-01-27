@@ -15,10 +15,10 @@
 #' @param sleeptimes A dataframe in the sleep time format (see help for more info)
 #' @param series.start A POSIXct object indicating the start datetime of the simulation (i.e., pre-first sleep waking duration)
 #' @param series.end  A POSIXct object indicating the end datetime of the simulation
-#' @param roundvalue A value to round the sleep times to in minutes (`default = 5 minutes`)
-#' @param sleep.start.col The column in the dataframe containing the sleep start times
-#' @param sleep.end.col The column name in the dataframe containing the sleep end times
-#' @param sleep.id.col A column name specifying the sleep id sequence (i.e., `1:n()`)
+#' @param roundvalue An whole numeric (integer) value to round the sleep times to in minutes (`default = 5 minutes`). Second precision not supported.
+#' @param sleep.start.col [string] The column in the dataframe containing the sleep start times
+#' @param sleep.end.col [string] The column name in the dataframe containing the sleep end times
+#' @param sleep.id.col [string] A column name specifying the sleep id sequence (i.e., `1:n()`)
 #'
 #' @examples
 #'
@@ -76,6 +76,16 @@ parse_sleeptimes <- function(sleeptimes, series.start, series.end,
   checkmate::assert_true(all(sleeptimes[[sleep.start.col]] < sleeptimes[[sleep.end.col]]))
   # Assert that ALL sleep end times <= series.end & all are a datetime & same timezone
   checkmate::assert_posixct(sleeptimes[[sleep.start.col]], lower = series.start, .var.name = "sleep.start datetimes")
+
+  # roundvalue checks for whole number, as second precision not supported
+  if(roundvalue < 1) stop("roundvalue must be a whole number > 1. FIPS does not support second-level precision")
+  if(!(roundvalue%%1==0)) {
+    # Print warning
+    warning(paste("roundvalue must be a whole number > 1. FIPS does not support second-level precision.",
+                  "User set round value of", roundvalue, "now set to", round(roundvalue)))
+    # round userinput
+    roundvalue = round(roundvalue)}
+
 
 
   # Now rename the user supplied sleeptime columns to "sleep.id", "sleep.start", and "sleep.end".
