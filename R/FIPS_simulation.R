@@ -78,11 +78,11 @@ FIPS_Simulation_lost_attributes <- function(x) {
 }
 
 
-# print.FIPS_simulation
-#
-# @method print FIPS_simulation
-#
-# @export
+#' print.FIPS_simulation
+#'
+#' @method print FIPS_simulation
+#'
+#' @export
 print.FIPS_simulation <- function(x) {
 
   if(FIPS_Simulation_lost_attributes(x)) {
@@ -107,11 +107,11 @@ print.FIPS_simulation <- function(x) {
 
 
 
-# summary.FIPS_simulation
-#
-# @method summary FIPS_simulation
-#
-# @export
+#' summary.FIPS_simulation
+#'
+#' @method summary FIPS_simulation
+#'
+#' @export
 summary.FIPS_simulation <- function(x) {
 
   if(FIPS_Simulation_lost_attributes(x)) {
