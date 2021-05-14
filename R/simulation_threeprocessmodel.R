@@ -210,11 +210,41 @@ TPM_Ufun <- function(Um, Ua, p, tod) {
   return(U)
 }
 
-TPM_cols = c("s", "c", "w", "u", "alertness", "KSS")
+TPM_cols = c("s", "c", "w", "u", "alertness")
 TPM_append_model_cols <- function(.FIPS_df) {
   .FIPS_df[,TPM_cols] <- NA
   return(.FIPS_df)
 }
+
+#' TPM_add_KSS
+#'
+#' @param .FIPS_sim
+#'
+#' @return
+#' @export
+#'
+#' @examples
+TPM_get_KSS_vector <- function(.FIPS_sim) {
+
+  # Make sure we are operating on a TPM model
+  if (get_FIPS_modeltype(.FIPS_sim) != "TPM") {
+    error_msg = sprintf("This function only works on Three Process Model (TPM) simulations, not on: ", get_FIPS_modeltype(.FIPS_sim))
+    stop(call. = F, error_msg)
+  }
+
+  sim_pvec = get_FIPS_pvec(.FIPS_sim)
+
+  # Check we have the defaults
+  is_pvec_default = all(as.logical(sim_pvec == pvec.threeprocess))
+  if(!is_pvec_default) {
+    error_msg = sprintf("You have modified a TPM argument and cannot use TPM_add_KSS().\n This function can only be used on simulations with the default parameter.")
+    stop(call. = F, error_msg)
+  }
+
+  # If that's all good then let's calculate
+  KSS_vector = sim_pvec["KSS_intercept"] + sim_pvec["KSS_beta"] * with(.FIPS_sim, (s + c + u + w))
+  return(KSS_vector)
+  }
 
 
 #' Simulate: Three Process Model
@@ -258,6 +288,7 @@ TPM_append_model_cols <- function(.FIPS_df) {
 #' @return dataframe with simulated values - where fatigue middle is estimate (if no error terms)
 #' @md
 #' @export
+#'
 TPM_simulate <- function(pvec, dat) {
 
   TPM_check_pvec(pvec)
@@ -292,7 +323,7 @@ TPM_simulate <- function(pvec, dat) {
     dat$u[i] = TPM_Ufun(Um = pvec["Um"], Ua = pvec["Ua"], p = pvec["p"],tod = dat$time[i])
 
     dat$alertness[i] = dat$s[i] + dat$c[i] + dat$u[i] + dat$w[i]
-    dat$KSS[i] = pvec["KSS_intercept"] + pvec["KSS_beta"] * (dat$s[i] + dat$c[i] + dat$u[i] + dat$w[i])
+
 
   }
 
@@ -303,7 +334,6 @@ TPM_simulate <- function(pvec, dat) {
                          pred_stat_name = "alertness",
                          pred_stat_default_formula = "s + c + u + w",
                          pred_cols = TPM_cols)
-
   return(dat)
 
 }

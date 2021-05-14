@@ -8,13 +8,12 @@
 #' @param FIPS_df A valid FIPS_df series that has not already been modelled
 #' @param modeltype String: either `"TPM"` (Three Process Model) or `"unified"`.
 #' @param pvec Parameter vector (named list), see default pvecs for guidance.
-#' @param metric_formula A string formula to be parsed by dplyr::mutate to
-#' calculate the overall fatigue/alertness score.
+#' @param formula A formula to be parsed to calculate the overall fatigue/alertness score (see details).
 #'
 #' @md
 #' @return a FIPS_simulation object
 #' @export
-FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec, metric_formula = NULL) {
+FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec, formula = NULL) {
 
   if(!is_FIPS_df(FIPS_df)) {
     stop("This dataframe isn't of FIPS_df class. Please double check you got this right...")
@@ -31,9 +30,15 @@ FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec, metric_formula = NULL
   if (modeltype == "unified") {
     sim = unified_simulate(dat = FIPS_df, pvec = pvec)
     # sim = metric_output(sim, metric_formula)
+
   } else if (modeltype == "TPM") {
     sim = TPM_simulate(dat = FIPS_df, pvec = pvec)
-    # sim = metric_output(sim, metric_formula)
+     # Add KSS for default TPM simulation
+    is_pvec_default = all(pvec == pvec.threeprocess)
+    # if (is_pvec_default) {
+    #   kss_vector = TPM_get_KSS_vector(sim)
+    #   sim = add_formula_vector(sim, kss_vector, "KSS")
+    # }
   }
   return(sim)
 }
