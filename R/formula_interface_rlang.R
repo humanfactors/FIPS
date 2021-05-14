@@ -6,6 +6,7 @@ validate_formula <- function(formula, FIPS_df) {
 
 get_bmm_model_frame <- function(formula, FIPS_df) {
   validated_labs = attr(terms(formula), "term.labels")
+  validated_labs = validated_labs[!grepl("I\\(", validated_labs)]
   model_frame = data.frame(FIPS_df[,c(validated_labs)])
   return(model_frame)
 }
