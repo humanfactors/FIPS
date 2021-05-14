@@ -332,7 +332,6 @@ TPM_simulate <- function(pvec, dat) {
                          modeltype = "TPM",
                          pvec = pvec,
                          pred_stat_name = "alertness",
-                         pred_stat_default_formula = "s + c + u + w",
                          pred_cols = TPM_cols)
   return(dat)
 

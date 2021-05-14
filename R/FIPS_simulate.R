@@ -33,12 +33,20 @@ FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec, formula = NULL) {
 
   } else if (modeltype == "TPM") {
     sim = TPM_simulate(dat = FIPS_df, pvec = pvec)
+
      # Add KSS for default TPM simulation
     is_pvec_default = all(pvec == pvec.threeprocess)
-    # if (is_pvec_default) {
-    #   kss_vector = TPM_get_KSS_vector(sim)
-    #   sim = add_formula_vector(sim, kss_vector, "KSS")
-    # }
+    if (is_pvec_default) {
+      kss_vector = TPM_get_KSS_vector(sim)
+      sim = add_formula_vector(sim, kss_vector, "KSS")
+    }
+
+    # Do any custom formula stuff
+    if (!is.null(formula)) {
+      sim = process_bmm_formula(formula, sim)
+    }
+
+
   }
   return(sim)
 }

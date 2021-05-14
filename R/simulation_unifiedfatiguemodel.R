@@ -234,7 +234,6 @@ unified_simulate <- function(pvec, dat) {
     modeltype = "unified",
     pvec = pvec,
     pred_stat_name = "fatigue",
-    pred_stat_default_formula = "s + pvec[\"kappa\"] * c",
     pred_cols = unified_cols)
 
 

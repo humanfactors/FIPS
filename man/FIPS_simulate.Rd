@@ -4,7 +4,7 @@
 \alias{FIPS_simulate}
 \title{FIPS Simulation dispatcher}
 \usage{
-FIPS_simulate(FIPS_df, modeltype = NULL, pvec)
+FIPS_simulate(FIPS_df, modeltype = NULL, pvec, formula = NULL)
 }
 \arguments{
 \item{FIPS_df}{A valid FIPS_df series that has not already been modelled}
@@ -12,6 +12,8 @@ FIPS_simulate(FIPS_df, modeltype = NULL, pvec)
 \item{modeltype}{String: either \code{"TPM"} (Three Process Model) or \code{"unified"}.}
 
 \item{pvec}{Parameter vector (named list), see default pvecs for guidance.}
+
+\item{formula}{A formula to be parsed to calculate the overall fatigue/alertness score (see details).}
 }
 \value{
 a FIPS_simulation object
