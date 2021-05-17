@@ -9,7 +9,7 @@ as_FIPS_df.data.frame <- function(df) {
 
 #' The FIPS_df
 #'
-#' All models implemented in FIPS are implemented to be run on a `FIPS_df` onject ---
+#' All models implemented in FIPS are implemented to be run on a `FIPS_df` object ---
 #' a dataframe containing a time series of all variables required to run [FIPS_simulate] to
 #' generate a `FIPS_simulation` object (a subclass of `FIPS_df`).
 #'
