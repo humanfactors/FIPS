@@ -152,7 +152,7 @@ unified_Wfun <- function(taw, wc, wd) {
   return(W)
 }
 
-unified_cols = c("s", "l", "c", "w", "lapses", "fatigue")
+unified_cols = c("s", "l", "c", "w")
 unified_append_model_cols <- function(.FIPS_df) {
   .FIPS_df[,unified_cols] = NA
   return(.FIPS_df)
@@ -168,6 +168,12 @@ unified_simulation_dispatch <- function(dat, pvec, model_formula) {
   # Assign as FIPS_simulation class 
   dat = FIPS_simulation(dat, modeltype = "unified", pvec = pvec, pred_stat = "fatigue", pred_cols = unified_cols)
   # Add any required formula calculations
+    if (is.null(model_formula)) {
+    dat = process_bmm_formula(dat, fatigue ~ s + I(pvec["kappa"]) * c, pvec)  
+  }
+  if (!is.null(model_formula)) {
+    dat = process_bmm_formula(dat, model_formula, pvec)
+  }
   return(dat)
 }
 
@@ -233,8 +239,6 @@ unified_simulate <- function(pvec, dat) {
     }
 
     dat$c[i] = unified_Cfun(dat$time[i], pvec["phi"])
-    dat$lapses[i] = dat$s[i] + pvec["kappa"] * dat$c[i]
-    dat$fatigue[i] = dat$s[i] + pvec["kappa"] * dat$c[i]
   }
 
   return(dat)

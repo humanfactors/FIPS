@@ -261,10 +261,10 @@ TPM_simulation_dispatch <- function(dat, pvec, model_formula) {
   # Add any required formula calculations
   if (is.null(model_formula)) {
     dat = add_formula_vector(.FIPS_sim = dat, pred_vector = TPM_get_KSS_vector(dat), pred_name = "KSS")
-    dat = process_bmm_formula(dat, alertness ~ s + c + u )  
+    dat = process_bmm_formula(dat, alertness ~ s + c + u, pvec)  
   }
   if (!is.null(model_formula)) {
-    dat = process_bmm_formula(dat, model_formula)
+    dat = process_bmm_formula(dat, model_formula, pvec)
   }
   return(dat)
 }

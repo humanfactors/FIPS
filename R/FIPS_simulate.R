@@ -29,10 +29,8 @@ FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec, model_formula = NULL)
 
   if (modeltype == "unified") {
     sim = unified_simulation_dispatch(dat = FIPS_df, pvec = pvec, model_formula = model_formula)
-    # sim = unified_simulate(dat = FIPS_df, pvec = pvec)
   } else if (modeltype == "TPM") {
     sim = TPM_simulation_dispatch(dat = FIPS_df, pvec = pvec, model_formula = model_formula)
-    # sim = TPM_simulate(dat = FIPS_df, pvec = pvec)
   }
   return(sim)
 }

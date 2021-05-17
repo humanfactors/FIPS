@@ -11,7 +11,7 @@ get_bmm_model_frame <- function(.FIPS_sim, model_formula) {
   return(model_frame)
 }
 
-process_bmm_formula <- function(.FIPS_sim, model_formula) {
+process_bmm_formula <- function(.FIPS_sim, model_formula, pvec) {
   validate_formula(.FIPS_sim, model_formula)
   # Get a reduced .FIPS_sim with only required columns
   bmm_model_frame = get_bmm_model_frame(.FIPS_sim, model_formula)

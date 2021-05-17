@@ -15,7 +15,11 @@ test_that("Formulas can be handled", {
   expect_equal(
     tpmrun_custi$param_fat, (tpmrun_custi$s + tpmrun_custi$c * TPM_make_pvec()["KSS_beta"])
   )
+})
 
-
-
+test_that("Formula is working with custom pvec", {
+  # TODO: This test is a bit botched due to caller environments... Maybe a fix one day.
+  my_random_vec = TPM_make_pvec(Um = 5)
+  mysim = FIPS_simulate(simulation_df, "TPM", pvec = my_random_vec, model_formula = alertness ~ c * I(pvec["Um"]))
+  expect_equal(mysim$alertness, mysim$c * 5)
 })
