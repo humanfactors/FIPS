@@ -4,7 +4,7 @@
 
 # Fatigue Impairment Prediction Suite (FIPS)
 
-<img align="right" src="inst/logo/FIPS_logo.png?raw=true" alt="FIPSLOGO" width="200"/> 
+<img align="right" src="https://github.com/humanfactors/FIPS/blob/master/inst/logo/FIPS_logo.png?raw=true" alt="FIPSLOGO" width="200"/> 
 
 FIPS provides researchers and practitioners comprehensive set of functions for applying bio-mathematical models (BMMs) of fatigue. FIPS is a young project under active development and is implemented in the R programming language. 
 
