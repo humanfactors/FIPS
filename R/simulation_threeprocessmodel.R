@@ -219,12 +219,10 @@ TPM_append_model_cols <- function(.FIPS_df) {
 
 #' TPM_add_KSS
 #'
-#' @param .FIPS_sim
+#' Adds the KSS to a TPM FIPS_simulation. Will return error if FIPS_simulation not a TPM.
 #'
-#' @return
-#' @export
+#' @param .FIPS_sim a FIPS_simulation on the TPM
 #'
-#' @examples
 TPM_get_KSS_vector <- function(.FIPS_sim) {
 
   # Make sure we are operating on a TPM model
@@ -248,6 +246,14 @@ TPM_get_KSS_vector <- function(.FIPS_sim) {
   return(KSS_vector)
 }
 
+#' TPM Simulation Dispatcher
+#'
+#' Constructor/dispatcher for TPM model simulations.
+#'
+#' @param dat input dataframe (ensure this is in FIPS format)
+#' @param pvec a vector of default parameters
+#' @param model_formula A formula expression object of desired model caluclation
+#'
 TPM_simulation_dispatch <- function(dat, pvec, model_formula) {
   # check pvec for any problems, and whether parameters are the default
   TPM_check_pvec(pvec)
@@ -256,12 +262,12 @@ TPM_simulation_dispatch <- function(dat, pvec, model_formula) {
   dat = TPM_append_model_cols(dat)
   # Run the unified main simulation loop on dat
   dat = TPM_simulate(pvec, dat)
-  # Assign as FIPS_simulation class 
+  # Assign as FIPS_simulation class
   dat = FIPS_simulation(dat, modeltype = "TPM", pvec = pvec, pred_stat = "alertness", pred_cols = TPM_cols, model_formula = model_formula)
   # Add any required formula calculations
   if (is.null(model_formula)) {
     dat = add_formula_vector(.FIPS_sim = dat, pred_vector = TPM_get_KSS_vector(dat), pred_name = "KSS")
-    dat = process_bmm_formula(dat, alertness ~ s + c + u, pvec)  
+    dat = process_bmm_formula(dat, alertness ~ s + c + u, pvec)
   }
   if (!is.null(model_formula)) {
     dat = process_bmm_formula(dat, model_formula, pvec)

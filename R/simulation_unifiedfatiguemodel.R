@@ -158,6 +158,14 @@ unified_append_model_cols <- function(.FIPS_df) {
   return(.FIPS_df)
 }
 
+
+#' Unified Simulation Dispatcher
+#'
+#' Constructor/dispatcher for Unified model simulations.
+#'
+#' @param dat input dataframe (ensure this is a FIPS_df)
+#' @param pvec a vector of default parameters, see [unified_pvec]
+#' @param model_formula A formula expression object of desire model caluclation
 unified_simulation_dispatch <- function(dat, pvec, model_formula) {
   # check pvec
   unified_check_pvec(pvec)
@@ -165,11 +173,11 @@ unified_simulation_dispatch <- function(dat, pvec, model_formula) {
   dat = unified_append_model_cols(dat)
   # Run the unified main simulation loop on dat
   dat = unified_simulate(pvec, dat)
-  # Assign as FIPS_simulation class 
+  # Assign as FIPS_simulation class
   dat = FIPS_simulation(dat, modeltype = "unified", pvec = pvec, pred_stat = "fatigue", pred_cols = unified_cols)
   # Add any required formula calculations
     if (is.null(model_formula)) {
-    dat = process_bmm_formula(dat, fatigue ~ s + I(pvec["kappa"]) * c, pvec)  
+    dat = process_bmm_formula(dat, fatigue ~ s + I(pvec["kappa"]) * c, pvec)
   }
   if (!is.null(model_formula)) {
     dat = process_bmm_formula(dat, model_formula, pvec)
@@ -202,7 +210,7 @@ unified_simulation_dispatch <- function(dat, pvec, model_formula) {
 #' @return simulated dataset complete
 #' @export
 unified_simulate <- function(pvec, dat) {
-  
+
   # Initialise S and L
   if (dat$wake_status[1]) {
     s_at_wake = pvec["S0"]
@@ -242,5 +250,5 @@ unified_simulate <- function(pvec, dat) {
   }
 
   return(dat)
-  
+
 }
