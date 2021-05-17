@@ -158,6 +158,19 @@ unified_append_model_cols <- function(.FIPS_df) {
   return(.FIPS_df)
 }
 
+unified_simulation_dispatch <- function(dat, pvec, formula) {
+  # check pvec
+  unified_check_pvec(pvec)
+  # Add the unified model columns
+  dat = unified_append_model_cols(dat)
+  # Run the unified main simulation loop on dat
+  dat = unified_simulate(pvec, dat)
+  # Assign as FIPS_simulation class 
+  dat = FIPS_simulation(dat, modeltype = "unified", pvec = pvec, pred_stat = "fatigue", pred_cols = unified_cols)
+  # Add any required formula calculations
+  return(dat)
+}
+
 #' Simulate: Unified Model
 #'
 #' Runs a full simulation of the 'Unified Model'.
@@ -183,11 +196,7 @@ unified_append_model_cols <- function(.FIPS_df) {
 #' @return simulated dataset complete
 #' @export
 unified_simulate <- function(pvec, dat) {
-  # check pvec
-  unified_check_pvec(pvec)
-  # Add the unified model columns
-  dat = unified_append_model_cols(dat)
-
+  
   # Initialise S and L
   if (dat$wake_status[1]) {
     s_at_wake = pvec["S0"]
@@ -228,11 +237,6 @@ unified_simulate <- function(pvec, dat) {
     dat$fatigue[i] = dat$s[i] + pvec["kappa"] * dat$c[i]
   }
 
-
-  # Assign as FIPS_simulation given the simulation is now successful
-  dat <- FIPS_simulation(dat, modeltype = "unified", pvec = pvec, pred_stat = "fatigue", pred_cols = unified_cols)
-
-
   return(dat)
-
+  
 }

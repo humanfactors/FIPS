@@ -216,6 +216,20 @@ TPM_append_model_cols <- function(.FIPS_df) {
   return(.FIPS_df)
 }
 
+TPM_simulation_dispatch <- function(dat, pvec, formula) {
+  # check pvec for any problems, and whether parameters are the default
+  TPM_check_pvec(pvec)
+  is_pvec_default = all(pvec == pvec.threeprocess)
+  # Add the unified model columns
+  dat = TPM_append_model_cols(dat)
+  # Run the unified main simulation loop on dat
+  dat = TPM_simulate(pvec, dat)
+  # Assign as FIPS_simulation class 
+  dat <- FIPS_simulation(dat, modeltype = "TPM", pvec = pvec, pred_stat = "alertness", pred_cols = TPM_cols)
+  # Add any required formula calculations
+  return(dat)
+}
+
 
 #' Simulate: Three Process Model
 #'
@@ -260,9 +274,6 @@ TPM_append_model_cols <- function(.FIPS_df) {
 #' @export
 TPM_simulate <- function(pvec, dat) {
 
-  TPM_check_pvec(pvec)
-  dat = TPM_append_model_cols(dat)
-
   for (i in 1:nrow(dat)) {
 
     # Initialise S for first observation
@@ -297,8 +308,6 @@ TPM_simulate <- function(pvec, dat) {
   }
 
   # Assign as FIPS_simulation given the simulation is now successful
-  dat <- FIPS_simulation(dat, modeltype = "TPM", pvec = pvec, pred_stat = "alertness", pred_cols = TPM_cols)
-
   return(dat)
 
 }
