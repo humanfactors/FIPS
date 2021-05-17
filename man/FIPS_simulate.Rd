@@ -4,7 +4,7 @@
 \alias{FIPS_simulate}
 \title{FIPS Simulation dispatcher}
 \usage{
-FIPS_simulate(FIPS_df, modeltype = NULL, pvec)
+FIPS_simulate(FIPS_df, modeltype = NULL, pvec, model_formula = NULL)
 }
 \arguments{
 \item{FIPS_df}{A valid FIPS_df series that has not already been modelled}
@@ -12,6 +12,8 @@ FIPS_simulate(FIPS_df, modeltype = NULL, pvec)
 \item{modeltype}{String: either \code{"TPM"} (Three Process Model) or \code{"unified"}.}
 
 \item{pvec}{Parameter vector (named list), see default pvecs for guidance.}
+
+\item{model_formula}{An optional formula describing how the time-varying processes predictors should be calculated for the predicted output. See details.}
 }
 \value{
 a FIPS_simulation object
@@ -20,4 +22,18 @@ a FIPS_simulation object
 \code{FIPS_simulate} is used to apply a particular BMM simulation to a \code{FIPS_df}.
 It will dispatch to the selected model simulation type and then return the df with
 the fitted model columns added on as a \code{FIPS_simulation} object.
+}
+\details{
+If the formula argument is omitted, then default prediction values will be returned:
+KSS and alertness for TPM, and fatigue (i.e., lapses) for unified.
+\subsection{Formula Argument}{
+\itemize{
+\item The formula argument takes the form of an R formula expression (e.g., \code{y ~ c + s}).
+\item The term of the left-hand side (e.g., \code{y}) defines the variable name
+\item The term(s) on the right-hand side define how the variable is computed
+\item All variables must be defined in your enviornment or in the FIPS_simulation output (e.g., \verb{s, c, l, w} for "TPM").
+\item Parameter vector and other variable arguments must be placed in \code{I(expression)} format. For example,
+\code{fatigue ~ s + c + I(pvec[["KSS_beta"]])}.
+}
+}
 }

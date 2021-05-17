@@ -152,10 +152,37 @@ unified_Wfun <- function(taw, wc, wd) {
   return(W)
 }
 
-unified_cols = c("s", "l", "c", "w", "lapses", "fatigue")
+unified_cols = c("s", "l", "c", "w")
 unified_append_model_cols <- function(.FIPS_df) {
   .FIPS_df[,unified_cols] = NA
   return(.FIPS_df)
+}
+
+
+#' Unified Simulation Dispatcher
+#'
+#' Constructor/dispatcher for Unified model simulations.
+#'
+#' @param dat input dataframe (ensure this is a FIPS_df)
+#' @param pvec a vector of default parameters, see [unified_pvec]
+#' @param model_formula A formula expression object of desire model caluclation
+unified_simulation_dispatch <- function(dat, pvec, model_formula) {
+  # check pvec
+  unified_check_pvec(pvec)
+  # Add the unified model columns
+  dat = unified_append_model_cols(dat)
+  # Run the unified main simulation loop on dat
+  dat = unified_simulate(pvec, dat)
+  # Assign as FIPS_simulation class
+  dat = FIPS_simulation(dat, modeltype = "unified", pvec = pvec, pred_stat = "fatigue", pred_cols = unified_cols)
+  # Add any required formula calculations
+    if (is.null(model_formula)) {
+    dat = process_bmm_formula(dat, fatigue ~ s + I(pvec["kappa"]) * c, pvec)
+  }
+  if (!is.null(model_formula)) {
+    dat = process_bmm_formula(dat, model_formula, pvec)
+  }
+  return(dat)
 }
 
 #' Simulate: Unified Model
@@ -183,10 +210,6 @@ unified_append_model_cols <- function(.FIPS_df) {
 #' @return simulated dataset complete
 #' @export
 unified_simulate <- function(pvec, dat) {
-  # check pvec
-  unified_check_pvec(pvec)
-  # Add the unified model columns
-  dat = unified_append_model_cols(dat)
 
   # Initialise S and L
   if (dat$wake_status[1]) {
@@ -224,14 +247,7 @@ unified_simulate <- function(pvec, dat) {
     }
 
     dat$c[i] = unified_Cfun(dat$time[i], pvec["phi"])
-    dat$lapses[i] = dat$s[i] + pvec["kappa"] * dat$c[i]
-    dat$fatigue[i] = dat$s[i] + pvec["kappa"] * dat$c[i]
   }
-
-
-  # Assign as FIPS_simulation given the simulation is now successful
-  dat <- FIPS_simulation(dat, modeltype = "unified", pvec = pvec, pred_stat = "fatigue", pred_cols = unified_cols)
-
 
   return(dat)
 

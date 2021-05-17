@@ -1,0 +1,10 @@
+template:
+  params:
+    bootswatch: cosmo
+
+url: https://humanfactors.github.io/FIPS
+
+navbar:
+  type: default
+
+default_assets: false

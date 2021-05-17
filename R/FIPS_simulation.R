@@ -1,12 +1,13 @@
 # Internal function for instantiation of a FIPS_simulation
 # Must be called at the end of a model loop run in a simulation_*.R file
-FIPS_simulation <- function(dat, modeltype, pvec, pred_stat, pred_cols) {
+FIPS_simulation <- function(dat, modeltype, pvec, pred_stat, pred_cols, model_formula = NULL) {
   class(dat) <- append("FIPS_simulation", class(dat))
   attr(dat, "simmed") = TRUE
   attr(dat, "modeltype") = modeltype
   attr(dat, "pvec") = pvec
   attr(dat, "pred_stat") = pred_stat
   attr(dat, "pred_cols") = pred_cols
+  attr(dat, "model_formula") = model_formula
   return(dat)
 }
 

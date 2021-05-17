@@ -210,10 +210,69 @@ TPM_Ufun <- function(Um, Ua, p, tod) {
   return(U)
 }
 
-TPM_cols = c("s", "c", "w", "u", "alertness", "KSS")
+TPM_cols = c("s", "c", "w", "u")
 TPM_append_model_cols <- function(.FIPS_df) {
   .FIPS_df[,TPM_cols] <- NA
   return(.FIPS_df)
+}
+
+
+#' TPM_add_KSS
+#'
+#' Adds the KSS to a TPM FIPS_simulation. Will return error if FIPS_simulation not a TPM.
+#'
+#' @param .FIPS_sim a FIPS_simulation on the TPM
+#'
+TPM_get_KSS_vector <- function(.FIPS_sim) {
+
+  # Make sure we are operating on a TPM model
+  if (get_FIPS_modeltype(.FIPS_sim) != "TPM") {
+    error_msg = sprintf("This function only works on Three Process Model (TPM) simulations, not on: ", get_FIPS_modeltype(.FIPS_sim))
+    stop(call. = F, error_msg)
+  }
+
+  sim_pvec = get_FIPS_pvec(.FIPS_sim)
+
+  # Check we have the defaults
+  is_pvec_default = all(sim_pvec == TPM_default_pvec)
+  if(is_pvec_default == FALSE) {
+    warning_msg = sprintf("You have not provided a formula, but you have modified the TPM parameter vector. \n
+    The KSS will still be calcualted, but should only be used on simulations with the default parameterization.")
+    warning(call. = F, warning_msg)
+  }
+
+  # If that's all good then let's calculate
+  KSS_vector = sim_pvec["KSS_intercept"] + sim_pvec["KSS_beta"] * with(.FIPS_sim, (s + c + u + w))
+  return(KSS_vector)
+}
+
+#' TPM Simulation Dispatcher
+#'
+#' Constructor/dispatcher for TPM model simulations.
+#'
+#' @param dat input dataframe (ensure this is in FIPS format)
+#' @param pvec a vector of default parameters
+#' @param model_formula A formula expression object of desired model caluclation
+#'
+TPM_simulation_dispatch <- function(dat, pvec, model_formula) {
+  # check pvec for any problems, and whether parameters are the default
+  TPM_check_pvec(pvec)
+  is_pvec_default = all(pvec == TPM_default_pvec)
+  # Add the unified model columns
+  dat = TPM_append_model_cols(dat)
+  # Run the unified main simulation loop on dat
+  dat = TPM_simulate(pvec, dat)
+  # Assign as FIPS_simulation class
+  dat = FIPS_simulation(dat, modeltype = "TPM", pvec = pvec, pred_stat = "alertness", pred_cols = TPM_cols, model_formula = model_formula)
+  # Add any required formula calculations
+  if (is.null(model_formula)) {
+    dat = add_formula_vector(.FIPS_sim = dat, pred_vector = TPM_get_KSS_vector(dat), pred_name = "KSS")
+    dat = process_bmm_formula(dat, alertness ~ s + c + u, pvec)
+  }
+  if (!is.null(model_formula)) {
+    dat = process_bmm_formula(dat, model_formula, pvec)
+  }
+  return(dat)
 }
 
 
@@ -260,9 +319,6 @@ TPM_append_model_cols <- function(.FIPS_df) {
 #' @export
 TPM_simulate <- function(pvec, dat) {
 
-  TPM_check_pvec(pvec)
-  dat = TPM_append_model_cols(dat)
-
   for (i in 1:nrow(dat)) {
 
     # Initialise S for first observation
@@ -290,15 +346,9 @@ TPM_simulate <- function(pvec, dat) {
 
     dat$c[i] = TPM_Cfun(Cm = pvec["Cm"], Ca = pvec["Ca"], p = pvec["p"],tod = dat$time[i])
     dat$u[i] = TPM_Ufun(Um = pvec["Um"], Ua = pvec["Ua"], p = pvec["p"],tod = dat$time[i])
-
-    dat$alertness[i] = dat$s[i] + dat$c[i] + dat$u[i] + dat$w[i]
-    dat$KSS[i] = pvec["KSS_intercept"] + pvec["KSS_beta"] * (dat$s[i] + dat$c[i] + dat$u[i] + dat$w[i])
-
   }
 
   # Assign as FIPS_simulation given the simulation is now successful
-  dat <- FIPS_simulation(dat, modeltype = "TPM", pvec = pvec, pred_stat = "alertness", pred_cols = TPM_cols)
-
   return(dat)
 
 }
