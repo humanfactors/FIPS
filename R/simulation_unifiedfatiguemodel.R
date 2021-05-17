@@ -158,7 +158,7 @@ unified_append_model_cols <- function(.FIPS_df) {
   return(.FIPS_df)
 }
 
-unified_simulation_dispatch <- function(dat, pvec, formula) {
+unified_simulation_dispatch <- function(dat, pvec, model_formula) {
   # check pvec
   unified_check_pvec(pvec)
   # Add the unified model columns

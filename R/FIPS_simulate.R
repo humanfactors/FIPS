@@ -8,12 +8,12 @@
 #' @param FIPS_df A valid FIPS_df series that has not already been modelled
 #' @param modeltype String: either `"TPM"` (Three Process Model) or `"unified"`.
 #' @param pvec Parameter vector (named list), see default pvecs for guidance.
-#' @param formula A formula describing how the time-varying processes predictors should be calculated for the predicted output. See details.
+#' @param model_formula A formula describing how the time-varying processes predictors should be calculated for the predicted output. See details.
 #' 
 #' @md
 #' @return a FIPS_simulation object
 #' @export
-FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec, formula = NULL) {
+FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec, model_formula = NULL) {
 
   if(!is_FIPS_df(FIPS_df)) {
     stop("This dataframe isn't of FIPS_df class. Please double check you got this right...")
@@ -28,10 +28,10 @@ FIPS_simulate <- function(FIPS_df, modeltype = NULL, pvec, formula = NULL) {
   modeltype <- match.arg(arg = modeltype, choices = c("TPM", "unified"), several.ok = F)
 
   if (modeltype == "unified") {
-    sim = unified_simulation_dispatch(dat = FIPS_df, pvec = pvec, formula = formula)
+    sim = unified_simulation_dispatch(dat = FIPS_df, pvec = pvec, model_formula = model_formula)
     # sim = unified_simulate(dat = FIPS_df, pvec = pvec)
   } else if (modeltype == "TPM") {
-    sim = TPM_simulation_dispatch(dat = FIPS_df, pvec = pvec, formula = formula)
+    sim = TPM_simulation_dispatch(dat = FIPS_df, pvec = pvec, model_formula = model_formula)
     # sim = TPM_simulate(dat = FIPS_df, pvec = pvec)
   }
   return(sim)

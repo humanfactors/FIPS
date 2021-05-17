@@ -1,26 +1,29 @@
-validate_formula <- function(formula, .FIPS_sim) {
-  # labels = attr(terms(test_formula), "term.labels")
+# TODO: Perform some form of validation on model_formula
+validate_formula <- function(.FIPS_sim, model_formula) {
+  # labels = attr(terms(model_formula), "term.labels")
   NULL
 }
 
-
-get_bmm_model_frame <- function(formula, .FIPS_sim) {
-  validated_labs = attr(terms(formula), "term.labels")
+get_bmm_model_frame <- function(.FIPS_sim, model_formula) {
+  validated_labs = attr(terms(model_formula), "term.labels")
   validated_labs = validated_labs[!grepl("I\\(", validated_labs)]
   model_frame = data.frame(.FIPS_sim[,c(validated_labs)])
   return(model_frame)
 }
 
-process_bmm_formula <- function(formula, .FIPS_sim) {
-  validate_formula(formula, .FIPS_sim)
-  bmm_model_frame = get_bmm_model_frame(formula, .FIPS_sim)
-  pred_var_string = rlang::as_string(rlang::f_lhs(formula))
-  form_out = rlang::f_rhs(formula)
+process_bmm_formula <- function(.FIPS_sim, model_formula) {
+  validate_formula(.FIPS_sim, model_formula)
+  # Get a reduced .FIPS_sim with only required columns
+  bmm_model_frame = get_bmm_model_frame(.FIPS_sim, model_formula)
+  # User specified predictor name
+  pred_var_string = rlang::as_string(rlang::f_lhs(model_formula))
+  form_out = rlang::f_rhs(model_formula)
   pred_out = rlang::eval_tidy(expr(with(bmm_model_frame, !!form_out)))
 
   # Add prediction column and ensure new name is a pred_col
   .FIPS_sim[,rlang::as_string(pred_var_string)] = pred_out
   attr(.FIPS_sim, "pred_cols") = c(attr(.FIPS_sim, "pred_cols"), pred_var_string)
+  .FIPS_sim = set_pred_stat(.FIPS_sim, pred_var_string)
   return(.FIPS_sim)
 }
 
@@ -29,4 +32,9 @@ add_formula_vector <- function(.FIPS_sim, pred_vector, pred_name) {
   .FIPS_sim[,pred_name] = pred_vector
   attr(.FIPS_sim, "pred_cols") = c(attr(.FIPS_sim, "pred_cols"), pred_name)
   return(.FIPS_sim)
+}
+
+set_pred_stat <- function(.FIPS_sim, pred_stat_name) {
+    attr(.FIPS_sim, "pred_stat") = pred_stat_name
+    return(.FIPS_sim)
 }

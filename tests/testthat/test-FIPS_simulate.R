@@ -14,6 +14,13 @@ test_that("Error handling working correctly", {
 
 })
 
+test_that("Warning for custom parameter is TPM is working", {
+
+  expect_warning(FIPS_simulate(simulation_df, "TPM", TPM_make_pvec(Um = 5)),
+                 regexp = "You have not provided a formula")
+
+})
+
 test_that("Simulate runs and can access attributes post simulation", {
 
   simrun = FIPS_simulate(simulation_df, "unified", unified_make_pvec())
