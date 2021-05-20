@@ -34,7 +34,7 @@ my_FIPS_dataframe = FIPS::parse_sleepwake_sequence(
   series.start = as.POSIXct("2020-05-21 08:00:00"))
 ```
 
-**Step 2:** To run a model simulation, you use [`FIPS_simulate`](https://humanfactors.github.io/FIPS/reference/FIPS_simulate.html), which returns a `FIPS_simulation` with all model predictions/forecasts generted in the corresponding columns. Note that the formula argument is optional, and sensible defaults will be used if omitted.
+**Step 2:** To run a model simulation, you use [`FIPS_simulate`](https://humanfactors.github.io/FIPS/reference/FIPS_simulate.html), which returns a `FIPS_simulation` with all model predictions/forecasts generated in the corresponding columns. Note that the formula argument is optional, and sensible defaults will be used if omitted.
 
 ```r
 # Run a simulation with the three process model
