@@ -6,101 +6,116 @@
 
 <img align="right" src="https://github.com/humanfactors/FIPS/blob/master/inst/logo/FIPS_logo.png?raw=true" alt="FIPSLOGO" width="200"/> 
 
-FIPS provides researchers and practitioners comprehensive set of functions for applying bio-mathematical models (BMMs) of fatigue. FIPS is a young project under active development and is implemented in the R programming language. 
+> If you are measure sleep behaviour or want to predict fatigue, this package probably can help.
 
-> If you are tracking people's sleep history (e.g.,  conducting an experience sampling study) or are interested in fatigue prediction, this package is likely to be helpful to you.
+FIPS is an R package that provides researchers and practitioners with a comprehensive set of functions for applying and simulating from bio-mathematical models (BMMs) of fatigue.
 
-FIPS includes a set of well documented functions for transforming sleep and actigraphy data to the data frame structure (called a `FIPS_df`) required for executing BMM simulations. Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the Unified Model and Three Process Model. All models are extendable and include customisable parameters. 
-
-## What are BMMs?
-
-BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. There are several different BMM implementations, but most have their roots in Borbély's (1982) two process model which stipulates that sleepiness/performance impairment functions in response to two processes: a circadian process and a homeostatic process. BMMs enable hypothesis testing of the latent factors underlying the relationships between sleep, fatigue, and human performance. For example, they enable researchers to estimate the relative contributions of homeostatic processes on fatigue, relative to endogenous circadian processes. These models are also frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs. 
-
-## What is FIPS?
-
-FIPS is an R package which allows users to conduct bio-mathematical modelling. FIPS makes it easy to conduct simulations from BMMs. The FIPS data structures also make parameter estimation more reproducible and standardised. All features of FIPS are based in `S3` classes, making extensions straightforward.
+FIPS includes a set of functions for transforming sleep and actigraphy data to the data frame structure required for executing BMM simulations(called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html)). Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the [Unified Model](https://www.sciencedirect.com/science/article/pii/S0022519313001811) and [Three Process Model](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0108679). All models are extendable and include customisable parameters. The core features of FIPS leverage R's flexible `S3` class system, making extensions straightforward.
 
 ## Installation
-To install the latest development version of FIPS:
+We have no plans for a CRAN submission. To install the latest version of FIPS:
 
 ```r
 # install.packages('remotes') # if remotes not installed
 remotes::install_github("humanfactors/FIPS")
 ```
-We highly recommended building the vignettes (with `build_vignettes = TRUE`; though note this requires additional dependencies) as both vignettes offer comprehensive walkthroughs of the core features of the package .
 
-## Simple Use Case
+# Core Features Example
 
-Full walkthroughs for using FIPS can be found in the vignette `vignette("FIPS-simulation-walkthrough","FIPS")`, with further information about plotting in `vignette("plotting","FIPS")`. These files can also be directly accessed from the source Rmarkdown files under `./vignettes`.
+Detailed information regarding the FIPS data formats can be found in the ["FIPS Simulation Walkthrough Vignette"](https://humanfactors.github.io/FIPS/articles/FIPS-simulation-walkthrough.html).
 
-All FIPS simulations require a `FIPS_df` object (see, `?FIPS::FIPS_df`), which is a form of data frame. There are two methods for generating a `FIPS_df` from existing data:
 
-- `parse_sleepwake_sequence` can be used to convert a sequence of sleep wake statuses (e.g., binary sequence with equidistance temporal spacing. This is the format used by other proprietary BMM software as well as several actigraphy-based sleep detection algorithms. 
-- `parse_sleeptimes` can be used to convert a data frame of sleep and wake times (and a sleep identifier) to a `FIPS_df` object.
-- Note that advanced users should be able to create a data frame compliant with the *FIPS data format*. See `help("FIPS_df")`. 
-
-For this example, we will run through a `parse_sleeptimes` example. You must start with a data frame in the *Sleep Data Format*, which is shown below. Importantly, the datetimes in the columns must be POSIXct datetime objects. We suggest leveraging lubridate for a simple datetime interface. Ideally, you should use these column names and format to avoid conflicts with the generated column names. 
-
-**The Sleep Data Format** looks as follows:
-
-|sleep.start         |sleep.end           | sleep.id|
-|:-------------------|:-------------------|--------:|
-|2018-05-11 07:07:00 |2018-05-11 12:55:00 |        1|
-|2018-05-12 06:14:00 |2018-05-12 12:50:00 |        2|
-|2018-05-14 01:55:00 |2018-05-14 06:29:00 |        3|
-|2018-05-14 13:30:00 |2018-05-14 14:58:00 |        4|
-
-For testing purposes, the following snippet shows how to generate a FIPS compliant sleep data frame (as shown above).
+**Step 1:** Prior to simulation, FIPS requires sleep history data to be in a special format, called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html) which contains all the information required for modelling (e.g., time awake, time asleep). This can be created with [`parse_sleepwake_sequence`](https://humanfactors.github.io/FIPS/reference/parse_sleepwake_sequence.html) or [`parse_sleeptimes](https://humanfactors.github.io/FIPS/reference/parse_sleeptimes.html).
 
 ```r
-example.sleeptimes <- tibble::tibble(
-  sleep.start = seq(
-    from = lubridate::ymd_hms('2018-05-01 23:00:00', tz = "Australia/Perth"), 
-    to = lubridate::ymd_hms('2018-05-07 17:00:00', tz = "Australia/Perth"),
-    by = '24 hours'),
-  sleep.end = sleep.start + lubridate::dhours(7.5),
-  sleep.id = rank(sleep.start))
+my_FIPS_dataframe = FIPS::parse_sleepwake_sequence(
+  seq = unit_sequence,  # A binary (1,0) vector 
+  epoch = 5,            # Epoch in minutes of vector
+  series.start = as.POSIXct("2020-05-21 08:00:00"))
 ```
 
-Now that you have the correct sleep times input structure, you can generate the `FIPS_df` from the sleep data format via the `parse_sleeptimes` function.
-
-```r
-# Simulation start date time (i.e., when you want first predictions to start)
-simulation.start = lubridate::ymd_hms('2018-05-01 07:00:00', tz = "Australia/Perth")
-# Simulation end date time (i.e., when you want predictions to end)
-simulation.end = lubridate::ymd_hms('2018-05-07 21:00:00', tz = "Australia/Perth")
-# The Continuous FIPS_df dataframe format
-# This creates the format ready for simulation
-simulated.dataframe = parse_sleeptimes(
-  sleeptimes = example.sleeptimes,
-  series.start = simulation.start,
-  series.end = simulation.end,
-  sleep.start.col = "sleep.start",
-  sleep.end.col = "sleep.end",
-  sleep.id.col = "sleep.id",
-  roundvalue = 5)
-```
-The resulting dataframe output (of class `FIPS_df`) can then be sent the simulation dispatch function `FIPS_simulate()`. The simulation functions require a parameter vector/list (pvec). Please see help for `TPM_make_pvec()` or `unified_make_pvec()` for more information on generating these vectors.
-
-In the example below, we will run a Three Process Model simulation over the `FIPS_df` series we just created. To do this, we will use the `FIPS_simulation` function, which takes in three arguments: a `FIPS_df` object, a specification of a `modeltype` (see help for model types currently implemented), and a `pvec` which is a vector of parameters for the model.
-
-Calling `FIPS_simulate()` will produce a `FIPS_df` with model predictions and predicted model process values (e.g., `s`, `c`). The returned `FIPS_df` will also now inherit the `FIPS_simulation` class.  A `FIPS_simulation` object has attributes containing the parameter vector, the `modeltype` string, and the `pvec` used, and several other values used internally. A custom print function of the object will reveal all this information. Note that this print function does mask some of the columns for ease of reading.
+**Step 2:** To run a model simulation, you use [`FIPS_simulate`](https://humanfactors.github.io/FIPS/reference/FIPS_simulate.html), which returns a `FIPS_simulation` with all model predictions/forecasts generted in the corresponding columns. Note that the formula argument is optional, and sensible defaults will be used if omitted.
 
 ```r
 # Run a simulation with the three process model
-TPM.simulation.results = FIPS_simulate(
-  FIPS_df = simulated.dataframe, # The FIPS_df
-  modeltype = "TPM",             # three process model
-  pvec = TPM_make_pvec())       # parameter vector with defaults
+TPM.simulation.results = FIPS::FIPS_simulate(
+  FIPS_df = my_FIPS_dataframe,   # A FIPS_df
+  modeltype = "TPM",             # Three Process Model
+  pvec = TPM_make_pvec()         # Default parameter vector
+  # formula = alertness ~ s + c + u + w  # An optional formula for output
+)
+
+# Run a simulation with the unified model
+unified.simulation.results = FIPS::FIPS_simulate(
+FIPS_df = my_FIPS_dataframe,   # A FIPS_df
+modeltype = "unified",         # Unified model
+pvec = unified_make_pvec()     # Default parameter vector
+)  
 ```
 
-You now can access printing, summary and plot methods for the FIPS_simulation object. Note that further transformations to the object in dplyr and similar Tidyverse packages will remove attributes.
+```
+$ print(TPM.simulation.results)
+> ---------
+> Model Type: TPM 
+> Epoch Value: 5 minutes 
+> Simulation duration: 60 hours 
+> Time points: 721 
+> Parameters used (pvec input): ...[Suppressed for README]...
+> For descriptions of these parameters, inspect:  help(FIPS::TPM_make_pvec) 
+> ---------
+> # A tibble: 721 x 10
+>    datetime             time wake_status sim_hours     s     c     w        u   KSS alertness
+>    <dttm>              <dbl> <lgl>           <dbl> <dbl> <dbl> <dbl>    <dbl> <dbl>     <dbl>
+>  1 2020-05-21 08:00:00  8    TRUE           0       7.96 -1.67 -5.72 -0.00274 10.3       6.28
+>  2 2020-05-21 08:05:00  8.08 TRUE           0.0833  7.94 -1.63 -5.04 -0.00549  9.84      6.31
+>  3 2020-05-21 08:10:00  8.17 TRUE           0.167   7.93 -1.59 -4.45 -0.00919  9.47      6.33
+>  4 2020-05-21 08:15:00  8.25 TRUE           0.25    7.91 -1.55 -3.92 -0.0138   9.14      6.35
+>  5 2020-05-21 08:20:00  8.33 TRUE           0.333   7.89 -1.50 -3.46 -0.0194   8.85      6.37
+>  6 2020-05-21 08:25:00  8.42 TRUE           0.417   7.88 -1.46 -3.05 -0.0258   8.59      6.39
+>  7 2020-05-21 08:30:00  8.5  TRUE           0.5     7.86 -1.42 -2.69 -0.0332   8.36      6.41
+>  8 2020-05-21 08:35:00  8.58 TRUE           0.583   7.85 -1.37 -2.37 -0.0415   8.16      6.43
+>  9 2020-05-21 08:40:00  8.67 TRUE           0.667   7.83 -1.32 -2.09 -0.0506   7.98      6.46
+> 10 2020-05-21 08:45:00  8.75 TRUE           0.75    7.81 -1.28 -1.84 -0.0606   7.82      6.48
+> # ... with 711 more rows
+```
+
+```
+$ print(unified.simulation.results)
+> ---------
+> Model Type: unified 
+> Epoch Value: 5 minutes 
+> Simulation duration: 60 hours 
+> Time points: 721 
+> Parameters used (pvec input): ...[Suppressed for README]...
+> For descriptions of these parameters, inspect:  help(FIPS::unified_make_pvec) 
+> ---------
+> # A tibble: 721 x 9
+>    datetime             time wake_status sim_hours      s      l     c     w fatigue
+>    <dttm>              <dbl> <lgl>           <dbl>  <dbl>  <dbl> <dbl> <dbl>   <dbl>
+>  1 2020-05-21 08:00:00  8    TRUE           0      0      0      0.335 1.14     1.38
+>  2 2020-05-21 08:05:00  8.08 TRUE           0.0833 0.0502 0.0206 0.320 1.10     1.37
+>  3 2020-05-21 08:10:00  8.17 TRUE           0.167  0.100  0.0412 0.305 1.06     1.36
+>  4 2020-05-21 08:15:00  8.25 TRUE           0.25   0.150  0.0618 0.291 1.02     1.35
+>  5 2020-05-21 08:20:00  8.33 TRUE           0.333  0.200  0.0824 0.276 0.978    1.34
+>  6 2020-05-21 08:25:00  8.42 TRUE           0.417  0.250  0.103  0.261 0.941    1.33
+>  7 2020-05-21 08:30:00  8.5  TRUE           0.5    0.300  0.123  0.247 0.906    1.32
+>  8 2020-05-21 08:35:00  8.58 TRUE           0.583  0.349  0.144  0.232 0.872    1.31
+>  9 2020-05-21 08:40:00  8.67 TRUE           0.667  0.399  0.164  0.218 0.839    1.30
+> 10 2020-05-21 08:45:00  8.75 TRUE           0.75   0.448  0.185  0.204 0.807    1.29
+> # ... with 711 more rows
+```
+
+**Step 3:** You now can access printing, summary and plot methods for the FIPS_simulation object. A [detailed tutorial of the plotting functionality](https://humanfactors.github.io/FIPS/articles/plotting.html) for FIPS is provided in the vignettes.
 
 ```r
 plot(TPM.simulation.results)
 summary(TPM.simulation.results)
 print(TPM.simulation.results)
 ```
+
+## What are BMMs?
+
+BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. There are several different BMM implementations, but most have their roots in Borbély's (1982) two process model which stipulates that sleepiness/performance impairment functions in response to two processes: a circadian process and a homeostatic process. BMMs enable hypothesis testing of the latent factors underlying the relationships between sleep, fatigue, and human performance. For example, they enable researchers to estimate the relative contributions of homeostatic processes on fatigue, relative to endogenous circadian processes. These models are also frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs. 
 
 # Contributing and Support
 

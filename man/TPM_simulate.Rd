@@ -19,8 +19,7 @@ Simulates three process model over specified period.
 Default parameters (la through S0) are constants used in previous applications of the model.
 }
 \details{
-Access the modelled tibble directly via \code{simulation.object$FIPS_df}. This also enables you to choose
-which parameters you would like in your final model.
+Access the modelled tibble directly by calling the object.
 }
 \section{Parameters}{
 
