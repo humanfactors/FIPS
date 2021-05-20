@@ -8,21 +8,21 @@
 
 > If you are measure sleep behaviour or want to predict fatigue, this package probably can help.
 
-FIPS provides researchers and practitioners comprehensive set of functions for applying bio-mathematical models (BMMs) of fatigue. FIPS is a young project under active development and is implemented in the R programming language. 
+FIPS is an R package that provides researchers and practitioners with a comprehensive set of functions for applying and simulating from bio-mathematical models (BMMs) of fatigue.
 
-FIPS includes a set of well documented functions for transforming sleep and actigraphy data to the data frame structure (called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html)) required for executing BMM simulations. Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the Unified Model and Three Process Model. All models are extendable and include customisable parameters. The FIPS data structures also make parameter estimation more reproducible and standardised. All features of FIPS are based in `S3` classes, making extensions straightforward.
+FIPS includes a set of functions for transforming sleep and actigraphy data to the data frame structure required for executing BMM simulations(called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html)). Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the [Unified Model](https://www.sciencedirect.com/science/article/pii/S0022519313001811) and [Three Process Model](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0108679). All models are extendable and include customisable parameters. The core features of FIPS leverage R's flexible `S3` class system, making extensions straightforward.
 
 ## Installation
-To install the latest version of FIPS:
+We have no plans for a CRAN submission. To install the latest version of FIPS:
 
 ```r
 # install.packages('remotes') # if remotes not installed
 remotes::install_github("humanfactors/FIPS")
 ```
 
-# Example Use
+# Core Features Example
 
-Detailed information regarding the FIPS data formats in the ["FIPS Simulation Walkthrough Vignette"](https://humanfactors.github.io/FIPS/articles/FIPS-simulation-walkthrough.html).
+Detailed information regarding the FIPS data formats can be found in the ["FIPS Simulation Walkthrough Vignette"](https://humanfactors.github.io/FIPS/articles/FIPS-simulation-walkthrough.html).
 
 
 **Step 1:** Prior to simulation, FIPS requires sleep history data to be in a special format, called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html) which contains all the information required for modelling (e.g., time awake, time asleep). This can be created with [`parse_sleepwake_sequence`](https://humanfactors.github.io/FIPS/reference/parse_sleepwake_sequence.html) or [`parse_sleeptimes](https://humanfactors.github.io/FIPS/reference/parse_sleeptimes.html).
@@ -42,27 +42,76 @@ TPM.simulation.results = FIPS::FIPS_simulate(
   FIPS_df = my_FIPS_dataframe,   # A FIPS_df
   modeltype = "TPM",             # Three Process Model
   pvec = TPM_make_pvec()         # Default parameter vector
-  formula = alertness ~ s + c + u + w) # A formula for output
----------
-> Model Type: TPM 
-> Epoch Value: 5 minutes 
-> Simulation duration: 0.4166667 hours 
-> Time points: 6 
-> For descriptions of these parameters, inspect: help(FIPS::TPM_make_pvec) 
-> ---------
-> # A tibble: 6 x 10
->   datetime             time wake_status sim_hours     s     c     w      u   KSS alertness
->   <dttm>              <dbl> <lgl>           <dbl> <dbl> <dbl> <dbl>  <dbl> <dbl>     <dbl>
-> 1 2018-05-02 21:55:00  21.9 TRUE           0       7.96 0.573 -5.72 -0.277  9.08      8.26
-> 2 2018-05-02 22:00:00  22   TRUE           0.0833  7.94 0.520 -5.04 -0.297  8.73      8.17
-> 3 2018-05-02 22:05:00  22.1 TRUE           0.167   7.93 0.466 -4.45 -0.317  8.42      8.08
-> 4 2018-05-02 22:10:00  22.2 TRUE           0.25    7.91 0.413 -3.92 -0.337  8.16      7.99
-> 5 2018-05-02 22:15:00  22.2 TRUE           0.333   7.89 0.359 -3.46 -0.358  7.94      7.90
-> 6 2018-05-02 22:20:00  22.3 TRUE           0.417   7.88 0.305 -3.05 -0.379  7.75      7.80
+  # formula = alertness ~ s + c + u + w  # An optional formula for output
+)
+
+# Run a simulation with the unified model
+unified.simulation.results = FIPS::FIPS_simulate(
+FIPS_df = my_FIPS_dataframe,   # A FIPS_df
+modeltype = "unified",         # Unified model
+pvec = unified_make_pvec()     # Default parameter vector
+)  
 ```
 
+```
+$ print(TPM.simulation.results)
+> ---------
+> Model Type: TPM 
+> Epoch Value: 5 minutes 
+> Simulation duration: 60 hours 
+> Time points: 721 
+> Parameters used (pvec input): ...[Suppressed for README]...
+> For descriptions of these parameters, inspect:  help(FIPS::TPM_make_pvec) 
+> ---------
+> # A tibble: 721 x 10
+>    datetime             time wake_status sim_hours     s     c     w        u   KSS alertness
+>    <dttm>              <dbl> <lgl>           <dbl> <dbl> <dbl> <dbl>    <dbl> <dbl>     <dbl>
+>  1 2020-05-21 08:00:00  8    TRUE           0       7.96 -1.67 -5.72 -0.00274 10.3       6.28
+>  2 2020-05-21 08:05:00  8.08 TRUE           0.0833  7.94 -1.63 -5.04 -0.00549  9.84      6.31
+>  3 2020-05-21 08:10:00  8.17 TRUE           0.167   7.93 -1.59 -4.45 -0.00919  9.47      6.33
+>  4 2020-05-21 08:15:00  8.25 TRUE           0.25    7.91 -1.55 -3.92 -0.0138   9.14      6.35
+>  5 2020-05-21 08:20:00  8.33 TRUE           0.333   7.89 -1.50 -3.46 -0.0194   8.85      6.37
+>  6 2020-05-21 08:25:00  8.42 TRUE           0.417   7.88 -1.46 -3.05 -0.0258   8.59      6.39
+>  7 2020-05-21 08:30:00  8.5  TRUE           0.5     7.86 -1.42 -2.69 -0.0332   8.36      6.41
+>  8 2020-05-21 08:35:00  8.58 TRUE           0.583   7.85 -1.37 -2.37 -0.0415   8.16      6.43
+>  9 2020-05-21 08:40:00  8.67 TRUE           0.667   7.83 -1.32 -2.09 -0.0506   7.98      6.46
+> 10 2020-05-21 08:45:00  8.75 TRUE           0.75    7.81 -1.28 -1.84 -0.0606   7.82      6.48
+> # ... with 711 more rows
+```
 
+```
+$ print(unified.simulation.results)
+> ---------
+> Model Type: unified 
+> Epoch Value: 5 minutes 
+> Simulation duration: 60 hours 
+> Time points: 721 
+> Parameters used (pvec input): ...[Suppressed for README]...
+> For descriptions of these parameters, inspect:  help(FIPS::unified_make_pvec) 
+> ---------
+> # A tibble: 721 x 9
+>    datetime             time wake_status sim_hours      s      l     c     w fatigue
+>    <dttm>              <dbl> <lgl>           <dbl>  <dbl>  <dbl> <dbl> <dbl>   <dbl>
+>  1 2020-05-21 08:00:00  8    TRUE           0      0      0      0.335 1.14     1.38
+>  2 2020-05-21 08:05:00  8.08 TRUE           0.0833 0.0502 0.0206 0.320 1.10     1.37
+>  3 2020-05-21 08:10:00  8.17 TRUE           0.167  0.100  0.0412 0.305 1.06     1.36
+>  4 2020-05-21 08:15:00  8.25 TRUE           0.25   0.150  0.0618 0.291 1.02     1.35
+>  5 2020-05-21 08:20:00  8.33 TRUE           0.333  0.200  0.0824 0.276 0.978    1.34
+>  6 2020-05-21 08:25:00  8.42 TRUE           0.417  0.250  0.103  0.261 0.941    1.33
+>  7 2020-05-21 08:30:00  8.5  TRUE           0.5    0.300  0.123  0.247 0.906    1.32
+>  8 2020-05-21 08:35:00  8.58 TRUE           0.583  0.349  0.144  0.232 0.872    1.31
+>  9 2020-05-21 08:40:00  8.67 TRUE           0.667  0.399  0.164  0.218 0.839    1.30
+> 10 2020-05-21 08:45:00  8.75 TRUE           0.75   0.448  0.185  0.204 0.807    1.29
+> # ... with 711 more rows
+```
 
+**Step 3:** You now can access printing, summary and plot methods for the FIPS_simulation object. A [detailed tutorial of the plotting functionality](https://humanfactors.github.io/FIPS/articles/plotting.html) for FIPS is provided in the vignettes.
+
+```r
+plot(TPM.simulation.results)
+summary(TPM.simulation.results)
+print(TPM.simulation.results)
+```
 
 ## What are BMMs?
 

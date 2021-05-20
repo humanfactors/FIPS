@@ -10,7 +10,7 @@ FIPS_df(.data)
 \item{.data}{A dataframe that matches the required FIPS_df structure}
 }
 \description{
-All models implemented in FIPS are implemented to be run on a \code{FIPS_df} onject ---
+All models implemented in FIPS are implemented to be run on a \code{FIPS_df} object ---
 a dataframe containing a time series of all variables required to run \link{FIPS_simulate} to
 generate a \code{FIPS_simulation} object (a subclass of \code{FIPS_df}).
 }
