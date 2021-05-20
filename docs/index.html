@@ -97,13 +97,13 @@
 <h1 class="hasAnchor">
 <a href="#core-features-example" class="anchor" aria-hidden="true"></a>Core Features Example</h1>
 <p>Detailed information regarding the FIPS data formats can be found in the <a href="https://humanfactors.github.io/FIPS/articles/FIPS-simulation-walkthrough.html">“FIPS Simulation Walkthrough Vignette”</a>.</p>
-<p><strong>Step 1:</strong> Prior to simulation, FIPS requires sleep history data to be in a special format, called a <a href="https://humanfactors.github.io/FIPS/reference/FIPS_df.html"><code>FIPS_df</code></a> which contains all the information required for modelling (e.g., time awake, time asleep). This can be created with <a href="https://humanfactors.github.io/FIPS/reference/parse_sleepwake_sequence.html"><code>parse_sleepwake_sequence</code></a> or <a href="https://humanfactors.github.io/FIPS/reference/parse_sleeptimes.html">`parse_sleeptimes</a>.</p>
+<p><strong>Step 1:</strong> Prior to simulation, FIPS requires sleep history data to be in a special format, called a <a href="https://humanfactors.github.io/FIPS/reference/FIPS_df.html"><code>FIPS_df</code></a> which contains all the information required for modelling (e.g., time awake, time asleep). This can be created with <a href="https://humanfactors.github.io/FIPS/reference/parse_sleepwake_sequence.html"><code>parse_sleepwake_sequence</code></a> or <a href="https://humanfactors.github.io/FIPS/reference/parse_sleeptimes.html"><code>parse_sleeptimes</code></a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_FIPS_dataframe</span> <span class="op">=</span> <span class="fu">FIPS</span><span class="fu">::</span><span class="fu"><a href="reference/parse_sleepwake_sequence.html">parse_sleepwake_sequence</a></span><span class="op">(</span>
   seq <span class="op">=</span> <span class="va">unit_sequence</span>,  <span class="co"># A binary (1,0) vector </span>
   epoch <span class="op">=</span> <span class="fl">5</span>,            <span class="co"># Epoch in minutes of vector</span>
   series.start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="st">"2020-05-21 08:00:00"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p><strong>Step 2:</strong> To run a model simulation, you use <a href="https://humanfactors.github.io/FIPS/reference/FIPS_simulate.html"><code>FIPS_simulate</code></a>, which returns a <code>FIPS_simulation</code> with all model predictions/forecasts generted in the corresponding columns. Note that the formula argument is optional, and sensible defaults will be used if omitted.</p>
+<p><strong>Step 2:</strong> To run a model simulation, you use <a href="https://humanfactors.github.io/FIPS/reference/FIPS_simulate.html"><code>FIPS_simulate</code></a>, which returns a <code>FIPS_simulation</code> with all model predictions/forecasts generated in the corresponding columns. Note that the formula argument is optional, and sensible defaults will be used if omitted.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Run a simulation with the three process model</span>
 <span class="va">TPM.simulation.results</span> <span class="op">=</span> <span class="fu">FIPS</span><span class="fu">::</span><span class="fu"><a href="reference/FIPS_simulate.html">FIPS_simulate</a></span><span class="op">(</span>
@@ -174,6 +174,46 @@ pvec <span class="op">=</span> <span class="fu"><a href="reference/unified_make_
 <h2 class="hasAnchor">
 <a href="#what-are-bmms" class="anchor" aria-hidden="true"></a>What are BMMs?</h2>
 <p>BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. There are several different BMM implementations, but most have their roots in Borbély’s (1982) two process model which stipulates that sleepiness/performance impairment functions in response to two processes: a circadian process and a homeostatic process. BMMs enable hypothesis testing of the latent factors underlying the relationships between sleep, fatigue, and human performance. For example, they enable researchers to estimate the relative contributions of homeostatic processes on fatigue, relative to endogenous circadian processes. These models are also frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs.</p>
+</div>
+<div id="critical-model-information" class="section level2">
+<h2 class="hasAnchor">
+<a href="#critical-model-information" class="anchor" aria-hidden="true"></a>Critical Model Information</h2>
+<p>Critical functions, arguments and outputs for each model are summarised in table below:</p>
+<table class="table">
+<thead><tr class="header">
+<th>Model</th>
+<th>Three Process</th>
+<th>Unified</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>
+<code>FIPS_Simulate</code> argument</td>
+<td><code>"TPM"</code></td>
+<td><code>"unified"</code></td>
+</tr>
+<tr class="even">
+<td>Parameter vector function</td>
+<td><code><a href="reference/TPM_make_pvec.html">TPM_make_pvec()</a></code></td>
+<td><code>unified_make_pvec</code></td>
+</tr>
+<tr class="odd">
+<td>Default formula</td>
+<td><code>alertness ~ s + c + u</code></td>
+<td><code>fatigue ~ s + I(κappa) * c</code></td>
+</tr>
+<tr class="even">
+<td>Time varying parameter names</td>
+<td>s, c, u, w</td>
+<td>s, l, c, w</td>
+</tr>
+<tr class="odd">
+<td>Default prediction outputs</td>
+<td>KSS, alertness</td>
+<td>Fatigue (PVT lapses)</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <div id="contributing-and-support" class="section level1">

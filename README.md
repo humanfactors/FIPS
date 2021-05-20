@@ -117,6 +117,18 @@ print(TPM.simulation.results)
 
 BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. There are several different BMM implementations, but most have their roots in Borbély's (1982) two process model which stipulates that sleepiness/performance impairment functions in response to two processes: a circadian process and a homeostatic process. BMMs enable hypothesis testing of the latent factors underlying the relationships between sleep, fatigue, and human performance. For example, they enable researchers to estimate the relative contributions of homeostatic processes on fatigue, relative to endogenous circadian processes. These models are also frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs. 
 
+## Critical Model Information
+
+Critical functions, arguments and outputs for each model are summarised in table below:
+
+| Model                        | Three Process           | Unified                      |
+|------------------------------|-------------------------|------------------------------|
+| `FIPS_Simulate` argument     | `"TPM"`                 | `"unified"`                  |
+| Parameter vector function    | `TPM_make_pvec()`       | `unified_make_pvec`          |
+| Default formula              | `alertness ~ s + c + u` | `fatigue ~ s + I(κappa) * c` |
+| Time varying parameter names | s, c, u, w              | s, l, c, w                   |
+| Default prediction outputs   | KSS, alertness          | Fatigue (PVT lapses)         |
+
 # Contributing and Support
 
 We welcome contributions great or small from the community. It would incredibly useful to receive feedback via Github Issues for anything regarding the package, including: installation issues, bugs or unexpected behaviour, usability, feature requests or inquiries, or even something you don't understand in the tutorials about this class of models more generally. Please file a Github issue for any general support queries too.
