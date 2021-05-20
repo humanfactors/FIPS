@@ -25,7 +25,7 @@ remotes::install_github("humanfactors/FIPS")
 Detailed information regarding the FIPS data formats can be found in the ["FIPS Simulation Walkthrough Vignette"](https://humanfactors.github.io/FIPS/articles/FIPS-simulation-walkthrough.html).
 
 
-**Step 1:** Prior to simulation, FIPS requires sleep history data to be in a special format, called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html) which contains all the information required for modelling (e.g., time awake, time asleep). This can be created with [`parse_sleepwake_sequence`](https://humanfactors.github.io/FIPS/reference/parse_sleepwake_sequence.html) or [`parse_sleeptimes](https://humanfactors.github.io/FIPS/reference/parse_sleeptimes.html).
+**Step 1:** Prior to simulation, FIPS requires sleep history data to be in a special format, called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html) which contains all the information required for modelling (e.g., time awake, time asleep). This can be created with [`parse_sleepwake_sequence`](https://humanfactors.github.io/FIPS/reference/parse_sleepwake_sequence.html) or [`parse_sleeptimes`](https://humanfactors.github.io/FIPS/reference/parse_sleeptimes.html).
 
 ```r
 my_FIPS_dataframe = FIPS::parse_sleepwake_sequence(
