@@ -10,7 +10,7 @@
 
 FIPS is an R package that provides researchers and practitioners with a comprehensive set of functions for applying and simulating from bio-mathematical models (BMMs) of fatigue.
 
-FIPS includes a set of functions for transforming sleep and actigraphy data to the data frame structure required for executing BMM simulations(called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html)). Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the [Unified Model](https://www.sciencedirect.com/science/article/pii/S0022519313001811) and [Three Process Model](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0108679). All models are extendable and include customisable parameters. The core features of FIPS leverage R's flexible `S3` class system, making extensions straightforward.
+FIPS includes a set of functions for transforming sleep and actigraphy data to the data frame structure required for executing BMM simulations (called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html)). Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the [Unified Model](https://www.sciencedirect.com/science/article/pii/S0022519313001811) and [Three Process Model](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0108679). All models are extendable and include customisable parameters. The core features of FIPS leverage R's flexible `S3` class system, making extensions straightforward.
 
 ## Installation
 We have no plans for a CRAN submission. To install the latest version of FIPS:
@@ -23,6 +23,8 @@ remotes::install_github("humanfactors/FIPS")
 # Core Features Example
 
 Detailed information regarding the FIPS data formats can be found in the ["FIPS Simulation Walkthrough Vignette"](https://humanfactors.github.io/FIPS/articles/FIPS-simulation-walkthrough.html).
+
+If you require a more manual user-interface to generate the FIPS-df, we have a web application that may help you generate the input CSV: https://github.com/Akhil-Eaga/FIPS-Data-Entry-System.
 
 
 **Step 1:** Prior to simulation, FIPS requires sleep history data to be in a special format, called a [`FIPS_df`](https://humanfactors.github.io/FIPS/reference/FIPS_df.html) which contains all the information required for modelling (e.g., time awake, time asleep). This can be created with [`parse_sleepwake_sequence`](https://humanfactors.github.io/FIPS/reference/parse_sleepwake_sequence.html) or [`parse_sleeptimes`](https://humanfactors.github.io/FIPS/reference/parse_sleeptimes.html).
