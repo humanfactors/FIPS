@@ -4,7 +4,12 @@
 \alias{print.FIPS_simulation}
 \title{print.FIPS_simulation}
 \usage{
-\method{print}{FIPS_simulation}(x)
+\method{print}{FIPS_simulation}(x, ...)
+}
+\arguments{
+\item{x}{A FIPS simulation object}
+
+\item{...}{further arguments passed to print}
 }
 \description{
 print.FIPS_simulation

@@ -4,10 +4,10 @@
 \alias{round_times}
 \title{Round times by column}
 \usage{
-round_times(.data, colname, round_by = 5)
+round_times(.stdata, colname, round_by = 5)
 }
 \arguments{
-\item{.data}{The sleeptimes dataframe}
+\item{.stdata}{The sleeptimes dataframe}
 
 \item{colname}{the column required to be rounded}
 

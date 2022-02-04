@@ -11,7 +11,8 @@ FIPS_plot(
   plot_stat = NULL,
   fatigue_CIs = FALSE,
   observed = NULL,
-  observed_y = NULL
+  observed_y = NULL,
+  ...
 )
 }
 \arguments{
@@ -28,6 +29,8 @@ FIPS_plot(
 \item{observed}{A data frame with any observed sleepiness ratings or objective indicators to plot against predictions}
 
 \item{observed_y}{The name of the observed sleepiness ratings in the observed data frame}
+
+\item{...}{additional arguments passed to ggplot2 theme_classic}
 }
 \value{
 A ggplot2 object displaying fatigue and other requested processes over time
