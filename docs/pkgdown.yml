@@ -1,10 +1,10 @@
-pandoc: 2.11.2
-pkgdown: 1.6.1.9001
-pkgdown_sha: 5bd377e7cb6d268565018b73e4bb99d2788182ed
+pandoc: 2.14.0.3
+pkgdown: 2.0.2.9000
+pkgdown_sha: 25a1ab2d04c2b8251214b5189fa6735896468cd7
 articles:
   FIPS-simulation-walkthrough: FIPS-simulation-walkthrough.html
   plotting: plotting.html
-last_built: 2021-05-17T08:47Z
+last_built: 2022-02-04T07:54Z
 urls:
   reference: https://humanfactors.github.io/FIPS/reference
   article: https://humanfactors.github.io/FIPS/articles

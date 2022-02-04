@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FIPS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -68,7 +68,7 @@
 
       
 
-      </header><script src="FIPS-simulation-walkthrough_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>FIPS Simulation Walkthrough</h1>
@@ -81,39 +81,39 @@
 
     
     
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor" aria-hidden="true"></a>Introduction</h2>
+<div class="section level3">
+<h3 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h3>
 <p>This vignette demonstrates how to generate a sleep times dataframe and then proceed to process this for modeling with the Three Process Model of Fatigue. The code here demonstrates the usage from a higher-level user perspective.</p>
 <p>Note that in future releases, we may seek to create functions that explicitly generate these sleep times for you. Furthermore, it is possible to simply create the sleeptimes in Excel or another program and transform to the format shown here. Therefore, the sleep generation features are presented here for practical purposes.</p>
 </div>
-<div id="data-preparation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#data-preparation" class="anchor" aria-hidden="true"></a>Data Preparation</h2>
-<div id="sleep-times-format" class="section level3">
-<h3 class="hasAnchor">
-<a href="#sleep-times-format" class="anchor" aria-hidden="true"></a>Sleep Times Format</h3>
+<div class="section level3">
+<h3 id="data-preparation">Data Preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
+</h3>
+<div class="section level4">
+<h4 id="sleep-times-format">Sleep Times Format<a class="anchor" aria-label="anchor" href="#sleep-times-format"></a>
+</h4>
 <p>The dataframe below shows a prototypical FIPS ‘sleep times’ dataframe. This form of dataframe is intended for individuals who are manually inputting sleep history (e.g., from pencil forms to a spreadsheet). Below, we generate this data structure ourselves for convenience. Specifically, we want to simulate a scenario where an individual obtains exactly 7.5 hours of sleep per night for 6 nights. There are likely multiple ways to achieve this, but the generation function below allows sufficient flexibility to have continuously offset sleeptimes (e.g., by changing <code>by = '24 hours'</code> to another value).</p>
 <p>The sleeptimes should correspond to only one participant (multiple people are not currently supported in FIPS without map functions). The default column names for this dataframe are <code>sleep.id</code>, <code>sleep.start</code>, and <code>sleep.end</code>. It is recommended that you explicitly specify timezones in all functions to avoid any silent errors relating to time zone specifications.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">example.sleeptimes</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   sleep.start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>
-    from <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-01 23:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>, 
-    to <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-07 17:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>,
+    from <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-01 23:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>, 
+    to <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-07 17:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>,
     by <span class="op">=</span> <span class="st">'24 hours'</span><span class="op">)</span>,
-  sleep.end <span class="op">=</span> <span class="va">sleep.start</span> <span class="op">+</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/duration.html" class="external-link">dhours</a></span><span class="op">(</span><span class="fl">7.5</span><span class="op">)</span>,
+  sleep.end <span class="op">=</span> <span class="va">sleep.start</span> <span class="op">+</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/duration.html" class="external-link">dhours</a></span><span class="op">(</span><span class="fl">7.5</span><span class="op">)</span>,
   sleep.id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rank.html" class="external-link">rank</a></span><span class="op">(</span><span class="va">sleep.start</span><span class="op">)</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">example.sleeptimes</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 6 x 3</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 6 x 3</span></span>
 <span class="co">#&gt;   sleep.start         sleep.end           sleep.id</span>
-<span class="co">#&gt;   &lt;dttm&gt;              &lt;dttm&gt;                 &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 2018-05-01 23:00:00 2018-05-02 06:30:00        1</span>
-<span class="co">#&gt; 2 2018-05-02 23:00:00 2018-05-03 06:30:00        2</span>
-<span class="co">#&gt; 3 2018-05-03 23:00:00 2018-05-04 06:30:00        3</span>
-<span class="co">#&gt; 4 2018-05-04 23:00:00 2018-05-05 06:30:00        4</span>
-<span class="co">#&gt; 5 2018-05-05 23:00:00 2018-05-06 06:30:00        5</span>
-<span class="co">#&gt; 6 2018-05-06 23:00:00 2018-05-07 06:30:00        6</span></code></pre></div>
+<span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">1</span> 2018-05-01 <span style="color: #949494;">23:00:00</span> 2018-05-02 <span style="color: #949494;">06:30:00</span>        1</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">2</span> 2018-05-02 <span style="color: #949494;">23:00:00</span> 2018-05-03 <span style="color: #949494;">06:30:00</span>        2</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">3</span> 2018-05-03 <span style="color: #949494;">23:00:00</span> 2018-05-04 <span style="color: #949494;">06:30:00</span>        3</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">4</span> 2018-05-04 <span style="color: #949494;">23:00:00</span> 2018-05-05 <span style="color: #949494;">06:30:00</span>        4</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">5</span> 2018-05-05 <span style="color: #949494;">23:00:00</span> 2018-05-06 <span style="color: #949494;">06:30:00</span>        5</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">6</span> 2018-05-06 <span style="color: #949494;">23:00:00</span> 2018-05-07 <span style="color: #949494;">06:30:00</span>        6</span></code></pre></div>
 <p>Prior to actually conducting the simulation, you <em>must</em> convert the sleep times to the continuous “FIPS_df” format. This format is a continuous time series style dataframe that contains calculated variables to be interpreted by the FIPS model functions. This dataframe contains the following headings: <code>datetime, sleep.id, wake_status, wake_status_int, change_point, switch_direction, status_duration, total_prev, time, day, sim_hours</code>. Information regarding these will be presented in the section below, but first let’s quickly run through how to generate the FIPS dataframe from sleep times.</p>
 <p>The <code>parse_sleeptimes</code> function from FIPS will takes in ‘sleep times’ generated previously, and note the arguments below.</p>
 <ul>
@@ -136,11 +136,11 @@
 <p>Moreover, note that all sleep observations will have their datetime rounded to this value. For example, with a <code>roundvalue = 5</code> the datetime <code>2018-05-07 21:02:02</code> would be rounded to <code>2018-05-07 21:00:00</code>. For this reason, it is ideal if your <code>series.start</code> and <code>series.end</code> are rounded to the same epoch value as you request. Seconds should never be included in your datetime (biomathematical models are not sensitive to this time resolution anyway).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Simulation start date time (i.e., when you want first predictions to begin)</span>
-<span class="va">simulation.start</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-01 07:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
+<span class="va">simulation.start</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-01 07:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
 
 <span class="co"># Simulation end date time (i.e., when you want predictions to end)</span>
 <span class="co"># In this case it ends </span>
-<span class="va">simulation.end</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-07 21:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
+<span class="va">simulation.end</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-07 21:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
 
 <span class="co"># The Continuous FIPS_df dataframe format</span>
 <span class="co"># This creates the format ready for simulation</span>
@@ -154,31 +154,31 @@
   roundvalue <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">simulated.dataframe</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1,897 x 11</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1,897 x 11</span></span>
 <span class="co">#&gt;    datetime            sleep.id wake_status wake_status_int change_point</span>
-<span class="co">#&gt;  * &lt;dttm&gt;                 &lt;dbl&gt; &lt;lgl&gt;                 &lt;int&gt;        &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 2018-05-01 07:00:00       NA TRUE                      1            0</span>
-<span class="co">#&gt;  2 2018-05-01 07:05:00       NA TRUE                      1            0</span>
-<span class="co">#&gt;  3 2018-05-01 07:10:00       NA TRUE                      1            0</span>
-<span class="co">#&gt;  4 2018-05-01 07:15:00       NA TRUE                      1            0</span>
-<span class="co">#&gt;  5 2018-05-01 07:20:00       NA TRUE                      1            0</span>
-<span class="co">#&gt;  6 2018-05-01 07:25:00       NA TRUE                      1            0</span>
-<span class="co">#&gt;  7 2018-05-01 07:30:00       NA TRUE                      1            0</span>
-<span class="co">#&gt;  8 2018-05-01 07:35:00       NA TRUE                      1            0</span>
-<span class="co">#&gt;  9 2018-05-01 07:40:00       NA TRUE                      1            0</span>
-<span class="co">#&gt; 10 2018-05-01 07:45:00       NA TRUE                      1            0</span>
-<span class="co">#&gt; # ... with 1,887 more rows, and 6 more variables: switch_direction &lt;chr&gt;,</span>
-<span class="co">#&gt; #   status_duration &lt;dbl&gt;, total_prev &lt;dbl&gt;, time &lt;dbl&gt;, day &lt;int&gt;,</span>
-<span class="co">#&gt; #   sim_hours &lt;dbl&gt;</span></code></pre></div>
+<span class="co">#&gt;  <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>                 <span style="color: #949494; font-style: italic;">&lt;int&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 2018-05-01 <span style="color: #949494;">07:00:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 2018-05-01 <span style="color: #949494;">07:05:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 2018-05-01 <span style="color: #949494;">07:10:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 2018-05-01 <span style="color: #949494;">07:15:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 2018-05-01 <span style="color: #949494;">07:20:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 2018-05-01 <span style="color: #949494;">07:25:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 2018-05-01 <span style="color: #949494;">07:30:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 2018-05-01 <span style="color: #949494;">07:35:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 2018-05-01 <span style="color: #949494;">07:40:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 2018-05-01 <span style="color: #949494;">07:45:00</span>       <span style="color: #BB0000;">NA</span> TRUE                      1            0</span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 1,887 more rows, and 6 more variables: switch_direction &lt;chr&gt;,</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   status_duration &lt;dbl&gt;, total_prev &lt;dbl&gt;, time &lt;dbl&gt;, day &lt;int&gt;,</span></span>
+<span class="co">#&gt; <span style="color: #949494;">#   sim_hours &lt;dbl&gt;</span></span></code></pre></div>
 </div>
-<div id="bitvector-sequence-format" class="section level3">
-<h3 class="hasAnchor">
-<a href="#bitvector-sequence-format" class="anchor" aria-hidden="true"></a>Bitvector Sequence Format</h3>
+<div class="section level4">
+<h4 id="bitvector-sequence-format">Bitvector Sequence Format<a class="anchor" aria-label="anchor" href="#bitvector-sequence-format"></a>
+</h4>
 <p>It is common to represent sleep history information as a bitvector (i.e., a sequence of 1’s and 0’s). In bitvectors, sleep and wake times are represented by 1’s or 0’s, with each bit representing an equal time duration (e.g., 1 minute in that status). The bitvector sequence also must be relative to a <em>start datetime</em>. This format is commonly outputted from actigraphy devices (a form of wearable sleep tracker) and corresponding sleep detection algorithms (e.g., Cole-Kripke). Other proprietary software packages (e.g., SAFTE-FAST) require imported data to be in bit vector form (though the exact required formats do vary).</p>
 <p><code>FIPS</code> expects bitvectors to repesent <strong>sleep as 0</strong> and <strong>wake as 1</strong>. The <code>parse_sleepwake_sequence</code> function can transform a bit vector sequence to a compliant <code>FIPS_df</code>. Below, an example of this data and steps to transform are provided, however, note that we do not use this dataframe again within this vignette.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Simulation start date time (i.e., when you want first predictions to begin)</span>
-<span class="va">simulation.start</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-01 10:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
+<span class="va">simulation.start</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-01 10:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
 
 <span class="co"># Example bitvector sequence. This typically would be imported directly via a textfile.</span>
 <span class="co"># Here we generate, though typically this would be returned by a ReadLines/read.delim/read.table</span>
@@ -213,22 +213,22 @@
 <span class="co">#&gt; 20  2018-05-01 14:45:00       NA 14.75   1      4.75               1</span>
 <span class="co">#&gt; 21  2018-05-01 15:00:00       NA 15.00   1      5.00               1</span>
 <span class="co">#&gt; 22  2018-05-01 15:15:00       NA 15.25   1      5.25               1</span>
-<span class="co">#&gt; 23  2018-05-01 15:30:00        1 15.50   1      5.50               0</span>
-<span class="co">#&gt; 24  2018-05-01 15:45:00        1 15.75   1      5.75               0</span>
-<span class="co">#&gt; 25  2018-05-01 16:00:00        1 16.00   1      6.00               0</span>
-<span class="co">#&gt; 26  2018-05-01 16:15:00        1 16.25   1      6.25               0</span>
-<span class="co">#&gt; 27  2018-05-01 16:30:00        1 16.50   1      6.50               0</span>
-<span class="co">#&gt; 28  2018-05-01 16:45:00        1 16.75   1      6.75               0</span>
-<span class="co">#&gt; 29  2018-05-01 17:00:00        1 17.00   1      7.00               0</span>
-<span class="co">#&gt; 30  2018-05-01 17:15:00        1 17.25   1      7.25               0</span>
-<span class="co">#&gt; 31  2018-05-01 17:30:00        1 17.50   1      7.50               0</span>
-<span class="co">#&gt; 32  2018-05-01 17:45:00        1 17.75   1      7.75               0</span>
-<span class="co">#&gt; 33  2018-05-01 18:00:00        1 18.00   1      8.00               0</span>
-<span class="co">#&gt; 34  2018-05-01 18:15:00        1 18.25   1      8.25               0</span>
-<span class="co">#&gt; 35  2018-05-01 18:30:00        1 18.50   1      8.50               0</span>
-<span class="co">#&gt; 36  2018-05-01 18:45:00        1 18.75   1      8.75               0</span>
-<span class="co">#&gt; 37  2018-05-01 19:00:00        1 19.00   1      9.00               0</span>
-<span class="co">#&gt; 38  2018-05-01 19:15:00        1 19.25   1      9.25               0</span>
+<span class="co">#&gt; 23  2018-05-01 15:30:00       NA 15.50   1      5.50               1</span>
+<span class="co">#&gt; 24  2018-05-01 15:45:00       NA 15.75   1      5.75               1</span>
+<span class="co">#&gt; 25  2018-05-01 16:00:00       NA 16.00   1      6.00               1</span>
+<span class="co">#&gt; 26  2018-05-01 16:15:00       NA 16.25   1      6.25               1</span>
+<span class="co">#&gt; 27  2018-05-01 16:30:00       NA 16.50   1      6.50               1</span>
+<span class="co">#&gt; 28  2018-05-01 16:45:00       NA 16.75   1      6.75               1</span>
+<span class="co">#&gt; 29  2018-05-01 17:00:00       NA 17.00   1      7.00               1</span>
+<span class="co">#&gt; 30  2018-05-01 17:15:00       NA 17.25   1      7.25               1</span>
+<span class="co">#&gt; 31  2018-05-01 17:30:00       NA 17.50   1      7.50               1</span>
+<span class="co">#&gt; 32  2018-05-01 17:45:00       NA 17.75   1      7.75               1</span>
+<span class="co">#&gt; 33  2018-05-01 18:00:00       NA 18.00   1      8.00               1</span>
+<span class="co">#&gt; 34  2018-05-01 18:15:00       NA 18.25   1      8.25               1</span>
+<span class="co">#&gt; 35  2018-05-01 18:30:00       NA 18.50   1      8.50               1</span>
+<span class="co">#&gt; 36  2018-05-01 18:45:00       NA 18.75   1      8.75               1</span>
+<span class="co">#&gt; 37  2018-05-01 19:00:00       NA 19.00   1      9.00               1</span>
+<span class="co">#&gt; 38  2018-05-01 19:15:00       NA 19.25   1      9.25               1</span>
 <span class="co">#&gt; 39  2018-05-01 19:30:00        1 19.50   1      9.50               0</span>
 <span class="co">#&gt; 40  2018-05-01 19:45:00        1 19.75   1      9.75               0</span>
 <span class="co">#&gt; 41  2018-05-01 20:00:00        1 20.00   1     10.00               0</span>
@@ -251,11 +251,11 @@
 <span class="co">#&gt; 58  2018-05-02 00:15:00        1  0.25   2     14.25               0</span>
 <span class="co">#&gt; 59  2018-05-02 00:30:00        1  0.50   2     14.50               0</span>
 <span class="co">#&gt; 60  2018-05-02 00:45:00        1  0.75   2     14.75               0</span>
-<span class="co">#&gt; 61  2018-05-02 01:00:00       NA  1.00   2     15.00               1</span>
-<span class="co">#&gt; 62  2018-05-02 01:15:00       NA  1.25   2     15.25               1</span>
-<span class="co">#&gt; 63  2018-05-02 01:30:00       NA  1.50   2     15.50               1</span>
-<span class="co">#&gt; 64  2018-05-02 01:45:00       NA  1.75   2     15.75               1</span>
-<span class="co">#&gt; 65  2018-05-02 02:00:00       NA  2.00   2     16.00               1</span>
+<span class="co">#&gt; 61  2018-05-02 01:00:00        1  1.00   2     15.00               0</span>
+<span class="co">#&gt; 62  2018-05-02 01:15:00        1  1.25   2     15.25               0</span>
+<span class="co">#&gt; 63  2018-05-02 01:30:00        1  1.50   2     15.50               0</span>
+<span class="co">#&gt; 64  2018-05-02 01:45:00        1  1.75   2     15.75               0</span>
+<span class="co">#&gt; 65  2018-05-02 02:00:00        1  2.00   2     16.00               0</span>
 <span class="co">#&gt; 66  2018-05-02 02:15:00       NA  2.25   2     16.25               1</span>
 <span class="co">#&gt; 67  2018-05-02 02:30:00       NA  2.50   2     16.50               1</span>
 <span class="co">#&gt; 68  2018-05-02 02:45:00       NA  2.75   2     16.75               1</span>
@@ -276,9 +276,9 @@
 <span class="co">#&gt; 83  2018-05-02 06:30:00       NA  6.50   2     20.50               1</span>
 <span class="co">#&gt; 84  2018-05-02 06:45:00       NA  6.75   2     20.75               1</span>
 <span class="co">#&gt; 85  2018-05-02 07:00:00       NA  7.00   2     21.00               1</span>
-<span class="co">#&gt; 86  2018-05-02 07:15:00        2  7.25   2     21.25               0</span>
-<span class="co">#&gt; 87  2018-05-02 07:30:00        2  7.50   2     21.50               0</span>
-<span class="co">#&gt; 88  2018-05-02 07:45:00        2  7.75   2     21.75               0</span>
+<span class="co">#&gt; 86  2018-05-02 07:15:00       NA  7.25   2     21.25               1</span>
+<span class="co">#&gt; 87  2018-05-02 07:30:00       NA  7.50   2     21.50               1</span>
+<span class="co">#&gt; 88  2018-05-02 07:45:00       NA  7.75   2     21.75               1</span>
 <span class="co">#&gt; 89  2018-05-02 08:00:00        2  8.00   2     22.00               0</span>
 <span class="co">#&gt; 90  2018-05-02 08:15:00        2  8.25   2     22.25               0</span>
 <span class="co">#&gt; 91  2018-05-02 08:30:00        2  8.50   2     22.50               0</span>
@@ -308,7 +308,7 @@
 <span class="co">#&gt; 115 2018-05-02 14:30:00        2 14.50   2     28.50               0</span>
 <span class="co">#&gt; 116 2018-05-02 14:45:00        2 14.75   2     28.75               0</span>
 <span class="co">#&gt; 117 2018-05-02 15:00:00        2 15.00   2     29.00               0</span>
-<span class="co">#&gt; 118 2018-05-02 15:15:00       NA 15.25   2     29.25               1</span>
+<span class="co">#&gt; 118 2018-05-02 15:15:00        2 15.25   2     29.25               0</span>
 <span class="co">#&gt; 119 2018-05-02 15:30:00       NA 15.50   2     29.50               1</span>
 <span class="co">#&gt; 120 2018-05-02 15:45:00       NA 15.75   2     29.75               1</span>
 <span class="co">#&gt; 121 2018-05-02 16:00:00       NA 16.00   2     30.00               1</span>
@@ -331,19 +331,19 @@
 <span class="co">#&gt; 138 2018-05-02 20:15:00       NA 20.25   2     34.25               1</span>
 <span class="co">#&gt; 139 2018-05-02 20:30:00       NA 20.50   2     34.50               1</span>
 <span class="co">#&gt; 140 2018-05-02 20:45:00       NA 20.75   2     34.75               1</span>
-<span class="co">#&gt; 141 2018-05-02 21:00:00       NA 21.00   2     35.00               1</span>
-<span class="co">#&gt; 142 2018-05-02 21:15:00       NA 21.25   2     35.25               1</span>
-<span class="co">#&gt; 143 2018-05-02 21:30:00       NA 21.50   2     35.50               1</span>
-<span class="co">#&gt; 144 2018-05-02 21:45:00       NA 21.75   2     35.75               1</span>
-<span class="co">#&gt; 145 2018-05-02 22:00:00       NA 22.00   2     36.00               1</span>
-<span class="co">#&gt; 146 2018-05-02 22:15:00       NA 22.25   2     36.25               1</span>
-<span class="co">#&gt; 147 2018-05-02 22:30:00       NA 22.50   2     36.50               1</span>
-<span class="co">#&gt; 148 2018-05-02 22:45:00       NA 22.75   2     36.75               1</span>
-<span class="co">#&gt; 149 2018-05-02 23:00:00       NA 23.00   2     37.00               1</span>
-<span class="co">#&gt; 150 2018-05-02 23:15:00       NA 23.25   2     37.25               1</span>
-<span class="co">#&gt; 151 2018-05-02 23:30:00       NA 23.50   2     37.50               1</span>
-<span class="co">#&gt; 152 2018-05-02 23:45:00       NA 23.75   2     37.75               1</span>
-<span class="co">#&gt; 153 2018-05-03 00:00:00       NA  0.00   3     38.00               1</span>
+<span class="co">#&gt; 141 2018-05-02 21:00:00        3 21.00   2     35.00               0</span>
+<span class="co">#&gt; 142 2018-05-02 21:15:00        3 21.25   2     35.25               0</span>
+<span class="co">#&gt; 143 2018-05-02 21:30:00        3 21.50   2     35.50               0</span>
+<span class="co">#&gt; 144 2018-05-02 21:45:00        3 21.75   2     35.75               0</span>
+<span class="co">#&gt; 145 2018-05-02 22:00:00        3 22.00   2     36.00               0</span>
+<span class="co">#&gt; 146 2018-05-02 22:15:00        3 22.25   2     36.25               0</span>
+<span class="co">#&gt; 147 2018-05-02 22:30:00        3 22.50   2     36.50               0</span>
+<span class="co">#&gt; 148 2018-05-02 22:45:00        3 22.75   2     36.75               0</span>
+<span class="co">#&gt; 149 2018-05-02 23:00:00        3 23.00   2     37.00               0</span>
+<span class="co">#&gt; 150 2018-05-02 23:15:00        3 23.25   2     37.25               0</span>
+<span class="co">#&gt; 151 2018-05-02 23:30:00        3 23.50   2     37.50               0</span>
+<span class="co">#&gt; 152 2018-05-02 23:45:00        3 23.75   2     37.75               0</span>
+<span class="co">#&gt; 153 2018-05-03 00:00:00        3  0.00   3     38.00               0</span>
 <span class="co">#&gt; 154 2018-05-03 00:15:00        3  0.25   3     38.25               0</span>
 <span class="co">#&gt; 155 2018-05-03 00:30:00        3  0.50   3     38.50               0</span>
 <span class="co">#&gt; 156 2018-05-03 00:45:00        3  0.75   3     38.75               0</span>
@@ -356,14 +356,14 @@
 <span class="co">#&gt; 163 2018-05-03 02:30:00        3  2.50   3     40.50               0</span>
 <span class="co">#&gt; 164 2018-05-03 02:45:00        3  2.75   3     40.75               0</span>
 <span class="co">#&gt; 165 2018-05-03 03:00:00        3  3.00   3     41.00               0</span>
-<span class="co">#&gt; 166 2018-05-03 03:15:00        3  3.25   3     41.25               0</span>
-<span class="co">#&gt; 167 2018-05-03 03:30:00        3  3.50   3     41.50               0</span>
-<span class="co">#&gt; 168 2018-05-03 03:45:00        3  3.75   3     41.75               0</span>
-<span class="co">#&gt; 169 2018-05-03 04:00:00        3  4.00   3     42.00               0</span>
-<span class="co">#&gt; 170 2018-05-03 04:15:00        3  4.25   3     42.25               0</span>
-<span class="co">#&gt; 171 2018-05-03 04:30:00        3  4.50   3     42.50               0</span>
-<span class="co">#&gt; 172 2018-05-03 04:45:00        3  4.75   3     42.75               0</span>
-<span class="co">#&gt; 173 2018-05-03 05:00:00        3  5.00   3     43.00               0</span>
+<span class="co">#&gt; 166 2018-05-03 03:15:00       NA  3.25   3     41.25               1</span>
+<span class="co">#&gt; 167 2018-05-03 03:30:00       NA  3.50   3     41.50               1</span>
+<span class="co">#&gt; 168 2018-05-03 03:45:00       NA  3.75   3     41.75               1</span>
+<span class="co">#&gt; 169 2018-05-03 04:00:00       NA  4.00   3     42.00               1</span>
+<span class="co">#&gt; 170 2018-05-03 04:15:00       NA  4.25   3     42.25               1</span>
+<span class="co">#&gt; 171 2018-05-03 04:30:00       NA  4.50   3     42.50               1</span>
+<span class="co">#&gt; 172 2018-05-03 04:45:00       NA  4.75   3     42.75               1</span>
+<span class="co">#&gt; 173 2018-05-03 05:00:00       NA  5.00   3     43.00               1</span>
 <span class="co">#&gt; 174 2018-05-03 05:15:00       NA  5.25   3     43.25               1</span>
 <span class="co">#&gt; 175 2018-05-03 05:30:00       NA  5.50   3     43.50               1</span>
 <span class="co">#&gt; 176 2018-05-03 05:45:00       NA  5.75   3     43.75               1</span>
@@ -385,9 +385,9 @@
 <span class="co">#&gt; 192 2018-05-03 09:45:00       NA  9.75   3     47.75               1</span>
 <span class="co">#&gt; 193 2018-05-03 10:00:00       NA 10.00   3     48.00               1</span>
 <span class="co">#&gt; 194 2018-05-03 10:15:00       NA 10.25   3     48.25               1</span>
-<span class="co">#&gt; 195 2018-05-03 10:30:00       NA 10.50   3     48.50               1</span>
-<span class="co">#&gt; 196 2018-05-03 10:45:00       NA 10.75   3     48.75               1</span>
-<span class="co">#&gt; 197 2018-05-03 11:00:00       NA 11.00   3     49.00               1</span>
+<span class="co">#&gt; 195 2018-05-03 10:30:00        4 10.50   3     48.50               0</span>
+<span class="co">#&gt; 196 2018-05-03 10:45:00        4 10.75   3     48.75               0</span>
+<span class="co">#&gt; 197 2018-05-03 11:00:00        4 11.00   3     49.00               0</span>
 <span class="co">#&gt; 198 2018-05-03 11:15:00        4 11.25   3     49.25               0</span>
 <span class="co">#&gt; 199 2018-05-03 11:30:00        4 11.50   3     49.50               0</span>
 <span class="co">#&gt; 200 2018-05-03 11:45:00        4 11.75   3     49.75               0</span>
@@ -417,8 +417,8 @@
 <span class="co">#&gt; 224 2018-05-03 17:45:00        4 17.75   3     55.75               0</span>
 <span class="co">#&gt; 225 2018-05-03 18:00:00        4 18.00   3     56.00               0</span>
 <span class="co">#&gt; 226 2018-05-03 18:15:00        4 18.25   3     56.25               0</span>
-<span class="co">#&gt; 227 2018-05-03 18:30:00        4 18.50   3     56.50               0</span>
-<span class="co">#&gt; 228 2018-05-03 18:45:00        4 18.75   3     56.75               0</span>
+<span class="co">#&gt; 227 2018-05-03 18:30:00       NA 18.50   3     56.50               1</span>
+<span class="co">#&gt; 228 2018-05-03 18:45:00       NA 18.75   3     56.75               1</span>
 <span class="co">#&gt; 229 2018-05-03 19:00:00       NA 19.00   3     57.00               1</span>
 <span class="co">#&gt; 230 2018-05-03 19:15:00       NA 19.25   3     57.25               1</span>
 <span class="co">#&gt; 231 2018-05-03 19:30:00       NA 19.50   3     57.50               1</span>
@@ -438,16 +438,16 @@
 <span class="co">#&gt; 245 2018-05-03 23:00:00       NA 23.00   3     61.00               1</span>
 <span class="co">#&gt; 246 2018-05-03 23:15:00       NA 23.25   3     61.25               1</span>
 <span class="co">#&gt; 247 2018-05-03 23:30:00       NA 23.50   3     61.50               1</span>
-<span class="co">#&gt; 248 2018-05-03 23:45:00       NA 23.75   3     61.75               1</span>
-<span class="co">#&gt; 249 2018-05-04 00:00:00       NA  0.00   4     62.00               1</span>
-<span class="co">#&gt; 250 2018-05-04 00:15:00       NA  0.25   4     62.25               1</span>
-<span class="co">#&gt; 251 2018-05-04 00:30:00       NA  0.50   4     62.50               1</span>
-<span class="co">#&gt; 252 2018-05-04 00:45:00       NA  0.75   4     62.75               1</span>
-<span class="co">#&gt; 253 2018-05-04 01:00:00       NA  1.00   4     63.00               1</span>
-<span class="co">#&gt; 254 2018-05-04 01:15:00       NA  1.25   4     63.25               1</span>
-<span class="co">#&gt; 255 2018-05-04 01:30:00       NA  1.50   4     63.50               1</span>
-<span class="co">#&gt; 256 2018-05-04 01:45:00       NA  1.75   4     63.75               1</span>
-<span class="co">#&gt; 257 2018-05-04 02:00:00       NA  2.00   4     64.00               1</span>
+<span class="co">#&gt; 248 2018-05-03 23:45:00        5 23.75   3     61.75               0</span>
+<span class="co">#&gt; 249 2018-05-04 00:00:00        5  0.00   4     62.00               0</span>
+<span class="co">#&gt; 250 2018-05-04 00:15:00        5  0.25   4     62.25               0</span>
+<span class="co">#&gt; 251 2018-05-04 00:30:00        5  0.50   4     62.50               0</span>
+<span class="co">#&gt; 252 2018-05-04 00:45:00        5  0.75   4     62.75               0</span>
+<span class="co">#&gt; 253 2018-05-04 01:00:00        5  1.00   4     63.00               0</span>
+<span class="co">#&gt; 254 2018-05-04 01:15:00        5  1.25   4     63.25               0</span>
+<span class="co">#&gt; 255 2018-05-04 01:30:00        5  1.50   4     63.50               0</span>
+<span class="co">#&gt; 256 2018-05-04 01:45:00        5  1.75   4     63.75               0</span>
+<span class="co">#&gt; 257 2018-05-04 02:00:00        5  2.00   4     64.00               0</span>
 <span class="co">#&gt; 258 2018-05-04 02:15:00        5  2.25   4     64.25               0</span>
 <span class="co">#&gt; 259 2018-05-04 02:30:00        5  2.50   4     64.50               0</span>
 <span class="co">#&gt; 260 2018-05-04 02:45:00        5  2.75   4     64.75               0</span>
@@ -471,13 +471,13 @@
 <span class="co">#&gt; 278 2018-05-04 07:15:00        5  7.25   4     69.25               0</span>
 <span class="co">#&gt; 279 2018-05-04 07:30:00        5  7.50   4     69.50               0</span>
 <span class="co">#&gt; 280 2018-05-04 07:45:00        5  7.75   4     69.75               0</span>
-<span class="co">#&gt; 281 2018-05-04 08:00:00       NA  8.00   4     70.00               1</span>
-<span class="co">#&gt; 282 2018-05-04 08:15:00       NA  8.25   4     70.25               1</span>
-<span class="co">#&gt; 283 2018-05-04 08:30:00       NA  8.50   4     70.50               1</span>
-<span class="co">#&gt; 284 2018-05-04 08:45:00       NA  8.75   4     70.75               1</span>
-<span class="co">#&gt; 285 2018-05-04 09:00:00       NA  9.00   4     71.00               1</span>
-<span class="co">#&gt; 286 2018-05-04 09:15:00       NA  9.25   4     71.25               1</span>
-<span class="co">#&gt; 287 2018-05-04 09:30:00       NA  9.50   4     71.50               1</span>
+<span class="co">#&gt; 281 2018-05-04 08:00:00        5  8.00   4     70.00               0</span>
+<span class="co">#&gt; 282 2018-05-04 08:15:00        5  8.25   4     70.25               0</span>
+<span class="co">#&gt; 283 2018-05-04 08:30:00        5  8.50   4     70.50               0</span>
+<span class="co">#&gt; 284 2018-05-04 08:45:00        5  8.75   4     70.75               0</span>
+<span class="co">#&gt; 285 2018-05-04 09:00:00        5  9.00   4     71.00               0</span>
+<span class="co">#&gt; 286 2018-05-04 09:15:00        5  9.25   4     71.25               0</span>
+<span class="co">#&gt; 287 2018-05-04 09:30:00        5  9.50   4     71.50               0</span>
 <span class="co">#&gt; 288 2018-05-04 09:45:00       NA  9.75   4     71.75               1</span>
 <span class="co">#&gt; 289 2018-05-04 10:00:00       NA 10.00   4     72.00               1</span>
 <span class="co">#&gt; 290 2018-05-04 10:15:00       NA 10.25   4     72.25               1</span>
@@ -498,19 +498,19 @@
 <span class="co">#&gt; 305 2018-05-04 14:00:00       NA 14.00   4     76.00               1</span>
 <span class="co">#&gt; 306 2018-05-04 14:15:00       NA 14.25   4     76.25               1</span>
 <span class="co">#&gt; 307 2018-05-04 14:30:00       NA 14.50   4     76.50               1</span>
-<span class="co">#&gt; 308 2018-05-04 14:45:00        6 14.75   4     76.75               0</span>
-<span class="co">#&gt; 309 2018-05-04 15:00:00        6 15.00   4     77.00               0</span>
-<span class="co">#&gt; 310 2018-05-04 15:15:00        6 15.25   4     77.25               0</span>
-<span class="co">#&gt; 311 2018-05-04 15:30:00        6 15.50   4     77.50               0</span>
-<span class="co">#&gt; 312 2018-05-04 15:45:00        6 15.75   4     77.75               0</span>
-<span class="co">#&gt; 313 2018-05-04 16:00:00        6 16.00   4     78.00               0</span>
-<span class="co">#&gt; 314 2018-05-04 16:15:00        6 16.25   4     78.25               0</span>
-<span class="co">#&gt; 315 2018-05-04 16:30:00        6 16.50   4     78.50               0</span>
-<span class="co">#&gt; 316 2018-05-04 16:45:00        6 16.75   4     78.75               0</span>
-<span class="co">#&gt; 317 2018-05-04 17:00:00        6 17.00   4     79.00               0</span>
-<span class="co">#&gt; 318 2018-05-04 17:15:00        6 17.25   4     79.25               0</span>
-<span class="co">#&gt; 319 2018-05-04 17:30:00        6 17.50   4     79.50               0</span>
-<span class="co">#&gt; 320 2018-05-04 17:45:00        6 17.75   4     79.75               0</span>
+<span class="co">#&gt; 308 2018-05-04 14:45:00       NA 14.75   4     76.75               1</span>
+<span class="co">#&gt; 309 2018-05-04 15:00:00       NA 15.00   4     77.00               1</span>
+<span class="co">#&gt; 310 2018-05-04 15:15:00       NA 15.25   4     77.25               1</span>
+<span class="co">#&gt; 311 2018-05-04 15:30:00       NA 15.50   4     77.50               1</span>
+<span class="co">#&gt; 312 2018-05-04 15:45:00       NA 15.75   4     77.75               1</span>
+<span class="co">#&gt; 313 2018-05-04 16:00:00       NA 16.00   4     78.00               1</span>
+<span class="co">#&gt; 314 2018-05-04 16:15:00       NA 16.25   4     78.25               1</span>
+<span class="co">#&gt; 315 2018-05-04 16:30:00       NA 16.50   4     78.50               1</span>
+<span class="co">#&gt; 316 2018-05-04 16:45:00       NA 16.75   4     78.75               1</span>
+<span class="co">#&gt; 317 2018-05-04 17:00:00       NA 17.00   4     79.00               1</span>
+<span class="co">#&gt; 318 2018-05-04 17:15:00       NA 17.25   4     79.25               1</span>
+<span class="co">#&gt; 319 2018-05-04 17:30:00       NA 17.50   4     79.50               1</span>
+<span class="co">#&gt; 320 2018-05-04 17:45:00       NA 17.75   4     79.75               1</span>
 <span class="co">#&gt; 321 2018-05-04 18:00:00        6 18.00   4     80.00               0</span>
 <span class="co">#&gt; 322 2018-05-04 18:15:00        6 18.25   4     80.25               0</span>
 <span class="co">#&gt; 323 2018-05-04 18:30:00        6 18.50   4     80.50               0</span>
@@ -532,6 +532,24 @@
 <span class="co">#&gt; 339 2018-05-04 22:30:00        6 22.50   4     84.50               0</span>
 <span class="co">#&gt; 340 2018-05-04 22:45:00        6 22.75   4     84.75               0</span>
 <span class="co">#&gt; 341 2018-05-04 23:00:00        6 23.00   4     85.00               0</span>
+<span class="co">#&gt; 342 2018-05-04 23:15:00        6 23.25   4     85.25               0</span>
+<span class="co">#&gt; 343 2018-05-04 23:30:00        6 23.50   4     85.50               0</span>
+<span class="co">#&gt; 344 2018-05-04 23:45:00        6 23.75   4     85.75               0</span>
+<span class="co">#&gt; 345 2018-05-05 00:00:00        6  0.00   5     86.00               0</span>
+<span class="co">#&gt; 346 2018-05-05 00:15:00        6  0.25   5     86.25               0</span>
+<span class="co">#&gt; 347 2018-05-05 00:30:00        6  0.50   5     86.50               0</span>
+<span class="co">#&gt; 348 2018-05-05 00:45:00        6  0.75   5     86.75               0</span>
+<span class="co">#&gt; 349 2018-05-05 01:00:00        6  1.00   5     87.00               0</span>
+<span class="co">#&gt; 350 2018-05-05 01:15:00        6  1.25   5     87.25               0</span>
+<span class="co">#&gt; 351 2018-05-05 01:30:00        6  1.50   5     87.50               0</span>
+<span class="co">#&gt; 352 2018-05-05 01:45:00        6  1.75   5     87.75               0</span>
+<span class="co">#&gt; 353 2018-05-05 02:00:00        6  2.00   5     88.00               0</span>
+<span class="co">#&gt; 354 2018-05-05 02:15:00        6  2.25   5     88.25               0</span>
+<span class="co">#&gt; 355 2018-05-05 02:30:00        6  2.50   5     88.50               0</span>
+<span class="co">#&gt; 356 2018-05-05 02:45:00        6  2.75   5     88.75               0</span>
+<span class="co">#&gt; 357 2018-05-05 03:00:00        6  3.00   5     89.00               0</span>
+<span class="co">#&gt; 358 2018-05-05 03:15:00        6  3.25   5     89.25               0</span>
+<span class="co">#&gt; 359 2018-05-05 03:30:00        6  3.50   5     89.50               0</span>
 <span class="co">#&gt;     wake_status change_point switch_direction status_duration total_prev</span>
 <span class="co">#&gt; 1          TRUE            0                0            0.00       0.00</span>
 <span class="co">#&gt; 2          TRUE            0                0            0.25       0.00</span>
@@ -555,330 +573,348 @@
 <span class="co">#&gt; 20         TRUE            0                0            4.75       0.00</span>
 <span class="co">#&gt; 21         TRUE            0                0            5.00       0.00</span>
 <span class="co">#&gt; 22         TRUE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 23        FALSE            1            Sleep            0.00       5.50</span>
-<span class="co">#&gt; 24        FALSE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 25        FALSE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 26        FALSE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 27        FALSE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 28        FALSE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 29        FALSE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 30        FALSE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 31        FALSE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 32        FALSE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 33        FALSE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 34        FALSE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 35        FALSE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 36        FALSE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 37        FALSE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 38        FALSE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 39        FALSE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 40        FALSE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 41        FALSE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 42        FALSE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 43        FALSE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 44        FALSE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 45        FALSE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 46        FALSE            0                0            5.75       0.00</span>
-<span class="co">#&gt; 47        FALSE            0                0            6.00       0.00</span>
-<span class="co">#&gt; 48        FALSE            0                0            6.25       0.00</span>
-<span class="co">#&gt; 49        FALSE            0                0            6.50       0.00</span>
-<span class="co">#&gt; 50        FALSE            0                0            6.75       0.00</span>
-<span class="co">#&gt; 51        FALSE            0                0            7.00       0.00</span>
-<span class="co">#&gt; 52        FALSE            0                0            7.25       0.00</span>
-<span class="co">#&gt; 53        FALSE            0                0            7.50       0.00</span>
-<span class="co">#&gt; 54        FALSE            0                0            7.75       0.00</span>
-<span class="co">#&gt; 55        FALSE            0                0            8.00       0.00</span>
-<span class="co">#&gt; 56        FALSE            0                0            8.25       0.00</span>
-<span class="co">#&gt; 57        FALSE            0                0            8.50       0.00</span>
-<span class="co">#&gt; 58        FALSE            0                0            8.75       0.00</span>
-<span class="co">#&gt; 59        FALSE            0                0            9.00       0.00</span>
-<span class="co">#&gt; 60        FALSE            0                0            9.25       0.00</span>
-<span class="co">#&gt; 61         TRUE            1             Wake            0.00       9.50</span>
-<span class="co">#&gt; 62         TRUE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 63         TRUE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 64         TRUE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 65         TRUE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 66         TRUE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 67         TRUE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 68         TRUE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 69         TRUE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 70         TRUE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 71         TRUE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 72         TRUE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 73         TRUE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 74         TRUE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 75         TRUE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 76         TRUE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 77         TRUE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 78         TRUE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 79         TRUE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 80         TRUE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 81         TRUE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 82         TRUE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 83         TRUE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 84         TRUE            0                0            5.75       0.00</span>
-<span class="co">#&gt; 85         TRUE            0                0            6.00       0.00</span>
-<span class="co">#&gt; 86        FALSE            1            Sleep            0.00       6.25</span>
-<span class="co">#&gt; 87        FALSE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 88        FALSE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 89        FALSE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 90        FALSE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 91        FALSE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 92        FALSE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 93        FALSE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 94        FALSE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 95        FALSE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 96        FALSE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 97        FALSE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 98        FALSE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 99        FALSE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 100       FALSE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 101       FALSE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 102       FALSE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 103       FALSE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 104       FALSE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 105       FALSE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 106       FALSE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 107       FALSE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 108       FALSE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 109       FALSE            0                0            5.75       0.00</span>
-<span class="co">#&gt; 110       FALSE            0                0            6.00       0.00</span>
-<span class="co">#&gt; 111       FALSE            0                0            6.25       0.00</span>
-<span class="co">#&gt; 112       FALSE            0                0            6.50       0.00</span>
-<span class="co">#&gt; 113       FALSE            0                0            6.75       0.00</span>
-<span class="co">#&gt; 114       FALSE            0                0            7.00       0.00</span>
-<span class="co">#&gt; 115       FALSE            0                0            7.25       0.00</span>
-<span class="co">#&gt; 116       FALSE            0                0            7.50       0.00</span>
-<span class="co">#&gt; 117       FALSE            0                0            7.75       0.00</span>
-<span class="co">#&gt; 118        TRUE            1             Wake            0.00       8.00</span>
-<span class="co">#&gt; 119        TRUE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 120        TRUE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 121        TRUE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 122        TRUE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 123        TRUE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 124        TRUE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 125        TRUE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 126        TRUE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 127        TRUE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 128        TRUE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 129        TRUE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 130        TRUE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 131        TRUE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 132        TRUE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 133        TRUE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 134        TRUE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 135        TRUE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 136        TRUE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 137        TRUE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 138        TRUE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 139        TRUE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 140        TRUE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 141        TRUE            0                0            5.75       0.00</span>
-<span class="co">#&gt; 142        TRUE            0                0            6.00       0.00</span>
-<span class="co">#&gt; 143        TRUE            0                0            6.25       0.00</span>
-<span class="co">#&gt; 144        TRUE            0                0            6.50       0.00</span>
-<span class="co">#&gt; 145        TRUE            0                0            6.75       0.00</span>
-<span class="co">#&gt; 146        TRUE            0                0            7.00       0.00</span>
-<span class="co">#&gt; 147        TRUE            0                0            7.25       0.00</span>
-<span class="co">#&gt; 148        TRUE            0                0            7.50       0.00</span>
-<span class="co">#&gt; 149        TRUE            0                0            7.75       0.00</span>
-<span class="co">#&gt; 150        TRUE            0                0            8.00       0.00</span>
-<span class="co">#&gt; 151        TRUE            0                0            8.25       0.00</span>
-<span class="co">#&gt; 152        TRUE            0                0            8.50       0.00</span>
-<span class="co">#&gt; 153        TRUE            0                0            8.75       0.00</span>
-<span class="co">#&gt; 154       FALSE            1            Sleep            0.00       9.00</span>
-<span class="co">#&gt; 155       FALSE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 156       FALSE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 157       FALSE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 158       FALSE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 159       FALSE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 160       FALSE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 161       FALSE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 162       FALSE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 163       FALSE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 164       FALSE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 165       FALSE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 166       FALSE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 167       FALSE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 168       FALSE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 169       FALSE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 170       FALSE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 171       FALSE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 172       FALSE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 173       FALSE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 174        TRUE            1             Wake            0.00       5.00</span>
-<span class="co">#&gt; 175        TRUE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 176        TRUE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 177        TRUE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 178        TRUE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 179        TRUE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 180        TRUE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 181        TRUE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 182        TRUE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 183        TRUE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 184        TRUE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 185        TRUE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 186        TRUE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 187        TRUE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 188        TRUE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 189        TRUE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 190        TRUE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 191        TRUE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 192        TRUE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 193        TRUE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 194        TRUE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 195        TRUE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 196        TRUE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 197        TRUE            0                0            5.75       0.00</span>
-<span class="co">#&gt; 198       FALSE            1            Sleep            0.00       6.00</span>
-<span class="co">#&gt; 199       FALSE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 200       FALSE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 201       FALSE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 202       FALSE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 203       FALSE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 204       FALSE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 205       FALSE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 206       FALSE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 207       FALSE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 208       FALSE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 209       FALSE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 210       FALSE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 211       FALSE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 212       FALSE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 213       FALSE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 214       FALSE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 215       FALSE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 216       FALSE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 217       FALSE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 218       FALSE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 219       FALSE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 220       FALSE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 221       FALSE            0                0            5.75       0.00</span>
-<span class="co">#&gt; 222       FALSE            0                0            6.00       0.00</span>
-<span class="co">#&gt; 223       FALSE            0                0            6.25       0.00</span>
-<span class="co">#&gt; 224       FALSE            0                0            6.50       0.00</span>
-<span class="co">#&gt; 225       FALSE            0                0            6.75       0.00</span>
-<span class="co">#&gt; 226       FALSE            0                0            7.00       0.00</span>
-<span class="co">#&gt; 227       FALSE            0                0            7.25       0.00</span>
-<span class="co">#&gt; 228       FALSE            0                0            7.50       0.00</span>
-<span class="co">#&gt; 229        TRUE            1             Wake            0.00       7.75</span>
-<span class="co">#&gt; 230        TRUE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 231        TRUE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 232        TRUE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 233        TRUE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 234        TRUE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 235        TRUE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 236        TRUE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 237        TRUE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 238        TRUE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 239        TRUE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 240        TRUE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 241        TRUE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 242        TRUE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 243        TRUE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 244        TRUE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 245        TRUE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 246        TRUE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 247        TRUE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 248        TRUE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 249        TRUE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 250        TRUE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 251        TRUE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 252        TRUE            0                0            5.75       0.00</span>
-<span class="co">#&gt; 253        TRUE            0                0            6.00       0.00</span>
-<span class="co">#&gt; 254        TRUE            0                0            6.25       0.00</span>
-<span class="co">#&gt; 255        TRUE            0                0            6.50       0.00</span>
-<span class="co">#&gt; 256        TRUE            0                0            6.75       0.00</span>
-<span class="co">#&gt; 257        TRUE            0                0            7.00       0.00</span>
-<span class="co">#&gt; 258       FALSE            1            Sleep            0.00       7.25</span>
-<span class="co">#&gt; 259       FALSE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 260       FALSE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 261       FALSE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 262       FALSE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 263       FALSE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 264       FALSE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 265       FALSE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 266       FALSE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 267       FALSE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 268       FALSE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 269       FALSE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 270       FALSE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 271       FALSE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 272       FALSE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 273       FALSE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 274       FALSE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 275       FALSE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 276       FALSE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 277       FALSE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 278       FALSE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 279       FALSE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 280       FALSE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 281        TRUE            1             Wake            0.00       5.75</span>
-<span class="co">#&gt; 282        TRUE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 283        TRUE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 284        TRUE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 285        TRUE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 286        TRUE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 287        TRUE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 288        TRUE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 289        TRUE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 290        TRUE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 291        TRUE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 292        TRUE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 293        TRUE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 294        TRUE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 295        TRUE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 296        TRUE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 297        TRUE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 298        TRUE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 299        TRUE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 300        TRUE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 301        TRUE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 302        TRUE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 303        TRUE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 304        TRUE            0                0            5.75       0.00</span>
-<span class="co">#&gt; 305        TRUE            0                0            6.00       0.00</span>
-<span class="co">#&gt; 306        TRUE            0                0            6.25       0.00</span>
-<span class="co">#&gt; 307        TRUE            0                0            6.50       0.00</span>
-<span class="co">#&gt; 308       FALSE            1            Sleep            0.00       6.75</span>
-<span class="co">#&gt; 309       FALSE            0                0            0.25       0.00</span>
-<span class="co">#&gt; 310       FALSE            0                0            0.50       0.00</span>
-<span class="co">#&gt; 311       FALSE            0                0            0.75       0.00</span>
-<span class="co">#&gt; 312       FALSE            0                0            1.00       0.00</span>
-<span class="co">#&gt; 313       FALSE            0                0            1.25       0.00</span>
-<span class="co">#&gt; 314       FALSE            0                0            1.50       0.00</span>
-<span class="co">#&gt; 315       FALSE            0                0            1.75       0.00</span>
-<span class="co">#&gt; 316       FALSE            0                0            2.00       0.00</span>
-<span class="co">#&gt; 317       FALSE            0                0            2.25       0.00</span>
-<span class="co">#&gt; 318       FALSE            0                0            2.50       0.00</span>
-<span class="co">#&gt; 319       FALSE            0                0            2.75       0.00</span>
-<span class="co">#&gt; 320       FALSE            0                0            3.00       0.00</span>
-<span class="co">#&gt; 321       FALSE            0                0            3.25       0.00</span>
-<span class="co">#&gt; 322       FALSE            0                0            3.50       0.00</span>
-<span class="co">#&gt; 323       FALSE            0                0            3.75       0.00</span>
-<span class="co">#&gt; 324       FALSE            0                0            4.00       0.00</span>
-<span class="co">#&gt; 325       FALSE            0                0            4.25       0.00</span>
-<span class="co">#&gt; 326       FALSE            0                0            4.50       0.00</span>
-<span class="co">#&gt; 327       FALSE            0                0            4.75       0.00</span>
-<span class="co">#&gt; 328       FALSE            0                0            5.00       0.00</span>
-<span class="co">#&gt; 329       FALSE            0                0            5.25       0.00</span>
-<span class="co">#&gt; 330       FALSE            0                0            5.50       0.00</span>
-<span class="co">#&gt; 331       FALSE            0                0            5.75       0.00</span>
-<span class="co">#&gt; 332       FALSE            0                0            6.00       0.00</span>
-<span class="co">#&gt; 333       FALSE            0                0            6.25       0.00</span>
-<span class="co">#&gt; 334       FALSE            0                0            6.50       0.00</span>
-<span class="co">#&gt; 335       FALSE            0                0            6.75       0.00</span>
-<span class="co">#&gt; 336       FALSE            0                0            7.00       0.00</span>
-<span class="co">#&gt; 337       FALSE            0                0            7.25       0.00</span>
-<span class="co">#&gt; 338       FALSE            0                0            7.50       0.00</span>
-<span class="co">#&gt; 339       FALSE            0                0            7.75       0.00</span>
-<span class="co">#&gt; 340       FALSE            0                0            8.00       0.00</span>
-<span class="co">#&gt; 341       FALSE            0                0            8.25       0.00</span></code></pre></div>
+<span class="co">#&gt; 23         TRUE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 24         TRUE            0                0            5.75       0.00</span>
+<span class="co">#&gt; 25         TRUE            0                0            6.00       0.00</span>
+<span class="co">#&gt; 26         TRUE            0                0            6.25       0.00</span>
+<span class="co">#&gt; 27         TRUE            0                0            6.50       0.00</span>
+<span class="co">#&gt; 28         TRUE            0                0            6.75       0.00</span>
+<span class="co">#&gt; 29         TRUE            0                0            7.00       0.00</span>
+<span class="co">#&gt; 30         TRUE            0                0            7.25       0.00</span>
+<span class="co">#&gt; 31         TRUE            0                0            7.50       0.00</span>
+<span class="co">#&gt; 32         TRUE            0                0            7.75       0.00</span>
+<span class="co">#&gt; 33         TRUE            0                0            8.00       0.00</span>
+<span class="co">#&gt; 34         TRUE            0                0            8.25       0.00</span>
+<span class="co">#&gt; 35         TRUE            0                0            8.50       0.00</span>
+<span class="co">#&gt; 36         TRUE            0                0            8.75       0.00</span>
+<span class="co">#&gt; 37         TRUE            0                0            9.00       0.00</span>
+<span class="co">#&gt; 38         TRUE            0                0            9.25       0.00</span>
+<span class="co">#&gt; 39        FALSE            1            Sleep            0.00       9.50</span>
+<span class="co">#&gt; 40        FALSE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 41        FALSE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 42        FALSE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 43        FALSE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 44        FALSE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 45        FALSE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 46        FALSE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 47        FALSE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 48        FALSE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 49        FALSE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 50        FALSE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 51        FALSE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 52        FALSE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 53        FALSE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 54        FALSE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 55        FALSE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 56        FALSE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 57        FALSE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 58        FALSE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 59        FALSE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 60        FALSE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 61        FALSE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 62        FALSE            0                0            5.75       0.00</span>
+<span class="co">#&gt; 63        FALSE            0                0            6.00       0.00</span>
+<span class="co">#&gt; 64        FALSE            0                0            6.25       0.00</span>
+<span class="co">#&gt; 65        FALSE            0                0            6.50       0.00</span>
+<span class="co">#&gt; 66         TRUE            1             Wake            0.00       6.75</span>
+<span class="co">#&gt; 67         TRUE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 68         TRUE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 69         TRUE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 70         TRUE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 71         TRUE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 72         TRUE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 73         TRUE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 74         TRUE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 75         TRUE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 76         TRUE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 77         TRUE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 78         TRUE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 79         TRUE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 80         TRUE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 81         TRUE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 82         TRUE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 83         TRUE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 84         TRUE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 85         TRUE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 86         TRUE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 87         TRUE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 88         TRUE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 89        FALSE            1            Sleep            0.00       5.75</span>
+<span class="co">#&gt; 90        FALSE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 91        FALSE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 92        FALSE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 93        FALSE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 94        FALSE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 95        FALSE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 96        FALSE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 97        FALSE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 98        FALSE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 99        FALSE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 100       FALSE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 101       FALSE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 102       FALSE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 103       FALSE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 104       FALSE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 105       FALSE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 106       FALSE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 107       FALSE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 108       FALSE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 109       FALSE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 110       FALSE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 111       FALSE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 112       FALSE            0                0            5.75       0.00</span>
+<span class="co">#&gt; 113       FALSE            0                0            6.00       0.00</span>
+<span class="co">#&gt; 114       FALSE            0                0            6.25       0.00</span>
+<span class="co">#&gt; 115       FALSE            0                0            6.50       0.00</span>
+<span class="co">#&gt; 116       FALSE            0                0            6.75       0.00</span>
+<span class="co">#&gt; 117       FALSE            0                0            7.00       0.00</span>
+<span class="co">#&gt; 118       FALSE            0                0            7.25       0.00</span>
+<span class="co">#&gt; 119        TRUE            1             Wake            0.00       7.50</span>
+<span class="co">#&gt; 120        TRUE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 121        TRUE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 122        TRUE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 123        TRUE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 124        TRUE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 125        TRUE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 126        TRUE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 127        TRUE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 128        TRUE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 129        TRUE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 130        TRUE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 131        TRUE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 132        TRUE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 133        TRUE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 134        TRUE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 135        TRUE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 136        TRUE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 137        TRUE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 138        TRUE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 139        TRUE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 140        TRUE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 141       FALSE            1            Sleep            0.00       5.50</span>
+<span class="co">#&gt; 142       FALSE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 143       FALSE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 144       FALSE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 145       FALSE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 146       FALSE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 147       FALSE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 148       FALSE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 149       FALSE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 150       FALSE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 151       FALSE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 152       FALSE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 153       FALSE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 154       FALSE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 155       FALSE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 156       FALSE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 157       FALSE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 158       FALSE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 159       FALSE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 160       FALSE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 161       FALSE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 162       FALSE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 163       FALSE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 164       FALSE            0                0            5.75       0.00</span>
+<span class="co">#&gt; 165       FALSE            0                0            6.00       0.00</span>
+<span class="co">#&gt; 166        TRUE            1             Wake            0.00       6.25</span>
+<span class="co">#&gt; 167        TRUE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 168        TRUE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 169        TRUE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 170        TRUE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 171        TRUE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 172        TRUE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 173        TRUE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 174        TRUE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 175        TRUE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 176        TRUE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 177        TRUE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 178        TRUE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 179        TRUE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 180        TRUE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 181        TRUE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 182        TRUE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 183        TRUE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 184        TRUE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 185        TRUE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 186        TRUE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 187        TRUE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 188        TRUE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 189        TRUE            0                0            5.75       0.00</span>
+<span class="co">#&gt; 190        TRUE            0                0            6.00       0.00</span>
+<span class="co">#&gt; 191        TRUE            0                0            6.25       0.00</span>
+<span class="co">#&gt; 192        TRUE            0                0            6.50       0.00</span>
+<span class="co">#&gt; 193        TRUE            0                0            6.75       0.00</span>
+<span class="co">#&gt; 194        TRUE            0                0            7.00       0.00</span>
+<span class="co">#&gt; 195       FALSE            1            Sleep            0.00       7.25</span>
+<span class="co">#&gt; 196       FALSE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 197       FALSE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 198       FALSE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 199       FALSE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 200       FALSE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 201       FALSE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 202       FALSE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 203       FALSE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 204       FALSE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 205       FALSE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 206       FALSE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 207       FALSE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 208       FALSE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 209       FALSE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 210       FALSE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 211       FALSE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 212       FALSE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 213       FALSE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 214       FALSE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 215       FALSE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 216       FALSE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 217       FALSE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 218       FALSE            0                0            5.75       0.00</span>
+<span class="co">#&gt; 219       FALSE            0                0            6.00       0.00</span>
+<span class="co">#&gt; 220       FALSE            0                0            6.25       0.00</span>
+<span class="co">#&gt; 221       FALSE            0                0            6.50       0.00</span>
+<span class="co">#&gt; 222       FALSE            0                0            6.75       0.00</span>
+<span class="co">#&gt; 223       FALSE            0                0            7.00       0.00</span>
+<span class="co">#&gt; 224       FALSE            0                0            7.25       0.00</span>
+<span class="co">#&gt; 225       FALSE            0                0            7.50       0.00</span>
+<span class="co">#&gt; 226       FALSE            0                0            7.75       0.00</span>
+<span class="co">#&gt; 227        TRUE            1             Wake            0.00       8.00</span>
+<span class="co">#&gt; 228        TRUE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 229        TRUE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 230        TRUE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 231        TRUE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 232        TRUE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 233        TRUE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 234        TRUE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 235        TRUE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 236        TRUE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 237        TRUE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 238        TRUE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 239        TRUE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 240        TRUE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 241        TRUE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 242        TRUE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 243        TRUE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 244        TRUE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 245        TRUE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 246        TRUE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 247        TRUE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 248       FALSE            1            Sleep            0.00       5.25</span>
+<span class="co">#&gt; 249       FALSE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 250       FALSE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 251       FALSE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 252       FALSE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 253       FALSE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 254       FALSE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 255       FALSE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 256       FALSE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 257       FALSE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 258       FALSE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 259       FALSE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 260       FALSE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 261       FALSE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 262       FALSE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 263       FALSE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 264       FALSE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 265       FALSE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 266       FALSE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 267       FALSE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 268       FALSE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 269       FALSE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 270       FALSE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 271       FALSE            0                0            5.75       0.00</span>
+<span class="co">#&gt; 272       FALSE            0                0            6.00       0.00</span>
+<span class="co">#&gt; 273       FALSE            0                0            6.25       0.00</span>
+<span class="co">#&gt; 274       FALSE            0                0            6.50       0.00</span>
+<span class="co">#&gt; 275       FALSE            0                0            6.75       0.00</span>
+<span class="co">#&gt; 276       FALSE            0                0            7.00       0.00</span>
+<span class="co">#&gt; 277       FALSE            0                0            7.25       0.00</span>
+<span class="co">#&gt; 278       FALSE            0                0            7.50       0.00</span>
+<span class="co">#&gt; 279       FALSE            0                0            7.75       0.00</span>
+<span class="co">#&gt; 280       FALSE            0                0            8.00       0.00</span>
+<span class="co">#&gt; 281       FALSE            0                0            8.25       0.00</span>
+<span class="co">#&gt; 282       FALSE            0                0            8.50       0.00</span>
+<span class="co">#&gt; 283       FALSE            0                0            8.75       0.00</span>
+<span class="co">#&gt; 284       FALSE            0                0            9.00       0.00</span>
+<span class="co">#&gt; 285       FALSE            0                0            9.25       0.00</span>
+<span class="co">#&gt; 286       FALSE            0                0            9.50       0.00</span>
+<span class="co">#&gt; 287       FALSE            0                0            9.75       0.00</span>
+<span class="co">#&gt; 288        TRUE            1             Wake            0.00      10.00</span>
+<span class="co">#&gt; 289        TRUE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 290        TRUE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 291        TRUE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 292        TRUE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 293        TRUE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 294        TRUE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 295        TRUE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 296        TRUE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 297        TRUE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 298        TRUE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 299        TRUE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 300        TRUE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 301        TRUE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 302        TRUE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 303        TRUE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 304        TRUE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 305        TRUE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 306        TRUE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 307        TRUE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 308        TRUE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 309        TRUE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 310        TRUE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 311        TRUE            0                0            5.75       0.00</span>
+<span class="co">#&gt; 312        TRUE            0                0            6.00       0.00</span>
+<span class="co">#&gt; 313        TRUE            0                0            6.25       0.00</span>
+<span class="co">#&gt; 314        TRUE            0                0            6.50       0.00</span>
+<span class="co">#&gt; 315        TRUE            0                0            6.75       0.00</span>
+<span class="co">#&gt; 316        TRUE            0                0            7.00       0.00</span>
+<span class="co">#&gt; 317        TRUE            0                0            7.25       0.00</span>
+<span class="co">#&gt; 318        TRUE            0                0            7.50       0.00</span>
+<span class="co">#&gt; 319        TRUE            0                0            7.75       0.00</span>
+<span class="co">#&gt; 320        TRUE            0                0            8.00       0.00</span>
+<span class="co">#&gt; 321       FALSE            1            Sleep            0.00       8.25</span>
+<span class="co">#&gt; 322       FALSE            0                0            0.25       0.00</span>
+<span class="co">#&gt; 323       FALSE            0                0            0.50       0.00</span>
+<span class="co">#&gt; 324       FALSE            0                0            0.75       0.00</span>
+<span class="co">#&gt; 325       FALSE            0                0            1.00       0.00</span>
+<span class="co">#&gt; 326       FALSE            0                0            1.25       0.00</span>
+<span class="co">#&gt; 327       FALSE            0                0            1.50       0.00</span>
+<span class="co">#&gt; 328       FALSE            0                0            1.75       0.00</span>
+<span class="co">#&gt; 329       FALSE            0                0            2.00       0.00</span>
+<span class="co">#&gt; 330       FALSE            0                0            2.25       0.00</span>
+<span class="co">#&gt; 331       FALSE            0                0            2.50       0.00</span>
+<span class="co">#&gt; 332       FALSE            0                0            2.75       0.00</span>
+<span class="co">#&gt; 333       FALSE            0                0            3.00       0.00</span>
+<span class="co">#&gt; 334       FALSE            0                0            3.25       0.00</span>
+<span class="co">#&gt; 335       FALSE            0                0            3.50       0.00</span>
+<span class="co">#&gt; 336       FALSE            0                0            3.75       0.00</span>
+<span class="co">#&gt; 337       FALSE            0                0            4.00       0.00</span>
+<span class="co">#&gt; 338       FALSE            0                0            4.25       0.00</span>
+<span class="co">#&gt; 339       FALSE            0                0            4.50       0.00</span>
+<span class="co">#&gt; 340       FALSE            0                0            4.75       0.00</span>
+<span class="co">#&gt; 341       FALSE            0                0            5.00       0.00</span>
+<span class="co">#&gt; 342       FALSE            0                0            5.25       0.00</span>
+<span class="co">#&gt; 343       FALSE            0                0            5.50       0.00</span>
+<span class="co">#&gt; 344       FALSE            0                0            5.75       0.00</span>
+<span class="co">#&gt; 345       FALSE            0                0            6.00       0.00</span>
+<span class="co">#&gt; 346       FALSE            0                0            6.25       0.00</span>
+<span class="co">#&gt; 347       FALSE            0                0            6.50       0.00</span>
+<span class="co">#&gt; 348       FALSE            0                0            6.75       0.00</span>
+<span class="co">#&gt; 349       FALSE            0                0            7.00       0.00</span>
+<span class="co">#&gt; 350       FALSE            0                0            7.25       0.00</span>
+<span class="co">#&gt; 351       FALSE            0                0            7.50       0.00</span>
+<span class="co">#&gt; 352       FALSE            0                0            7.75       0.00</span>
+<span class="co">#&gt; 353       FALSE            0                0            8.00       0.00</span>
+<span class="co">#&gt; 354       FALSE            0                0            8.25       0.00</span>
+<span class="co">#&gt; 355       FALSE            0                0            8.50       0.00</span>
+<span class="co">#&gt; 356       FALSE            0                0            8.75       0.00</span>
+<span class="co">#&gt; 357       FALSE            0                0            9.00       0.00</span>
+<span class="co">#&gt; 358       FALSE            0                0            9.25       0.00</span>
+<span class="co">#&gt; 359       FALSE            0                0            9.50       0.00</span></code></pre></div>
 </div>
 </div>
-<div id="modelling-and-the-simulation-dataframe" class="section level2">
-<h2 class="hasAnchor">
-<a href="#modelling-and-the-simulation-dataframe" class="anchor" aria-hidden="true"></a>Modelling and the Simulation Dataframe</h2>
+<div class="section level3">
+<h3 id="modelling-and-the-simulation-dataframe">Modelling and the Simulation Dataframe<a class="anchor" aria-label="anchor" href="#modelling-and-the-simulation-dataframe"></a>
+</h3>
 <p>Now that you have generated the FIPS format, you can now apply the FIPS simulation functions to this to actually run BMM predictions on the series. In the example below, we will run a Three Process Model simulation over the <code>FIPS_df</code> series we just created. To do this, we will use the <code>FIPS_simulation</code> function, which takes in three arguments: a <code>FIPS_df</code> object, a specification of a <code>modeltype</code> (see help for model types currently implemented), and a <code>pvec</code> which is a vector of parameters for the model.</p>
 <p>The parameter vectors provided by default in the package are those reported by <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0108679" class="external-link">Ingre et al. (2014)</a>. Please see the help files for citations and further information. These defaults are customisable, and if you are using Rstudio or Emacs ESS, you will get full autocompletion with descriptions of each parameter (See <code><a href="../reference/TPM_make_pvec.html">help("TPM_make_pvec", "FIPS")</a></code>).</p>
 <p>We will use the default parameter vector for the Three process model created by <code><a href="../reference/TPM_make_pvec.html">FIPS::TPM_make_pvec()</a></code>, which takes on the following values:</p>
@@ -988,20 +1024,20 @@
 <span class="co">#&gt;    -5.7200000    -1.5100000     7.9600000    10.6000000    -0.6000000 </span>
 <span class="co">#&gt; For descriptions of these parameters, inspect:  help(FIPS::TPM_make_pvec) </span>
 <span class="co">#&gt; ---------</span>
-<span class="co">#&gt; # A tibble: 1,897 x 10</span>
+<span class="co">#&gt; <span style="color: #949494;"># A tibble: 1,897 x 10</span></span>
 <span class="co">#&gt;    datetime             time wake_status sim_hours     s     c     w         u</span>
-<span class="co">#&gt;    &lt;dttm&gt;              &lt;dbl&gt; &lt;lgl&gt;           &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 2018-05-01 07:00:00  7    TRUE           0       7.96 -2.10 -5.72 -0.0432  </span>
-<span class="co">#&gt;  2 2018-05-01 07:05:00  7.08 TRUE           0.0833  7.94 -2.07 -5.04 -0.0348  </span>
-<span class="co">#&gt;  3 2018-05-01 07:10:00  7.17 TRUE           0.167   7.93 -2.04 -4.45 -0.0272  </span>
-<span class="co">#&gt;  4 2018-05-01 07:15:00  7.25 TRUE           0.25    7.91 -2.00 -3.92 -0.0206  </span>
-<span class="co">#&gt;  5 2018-05-01 07:20:00  7.33 TRUE           0.333   7.89 -1.97 -3.46 -0.0149  </span>
-<span class="co">#&gt;  6 2018-05-01 07:25:00  7.42 TRUE           0.417   7.88 -1.94 -3.05 -0.0100  </span>
-<span class="co">#&gt;  7 2018-05-01 07:30:00  7.5  TRUE           0.5     7.86 -1.90 -2.69 -0.00616 </span>
-<span class="co">#&gt;  8 2018-05-01 07:35:00  7.58 TRUE           0.583   7.85 -1.87 -2.37 -0.00321 </span>
-<span class="co">#&gt;  9 2018-05-01 07:40:00  7.67 TRUE           0.667   7.83 -1.83 -2.09 -0.00122 </span>
-<span class="co">#&gt; 10 2018-05-01 07:45:00  7.75 TRUE           0.75    7.81 -1.79 -1.84 -0.000171</span>
-<span class="co">#&gt; # ... with 1,887 more rows, and 2 more variables: KSS &lt;dbl&gt;, alertness &lt;dbl&gt;</span></code></pre></div>
+<span class="co">#&gt;    <span style="color: #949494; font-style: italic;">&lt;dttm&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>           <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 1</span> 2018-05-01 <span style="color: #949494;">07:00:00</span>  7    TRUE           0       7.96 -<span style="color: #BB0000;">2.10</span> -<span style="color: #BB0000;">5.72</span> -<span style="color: #BB0000;">0.043</span><span style="color: #BB0000; text-decoration: underline;">2</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 2</span> 2018-05-01 <span style="color: #949494;">07:05:00</span>  7.08 TRUE           0.083<span style="text-decoration: underline;">3</span>  7.94 -<span style="color: #BB0000;">2.07</span> -<span style="color: #BB0000;">5.04</span> -<span style="color: #BB0000;">0.034</span><span style="color: #BB0000; text-decoration: underline;">8</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 3</span> 2018-05-01 <span style="color: #949494;">07:10:00</span>  7.17 TRUE           0.167   7.93 -<span style="color: #BB0000;">2.04</span> -<span style="color: #BB0000;">4.45</span> -<span style="color: #BB0000;">0.027</span><span style="color: #BB0000; text-decoration: underline;">2</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 4</span> 2018-05-01 <span style="color: #949494;">07:15:00</span>  7.25 TRUE           0.25    7.91 -<span style="color: #BB0000;">2.00</span> -<span style="color: #BB0000;">3.92</span> -<span style="color: #BB0000;">0.020</span><span style="color: #BB0000; text-decoration: underline;">6</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 5</span> 2018-05-01 <span style="color: #949494;">07:20:00</span>  7.33 TRUE           0.333   7.89 -<span style="color: #BB0000;">1.97</span> -<span style="color: #BB0000;">3.46</span> -<span style="color: #BB0000;">0.014</span><span style="color: #BB0000; text-decoration: underline;">9</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 6</span> 2018-05-01 <span style="color: #949494;">07:25:00</span>  7.42 TRUE           0.417   7.88 -<span style="color: #BB0000;">1.94</span> -<span style="color: #BB0000;">3.05</span> -<span style="color: #BB0000;">0.010</span><span style="color: #BB0000; text-decoration: underline;">0</span>  </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 7</span> 2018-05-01 <span style="color: #949494;">07:30:00</span>  7.5  TRUE           0.5     7.86 -<span style="color: #BB0000;">1.90</span> -<span style="color: #BB0000;">2.69</span> -<span style="color: #BB0000;">0.006</span><span style="color: #BB0000; text-decoration: underline;">16</span> </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 8</span> 2018-05-01 <span style="color: #949494;">07:35:00</span>  7.58 TRUE           0.583   7.85 -<span style="color: #BB0000;">1.87</span> -<span style="color: #BB0000;">2.37</span> -<span style="color: #BB0000;">0.003</span><span style="color: #BB0000; text-decoration: underline;">21</span> </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;"> 9</span> 2018-05-01 <span style="color: #949494;">07:40:00</span>  7.67 TRUE           0.667   7.83 -<span style="color: #BB0000;">1.83</span> -<span style="color: #BB0000;">2.09</span> -<span style="color: #BB0000;">0.001</span><span style="color: #BB0000; text-decoration: underline;">22</span> </span>
+<span class="co">#&gt; <span style="color: #BCBCBC;">10</span> 2018-05-01 <span style="color: #949494;">07:45:00</span>  7.75 TRUE           0.75    7.81 -<span style="color: #BB0000;">1.79</span> -<span style="color: #BB0000;">1.84</span> -<span style="color: #BB0000;">0.000</span><span style="color: #BB0000; text-decoration: underline;">171</span></span>
+<span class="co">#&gt; <span style="color: #949494;"># ... with 1,887 more rows, and 2 more variables: KSS &lt;dbl&gt;, alertness &lt;dbl&gt;</span></span></code></pre></div>
 <ul>
 <li>
 <code>datetime</code> = vector of datetime stamps separated at equidistance intervals.</li>
@@ -1043,12 +1079,12 @@
 </li>
 </ul>
 </div>
-<div id="plotting" class="section level1">
-<h1 class="hasAnchor">
-<a href="#plotting" class="anchor" aria-hidden="true"></a>Plotting</h1>
-<div id="plot-1-parameter-plots" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plot-1-parameter-plots" class="anchor" aria-hidden="true"></a>Plot 1: Parameter Plots</h3>
+<div class="section level2">
+<h2 id="plotting">Plotting<a class="anchor" aria-label="anchor" href="#plotting"></a>
+</h2>
+<div class="section level4">
+<h4 id="plot-1-parameter-plots">Plot 1: Parameter Plots<a class="anchor" aria-label="anchor" href="#plot-1-parameter-plots"></a>
+</h4>
 <p>FIPS provides a default plot method to visualize model predictions and time-varying process estimates over time, discussed in detail <a href="plotting.html">in the plotting vignette</a>. These plots aid with debugging and understanding how the different model parameters contribute to predictions.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Plot the whole time series</span>
@@ -1062,9 +1098,9 @@
       to<span class="op">=</span> <span class="fu">as_datetime</span><span class="op">(</span><span class="st">'2018-05-01 23:00:00'</span><span class="op">)</span> <span class="op">+</span> <span class="fu">hours</span><span class="op">(</span><span class="fl">90</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="FIPS-simulation-walkthrough_files/figure-html/unnamed-chunk-7-2.png" width="672"></p>
 </div>
-<div id="plot-2-heatmap-prediction-plots" class="section level3">
-<h3 class="hasAnchor">
-<a href="#plot-2-heatmap-prediction-plots" class="anchor" aria-hidden="true"></a>Plot 2: Heatmap Prediction Plots</h3>
+<div class="section level4">
+<h4 id="plot-2-heatmap-prediction-plots">Plot 2: Heatmap Prediction Plots<a class="anchor" aria-label="anchor" href="#plot-2-heatmap-prediction-plots"></a>
+</h4>
 <p>There are many other ways that visualizations could help inform theory and practice. The below heat plot is an example of how dangerous times in a mission, according to the TPM predictions, could be visualized. In the example below, the regions in deep orange indicate a greatly increased risk of fatigue. However, the fact that the increased fatigue occurs at the start of the mission indicates the initalisation parameters (e.g., <code>S0</code>) are to blame, so this isn’t a cause for significant concern.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
@@ -1079,7 +1115,7 @@
   <span class="fu">separate</span><span class="op">(</span><span class="va">time</span>, into <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"plot_hour"</span>, <span class="st">"plot_minute"</span><span class="op">)</span>, <span class="st">":"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
   <span class="fu">mutate</span><span class="op">(</span>halfhour <span class="op">=</span> <span class="fu">if_else</span><span class="op">(</span><span class="va">plot_minute</span> <span class="op">&lt;</span> <span class="fl">30</span>, <span class="fl">0</span>, <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">plot_hour</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">group_by</span><span class="op">(</span><span class="va">day</span>, <span class="va">plot_hour</span>, <span class="va">halfhour</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">summarise</span><span class="op">(</span>KSS <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">KSS</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">summarise</span><span class="op">(</span>KSS <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">KSS</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"keep"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">day</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="co"># Start Plot</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">day</span>, <span class="va">halfhour</span>, fill <span class="op">=</span> <span class="va">KSS</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -1090,9 +1126,8 @@
   <span class="fu">colorspace</span><span class="fu">::</span><span class="fu"><a href="https://colorspace.R-Forge.R-project.org//reference/scale_colour_continuous_divergingx.html" class="external-link">scale_fill_continuous_divergingx</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"KSS"</span>, palette <span class="op">=</span> <span class="st">"Zissou 1"</span>, limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">9</span><span class="op">)</span>, mid <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">ggtitle</span><span class="op">(</span>label <span class="op">=</span> <span class="st">"Three Process Model (KSS)"</span>, subtitle <span class="op">=</span> <span class="st">"Heatmap of TPM predicted performance by 0.5hr"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">theme</span><span class="op">(</span>axis.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">12</span><span class="op">)</span><span class="op">)</span> 
-<span class="co">#&gt; `summarise()` has grouped output by 'day', 'plot_hour'. You can override using the `.groups` argument.</span>
 
-<span class="va">plot3_w</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">plot3_w</span><span class="op">)</span></code></pre></div>
 <p><img src="FIPS-simulation-walkthrough_files/figure-html/unnamed-chunk-8-1.png" width="480"></p>
 </div>
 </div>
@@ -1115,7 +1150,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9001.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
 </div>
 
       </footer>

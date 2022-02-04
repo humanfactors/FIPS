@@ -194,7 +194,7 @@ plot3_w = TPM.simulation.results %>%
   separate(time, into = c("plot_hour", "plot_minute"), ":") %>%
   mutate(halfhour = if_else(plot_minute < 30, 0, 0.5) + as.numeric(plot_hour)) %>% 
   group_by(day, plot_hour, halfhour) %>% 
-  summarise(KSS = mean(KSS)) %>% 
+  summarise(KSS = mean(KSS), .groups = "keep") %>% 
   filter(day > 1) %>% 
   # Start Plot
   ggplot(aes(day, halfhour, fill = KSS)) +
@@ -206,7 +206,7 @@ plot3_w = TPM.simulation.results %>%
   ggtitle(label = "Three Process Model (KSS)", subtitle = "Heatmap of TPM predicted performance by 0.5hr") +
   theme(axis.title = element_text(size = 12)) 
 
-plot3_w
+plot(plot3_w)
 
 ```
 

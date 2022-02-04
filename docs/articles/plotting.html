@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">FIPS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -68,7 +68,7 @@
 
       
 
-      </header><script src="plotting_files/header-attrs-2.8/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Plotting</h1>
@@ -81,23 +81,23 @@
 
     
     
-<div id="introduction" class="section level2">
-<h2 class="hasAnchor">
-<a href="#introduction" class="anchor" aria-hidden="true"></a>Introduction</h2>
+<div class="section level2">
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h2>
 <p>In this vignette we briefly demonstrate how to use the FIPS plotting function. Below we create sleeptimes and simulate an example sleep scenario to plot. This example includes initial sleep deprivation.</p>
 <p>(Note: you should read <code><a href="../articles/FIPS-simulation-walkthrough.html">vignette("FIPS-simulation-walkthrough","FIPS")</a></code> first).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Simulation start date time (i.e., when you want first predictions to begin)</span>
-<span class="va">simulation.start</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-01 11:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
+<span class="va">simulation.start</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-01 11:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
 <span class="co"># Simulation end date time (i.e., when you want predictions to end)</span>
-<span class="va">simulation.end</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-09 21:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
+<span class="va">simulation.end</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-09 21:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
 <span class="co"># Sleep times, 5 hours per night, starting 23:00</span>
 <span class="va">example.sleeptimes</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble</a></span><span class="op">(</span>
   sleep.start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span>
-    from <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-03 02:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>, 
-    to <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-09 16:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>,
+    from <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-03 02:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>, 
+    to <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-09 16:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>,
     by <span class="op">=</span> <span class="st">'24 hours'</span><span class="op">)</span>,
-  sleep.end <span class="op">=</span> <span class="va">sleep.start</span> <span class="op">+</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/duration.html" class="external-link">dhours</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>,
+  sleep.end <span class="op">=</span> <span class="va">sleep.start</span> <span class="op">+</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/duration.html" class="external-link">dhours</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>,
   sleep.id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rank.html" class="external-link">rank</a></span><span class="op">(</span><span class="va">sleep.start</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">simulated.dataframe</span> <span class="op">=</span> <span class="fu"><a href="../reference/parse_sleeptimes.html">parse_sleeptimes</a></span><span class="op">(</span>
@@ -174,7 +174,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link external-link">pkgdown</a> 1.6.1.9001.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
 </div>
 
       </footer>

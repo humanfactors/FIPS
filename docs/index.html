@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">FIPS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -50,9 +50,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/FIPS-data-types.html">UNKNOWN TITLE</a>
-    </li>
-    <li>
       <a href="articles/FIPS-simulation-walkthrough.html">FIPS Simulation Walkthrough</a>
     </li>
     <li>
@@ -75,28 +72,29 @@
   <div class="contents col-md-9">
 
 
-<div id="fatigue-impairment-prediction-suite-fips" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#fatigue-impairment-prediction-suite-fips" class="anchor" aria-hidden="true"></a>Fatigue Impairment Prediction Suite (FIPS)</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="fatigue-impairment-prediction-suite-fips">Fatigue Impairment Prediction Suite (FIPS)<a class="anchor" aria-label="anchor" href="#fatigue-impairment-prediction-suite-fips"></a>
+</h1></div>
 <p><img align="right" src="https://github.com/humanfactors/FIPS/blob/master/inst/logo/FIPS_logo.png?raw=true" alt="FIPSLOGO" width="200"></p>
 <blockquote>
 <p>If you are measure sleep behaviour or want to predict fatigue, this package probably can help.</p>
 </blockquote>
 <p>FIPS is an R package that provides researchers and practitioners with a comprehensive set of functions for applying and simulating from bio-mathematical models (BMMs) of fatigue.</p>
-<p>FIPS includes a set of functions for transforming sleep and actigraphy data to the data frame structure required for executing BMM simulations(called a <a href="https://humanfactors.github.io/FIPS/reference/FIPS_df.html"><code>FIPS_df</code></a>). Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the <a href="https://www.sciencedirect.com/science/article/pii/S0022519313001811" class="external-link">Unified Model</a> and <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0108679" class="external-link">Three Process Model</a>. All models are extendable and include customisable parameters. The core features of FIPS leverage R’s flexible <code>S3</code> class system, making extensions straightforward.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor" aria-hidden="true"></a>Installation</h2>
+<p>FIPS includes a set of functions for transforming sleep and actigraphy data to the data frame structure required for executing BMM simulations (called a <a href="https://humanfactors.github.io/FIPS/reference/FIPS_df.html"><code>FIPS_df</code></a>). Importantly, FIPS includes a set of functions for simulating from and interpreting several forms of BMM, including the <a href="https://www.sciencedirect.com/science/article/pii/S0022519313001811" class="external-link">Unified Model</a> and <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0108679" class="external-link">Three Process Model</a>. All models are extendable and include customisable parameters. The core features of FIPS leverage R’s flexible <code>S3</code> class system, making extensions straightforward.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>We have no plans for a CRAN submission. To install the latest version of FIPS:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages('remotes') # if remotes not installed</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"humanfactors/FIPS"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div id="core-features-example" class="section level1">
-<h1 class="hasAnchor">
-<a href="#core-features-example" class="anchor" aria-hidden="true"></a>Core Features Example</h1>
+<div class="section level1">
+<h1 id="core-features-example">Core Features Example<a class="anchor" aria-label="anchor" href="#core-features-example"></a>
+</h1>
 <p>Detailed information regarding the FIPS data formats can be found in the <a href="https://humanfactors.github.io/FIPS/articles/FIPS-simulation-walkthrough.html">“FIPS Simulation Walkthrough Vignette”</a>.</p>
+<p>If you require a more manual user-interface to generate the FIPS-df, we have a web application that may help you generate the input CSV: <a href="https://github.com/Akhil-Eaga/FIPS-Data-Entry-System" class="external-link uri">https://github.com/Akhil-Eaga/FIPS-Data-Entry-System</a>.</p>
 <p><strong>Step 1:</strong> Prior to simulation, FIPS requires sleep history data to be in a special format, called a <a href="https://humanfactors.github.io/FIPS/reference/FIPS_df.html"><code>FIPS_df</code></a> which contains all the information required for modelling (e.g., time awake, time asleep). This can be created with <a href="https://humanfactors.github.io/FIPS/reference/parse_sleepwake_sequence.html"><code>parse_sleepwake_sequence</code></a> or <a href="https://humanfactors.github.io/FIPS/reference/parse_sleeptimes.html"><code>parse_sleeptimes</code></a>.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">my_FIPS_dataframe</span> <span class="op">=</span> <span class="fu">FIPS</span><span class="fu">::</span><span class="fu"><a href="reference/parse_sleepwake_sequence.html">parse_sleepwake_sequence</a></span><span class="op">(</span>
@@ -170,14 +168,14 @@ pvec <span class="op">=</span> <span class="fu"><a href="reference/unified_make_
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">TPM.simulation.results</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">TPM.simulation.results</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">TPM.simulation.results</span><span class="op">)</span></code></pre></div>
-<div id="what-are-bmms" class="section level2">
-<h2 class="hasAnchor">
-<a href="#what-are-bmms" class="anchor" aria-hidden="true"></a>What are BMMs?</h2>
+<div class="section level2">
+<h2 id="what-are-bmms">What are BMMs?<a class="anchor" aria-label="anchor" href="#what-are-bmms"></a>
+</h2>
 <p>BMMs are a class of biological phenomenological models which are used to predict the neuro-behavioural outcomes of fatigue (e.g., alertness, performance) using sleep-wake history. There are several different BMM implementations, but most have their roots in Borbély’s (1982) two process model which stipulates that sleepiness/performance impairment functions in response to two processes: a circadian process and a homeostatic process. BMMs enable hypothesis testing of the latent factors underlying the relationships between sleep, fatigue, and human performance. For example, they enable researchers to estimate the relative contributions of homeostatic processes on fatigue, relative to endogenous circadian processes. These models are also frequently applied by defence and industrial sectors to support system safety as part of broader fatigue management strategies. FIPS is the first open-source BMM framework enabling practitioners to inspect, validate, and ideally extend BMMs.</p>
 </div>
-<div id="critical-model-information" class="section level2">
-<h2 class="hasAnchor">
-<a href="#critical-model-information" class="anchor" aria-hidden="true"></a>Critical Model Information</h2>
+<div class="section level2">
+<h2 id="critical-model-information">Critical Model Information<a class="anchor" aria-label="anchor" href="#critical-model-information"></a>
+</h2>
 <p>Critical functions, arguments and outputs for each model are summarised in table below:</p>
 <table class="table">
 <thead><tr class="header">
@@ -216,14 +214,14 @@ pvec <span class="op">=</span> <span class="fu"><a href="reference/unified_make_
 </table>
 </div>
 </div>
-<div id="contributing-and-support" class="section level1">
-<h1 class="hasAnchor">
-<a href="#contributing-and-support" class="anchor" aria-hidden="true"></a>Contributing and Support</h1>
+<div class="section level1">
+<h1 id="contributing-and-support">Contributing and Support<a class="anchor" aria-label="anchor" href="#contributing-and-support"></a>
+</h1>
 <p>We welcome contributions great or small from the community. It would incredibly useful to receive feedback via Github Issues for anything regarding the package, including: installation issues, bugs or unexpected behaviour, usability, feature requests or inquiries, or even something you don’t understand in the tutorials about this class of models more generally. Please file a Github issue for any general support queries too.</p>
 </div>
-<div id="terms-for-academic-usage" class="section level1">
-<h1 class="hasAnchor">
-<a href="#terms-for-academic-usage" class="anchor" aria-hidden="true"></a>Terms for Academic Usage</h1>
+<div class="section level1">
+<h1 id="terms-for-academic-usage">Terms for Academic Usage<a class="anchor" aria-label="anchor" href="#terms-for-academic-usage"></a>
+</h1>
 <p>In addition to the rights stipulated in the GNU Affero GPL-3, we request that all academic work leveraging FIPS provide a direct citation to the software package.</p>
 <p>Wilson et al., (2020). FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment. <em>Journal of Open Source Software</em>, 5(51), 2340, <a href="https://doi.org/10.21105/joss.02340" class="external-link uri">https://doi.org/10.21105/joss.02340</a></p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode tex"><code class="sourceCode latex"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>@article{Wilson2020,</span>
@@ -247,7 +245,7 @@ pvec <span class="op">=</span> <span class="fu"><a href="reference/unified_make_
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li>
-<a href="https://www.r-project.org/Licenses/AGPL-3">AGPL-3</a> + file <a href="LICENSE-text.html">LICENSE</a>
+<a href="https://www.r-project.org/Licenses/AGPL-3" class="external-link">AGPL-3</a> + file <a href="LICENSE-text.html">LICENSE</a>
 </li>
 </ul>
 </div>
@@ -256,6 +254,13 @@ pvec <span class="op">=</span> <span class="fu"><a href="reference/unified_make_
 <h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CONTRIBUTING.html">Contributing guide</a></li>
+</ul>
+</div>
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing FIPS</a></li>
 </ul>
 </div>
 
@@ -288,7 +293,7 @@ pvec <span class="op">=</span> <span class="fu"><a href="reference/unified_make_
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 1.6.1.9001.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
 </div>
 
       </footer>

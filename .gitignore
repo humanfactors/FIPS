@@ -38,3 +38,4 @@ vignettes/*.R
 # R package: bookdown caching files
 /*_files/
 .vscode/
+/doc/
