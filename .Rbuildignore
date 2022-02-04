@@ -4,6 +4,7 @@
 ^\.dir-locals\.el$
 ^\.vscode$
 ^\.travis\.yml$
-^ CONTRIBUTING\.md$
+^CONTRIBUTING\.md$
 ^\.github$
-^\.docs$
+^docs$
+^_pkgdown.yml$
