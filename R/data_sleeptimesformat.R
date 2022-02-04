@@ -51,7 +51,7 @@
 #' @export
 #' @md
 #'
-#' @importFrom rlang :=
+#' @importFrom rlang := .data
 parse_sleeptimes <- function(sleeptimes, series.start, series.end,
                              roundvalue = 5, sleep.start.col, sleep.end.col, sleep.id.col) {
 
@@ -90,18 +90,18 @@ parse_sleeptimes <- function(sleeptimes, series.start, series.end,
 
   # Now rename the user supplied sleeptime columns to "sleep.id", "sleep.start", and "sleep.end".
   sleeptimes = sleeptimes %>%
-    dplyr::rename(sleep.id := !!sym(sleep.id.col),
-           sleep.start := !!sym(sleep.start.col),
-           sleep.end := !!sym(sleep.end.col))
+    dplyr::rename("sleep.id" := !!sym(sleep.id.col),
+                  "sleep.start" := !!sym(sleep.start.col),
+                  "sleep.end" := !!sym(sleep.end.col))
 
   # Round sleep and wake times to the desired epoch value
   rounded.sleeptimes <- sleeptimes %>%
-    round_times(sleep.start, round_by = roundvalue) %>%
-    round_times(sleep.end, round_by = roundvalue)
+    round_times("sleep.start", round_by = roundvalue) %>%
+    round_times("sleep.end", round_by = roundvalue)
 
   # This makes the end of the sleep period occur 5 mins prior so that wake period starts at correct epoch
   rounded.sleeptimes <- rounded.sleeptimes %>%
-    dplyr::mutate(sleep.end = sleep.end - lubridate::minutes(roundvalue))
+    dplyr::mutate(sleep.end = .data$sleep.end - lubridate::minutes(roundvalue))
 
   # Assign minimum sleep start
   minimum.sleepstart = min(rounded.sleeptimes[["sleep.start"]])
@@ -122,12 +122,12 @@ parse_sleeptimes <- function(sleeptimes, series.start, series.end,
 
   joined.times <- dplyr::bind_rows(presleep.times, processed.sleeptimes) %>%
     dplyr::bind_rows(postwake.times) %>%
-    dplyr::mutate(wake_status_int = as.integer(wake_status)) %>%
-    dplyr::mutate(change_point = change_points(wake_status_int)) %>%
-    dplyr::mutate(switch_direction = status_dir(wake_status_int, change_point)) %>%
-    dplyr::mutate(status_duration = time_in_status(wake_status, roundvalue)) %>%
-    dplyr::mutate(total_prev = shifted_time_status(wake_status, change_point, roundvalue)) %>%
-    generate_decimal_timeunits(datetime)
+    dplyr::mutate(wake_status_int = as.integer(.data$wake_status)) %>%
+    dplyr::mutate(change_point = change_points(.data$wake_status_int)) %>%
+    dplyr::mutate(switch_direction = status_dir(.data$wake_status_int, .data$change_point)) %>%
+    dplyr::mutate(status_duration = time_in_status(.data$wake_status, roundvalue)) %>%
+    dplyr::mutate(total_prev = shifted_time_status(.data$wake_status, .data$change_point, roundvalue)) %>%
+    generate_decimal_timeunits("datetime")
 
   return(as_FIPS_df(joined.times))
 }
@@ -186,7 +186,7 @@ generate_postwake_times <- function(simulationend, lastwake, expand_by = 5) {
 
 #' Round times by column
 #'
-#' @param .data The sleeptimes dataframe
+#' @param .stdata The sleeptimes dataframe
 #' @param colname the column required to be rounded
 #' @param round_by Amount (in minutes) to round sleep times to
 #'
@@ -194,31 +194,36 @@ generate_postwake_times <- function(simulationend, lastwake, expand_by = 5) {
 #' @importFrom dplyr mutate
 #' @importFrom lubridate round_date
 #'
+#'
 #' @export
-round_times <- function(.data, colname, round_by = 5) {
+round_times <- function(.stdata, colname, round_by = 5) {
   if(round_by < 5) warning("Rounding less than 5 will result in an excessively large dataframe for long series")
-  .data %>%
-    dplyr::mutate({{colname}} := lubridate::round_date({{colname}}, paste(round_by, "mins")))
+
+  colname = rlang::ensym(colname)
+  .stdata %>%
+    dplyr::mutate(!!colname := lubridate::round_date(!!colname, paste(round_by, "mins")))
 }
 
 #' Expand Sleep Times to full vector
 #'
 #' Turns the paired sleeptimes into a long single vectored datetime sequence
 #'
-#' @param .data A sleeptimes dataframe
+#' @param .stdata A sleeptimes dataframe
 #' @param expand_by Amount (in minutes) to expand sleep times by
+#'
+#' @importFrom rlang .data
 #'
 #' @return Sleeptimedataframe with single columns vector for datetime and wake status
 #' @keywords internal
-expand_sleep_series <- function(.data, expand_by = 5) {
+expand_sleep_series <- function(.stdata, expand_by = 5) {
 
   emins = paste(expand_by, "mins")
 
-  .data %>%
-    dplyr::group_by(sleep.id) %>%
-    tidyr::expand(datetime = seq(min(sleep.start), max(sleep.end), by = emins)) %>%
+  .stdata %>%
+    dplyr::group_by(.data$sleep.id) %>%
+    tidyr::expand(datetime = seq(min(.data$sleep.start), max(.data$sleep.end), by = emins)) %>%
     dplyr::mutate(wake_status = F) %>%
     dplyr::ungroup() %>%
-    tidyr::complete(datetime = seq(min(datetime), max(datetime), by = emins), fill = list(wake_status = T))
+    tidyr::complete(datetime = seq(min(.data$datetime), max(.data$datetime), by = emins), fill = list(wake_status = T))
 }
 

@@ -11,6 +11,7 @@ validate_formula <- function(.FIPS_sim, model_formula) {
 #' @param model_formula A formula describing how the time-varying processes predictors should be calculated for the predicted output.
 #'
 #' @return Minimal dataframe with only requird columns for computation
+#' @importFrom stats terms
 get_bmm_model_frame <- function(.FIPS_sim, model_formula) {
   validated_labs = attr(terms(model_formula), "term.labels")
   validated_labs = validated_labs[!grepl("I\\(", validated_labs)]

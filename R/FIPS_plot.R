@@ -7,7 +7,8 @@
 #' @param fatigue_CIs A logical indicating whether uncertainty intervals on fatigue should be plotted
 #' @param observed A data frame with any observed sleepiness ratings or objective indicators to plot against predictions
 #' @param observed_y The name of the observed sleepiness ratings in the observed data frame
-#'
+#' @param ... additional arguments passed to ggplot2 theme_classic
+#' @importFrom rlang .data
 #' @return A ggplot2 object displaying fatigue and other requested processes over time
 #' @md
 #' @export
@@ -17,7 +18,8 @@ FIPS_plot <- function(dats,
                       plot_stat = NULL,
                       fatigue_CIs = FALSE,
                       observed = NULL,
-                      observed_y = NULL) {
+                      observed_y = NULL,
+                      ...) {
 
 
   if(FIPS_Simulation_lost_attributes(dats)) {
@@ -43,15 +45,15 @@ FIPS_plot <- function(dats,
 
   # Filter based on selected datetimes from and to
   if (!is.null(from)) {
-    dats <- dats %>% dplyr::filter(datetime > from)
+    dats <- dats %>% dplyr::filter(.data$datetime > from)
     if (!is.null(observed))
-      observed <- observed %>% dplyr::filter(datetime > from)
+      observed <- observed %>% dplyr::filter(.data$datetime > from)
     }
 
   if (!is.null(to)) {
-    dats <- dats %>% dplyr::filter(datetime < to)
+    dats <- dats %>% dplyr::filter(.data$datetime < to)
     if (!is.null(observed))
-      observed <- observed %>% dplyr::filter(datetime < to)
+      observed <- observed %>% dplyr::filter(.data$datetime < to)
   }
 
   if(!any((get_FIPS_pred_stat(dats) %in% plot_stat)) & fatigue_CIs == TRUE){
@@ -61,22 +63,22 @@ FIPS_plot <- function(dats,
 
   # Get start and end of sleeptimes for plotting sleep as rectangles
   sim_results <- dats  %>%
-    dplyr::group_by(sleep.id) %>% dplyr::mutate(
-      sleepstart = ifelse(is.na(sleep.id), NA, min(sim_hours)),
-        sleepend = ifelse(is.na(sleep.id), NA, max(sim_hours))) %>%
+    dplyr::group_by(.data$sleep.id) %>% dplyr::mutate(
+      sleepstart = ifelse(is.na(.data$sleep.id), NA, min(.data$sim_hours)),
+      sleepend = ifelse(is.na(.data$sleep.id), NA, max(.data$sim_hours))) %>%
     #Also get end of each day for dashed lines indicating day end
     dplyr::group_by(day) %>%
-    dplyr::mutate(eod = sim_hours[which(time == max(time))] + 24 - max(time))
+    dplyr::mutate(eod = .data$sim_hours[which(time == max(time))] + 24 - max(time))
 
   # Filter out any end of days after specified date range
   sim_results$eod[sim_results$eod > max(sim_results$sim_hours)] <- NA
 
-  plot_out <- ggplot2::ggplot(sim_results, aes(x = sim_hours)) +
-    geom_rect(aes(xmin = sleepstart, xmax = sleepend,
+  plot_out <- ggplot2::ggplot(sim_results, aes(x = .data$sim_hours)) +
+    geom_rect(aes(xmin = .data$sleepstart, xmax = .data$sleepend,
                   ymin = -Inf, ymax = Inf, fill = 'Sleep'), alpha = 0.1, na.rm = T) +
     scale_fill_manual('Sleep', name = "", values = 'grey80', guide = guide_legend(override.aes = list(alpha = 1))) +
-    geom_vline(aes(xintercept = eod), linetype = 2, na.rm = T) +
-    theme_classic() +
+    geom_vline(aes(xintercept = .data$eod), linetype = 2, na.rm = T) +
+    theme_classic(...) +
     xlab ("Simulation Hours") +
     ylab("")
 
@@ -90,14 +92,14 @@ FIPS_plot <- function(dats,
   }
 
   plot_out <- plot_out +
-    geom_line(data = long_data, aes(y = value, color = stat), size = 1) +
+    geom_line(data = long_data, aes(y = .data$value, color = stat), size = 1) +
     labs(colour = "Predicted Value")
 
   if (fatigue_CIs) {
     # Figure out which fill is appropriate
     correct_fill <- which(levels(long_data$stat) == "fatigue") + 1
     plot_out <- plot_out +
-      geom_ribbon(aes(ymin = fatigue_lower, ymax = fatigue_upper), alpha = 0.2, fill = correct_fill)
+      geom_ribbon(aes(ymin = .data$fatigue_lower, ymax = .data$fatigue_upper), alpha = 0.2, fill = correct_fill)
     }
 
   if (!is.null(observed)) {
@@ -121,6 +123,7 @@ FIPS_plot <- function(dats,
 #' @param fatigue_CIs A logical indicating whether uncertainty intervals on fatigue should be plotted
 #' @param observed A data frame with any observed sleepiness ratings or objective indicators to plot against predictions
 #' @param observed_y The name of the observed sleepiness ratings in the observed data frame
+#' @param ... additional arguments passed to ggplot2 theme_classic
 #'
 #' @export
 plot.FIPS_simulation <- function(
@@ -130,7 +133,8 @@ plot.FIPS_simulation <- function(
   plot_stat = NULL,
   fatigue_CIs = FALSE,
   observed = NULL,
-  observed_y = NULL) {
+  observed_y = NULL,
+  ...) {
   FIPS_plot(
     dats = x,
     from = from,
@@ -138,6 +142,7 @@ plot.FIPS_simulation <- function(
     plot_stat = plot_stat,
     fatigue_CIs = fatigue_CIs,
     observed = observed,
-    observed_y = observed_y
+    observed_y = observed_y,
+    ...
   )
 }
