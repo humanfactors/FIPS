@@ -4,10 +4,10 @@
 \alias{expand_sleep_series}
 \title{Expand Sleep Times to full vector}
 \usage{
-expand_sleep_series(.data, expand_by = 5)
+expand_sleep_series(.stdata, expand_by = 5)
 }
 \arguments{
-\item{.data}{A sleeptimes dataframe}
+\item{.stdata}{A sleeptimes dataframe}
 
 \item{expand_by}{Amount (in minutes) to expand sleep times by}
 }

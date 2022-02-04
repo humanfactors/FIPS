@@ -11,7 +11,8 @@
   plot_stat = NULL,
   fatigue_CIs = FALSE,
   observed = NULL,
-  observed_y = NULL
+  observed_y = NULL,
+  ...
 )
 }
 \arguments{
@@ -28,6 +29,8 @@
 \item{observed}{A data frame with any observed sleepiness ratings or objective indicators to plot against predictions}
 
 \item{observed_y}{The name of the observed sleepiness ratings in the observed data frame}
+
+\item{...}{additional arguments passed to ggplot2 theme_classic}
 }
 \description{
 S3 plot method for FIPS_simulation

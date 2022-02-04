@@ -4,7 +4,12 @@
 \alias{summary.FIPS_simulation}
 \title{summary.FIPS_simulation}
 \usage{
-\method{summary}{FIPS_simulation}(x)
+\method{summary}{FIPS_simulation}(object, ...)
+}
+\arguments{
+\item{object}{an object for which a summary is desired.}
+
+\item{...}{additional arguments affecting the summary produced}
 }
 \description{
 summary.FIPS_simulation

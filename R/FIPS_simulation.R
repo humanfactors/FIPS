@@ -83,8 +83,10 @@ FIPS_Simulation_lost_attributes <- function(x) {
 #'
 #' @method print FIPS_simulation
 #'
+#' @param x A FIPS simulation object
+#' @param ... further arguments passed to print
 #' @export
-print.FIPS_simulation <- function(x) {
+print.FIPS_simulation <- function(x, ...) {
 
   if(FIPS_Simulation_lost_attributes(x)) {
     warning("Your FIPS_Simulation object has lost attributes (have you wrangled the dataframe with dplyr (version < 1.0.0?). Dispatching method onwards.")
@@ -112,25 +114,28 @@ print.FIPS_simulation <- function(x) {
 #'
 #' @method summary FIPS_simulation
 #'
+#' @param object an object for which a summary is desired.
+#' @param ... additional arguments affecting the summary produced
+#'
 #' @export
-summary.FIPS_simulation <- function(x) {
+summary.FIPS_simulation <- function(object, ...) {
 
-  if(FIPS_Simulation_lost_attributes(x)) {
+  if(FIPS_Simulation_lost_attributes(object)) {
     warning("Your FIPS_Simulation object has lost attributes (have you wrangled the dataframe with dplyr?). Dispatching method onwards.")
     NextMethod()
   } else {
-      help_function = switch(get_FIPS_modeltype(x),
+      help_function = switch(get_FIPS_modeltype(object),
                            TPM = "help(FIPS::TPM_make_pvec)",
                            unified = "help(FIPS::unified_make_pvec)")
     cat("---------\n")
-    cat(paste("Model Type:"), get_FIPS_modeltype(x), "\n")
-    cat(paste("Epoch Value:"), (x$sim_hours[2] - x$sim_hours[1])*60, "minutes \n")
-    cat(paste("Simulation duration:"), (max(x$sim_hours)), "hours \n")
-    cat(paste("Time points:"), nrow(x), "\n")
+    cat(paste("Model Type:"), get_FIPS_modeltype(object), "\n")
+    cat(paste("Epoch Value:"), (object$sim_hours[2] - object$sim_hours[1])*60, "minutes \n")
+    cat(paste("Simulation duration:"), (max(object$sim_hours)), "hours \n")
+    cat(paste("Time points:"), nrow(object), "\n")
     cat("Parameters used (pvec input):\n")
-    print(get_FIPS_pvec(x))
+    print(get_FIPS_pvec(object))
     cat("For descriptions of these parameters, inspect: ", help_function, "\n")
     cat("---------\n")
-    summary.data.frame(x[,c("datetime","time","wake_status","sim_hours",get_FIPS_pred_cols(x))])
+    summary.data.frame(object[,c("datetime","time","wake_status","sim_hours",get_FIPS_pred_cols(object))])
   }
 }
