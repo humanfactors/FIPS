@@ -1,4 +1,3 @@
-
 #' Generate a heat-tile plot
 #'
 #' @param FIPS_sim
