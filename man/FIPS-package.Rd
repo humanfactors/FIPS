@@ -22,7 +22,7 @@ Although there are several different implementations of BMMs, most have their ro
  two process model which models sleepiness/performance impairment as the sum of two processes: a circadian process and a homeostatic process.
 }
 \author{
-\strong{Maintainer}: Michael David Wilson \email{michael.d.wilson@curtin.edu.au}
+\strong{Maintainer}: Micah Kate Wilson \email{micah.d.wilson@curtin.edu.au}
 
 Authors:
 \itemize{

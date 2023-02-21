@@ -84,8 +84,11 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>In this vignette we briefly demonstrate how to use the FIPS plotting function. Below we create sleeptimes and simulate an example sleep scenario to plot. This example includes initial sleep deprivation.</p>
-<p>(Note: you should read <code><a href="../articles/FIPS-simulation-walkthrough.html">vignette("FIPS-simulation-walkthrough","FIPS")</a></code> first).</p>
+<p>In this vignette we briefly demonstrate how to use the FIPS plotting
+function. Below we create sleeptimes and simulate an example sleep
+scenario to plot. This example includes initial sleep deprivation.</p>
+<p>(Note: you should read
+<code><a href="../articles/FIPS-simulation-walkthrough.html">vignette("FIPS-simulation-walkthrough","FIPS")</a></code> first).</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Simulation start date time (i.e., when you want first predictions to begin)</span>
 <span class="va">simulation.start</span> <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://lubridate.tidyverse.org/reference/ymd_hms.html" class="external-link">ymd_hms</a></span><span class="op">(</span><span class="st">'2018-05-01 11:00:00'</span>, tz <span class="op">=</span> <span class="st">"Australia/Perth"</span><span class="op">)</span>
@@ -114,16 +117,24 @@
   modeltype <span class="op">=</span> <span class="st">"unified"</span>,         <span class="co"># three process model</span>
   pvec <span class="op">=</span> <span class="fu"><a href="../reference/unified_make_pvec.html">unified_make_pvec</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># paramater vector</span>
   <span class="op">)</span></code></pre></div>
-<p>FIPS contains a generic <code>plot</code> method for simulation results. By default this will plot fatigue over time. Sleep is indicated by the grey rectangles, and the start of each new day is indicated by the dashed lines.</p>
+<p>FIPS contains a generic <code>plot</code> method for simulation
+results. By default this will plot fatigue over time. Sleep is indicated
+by the grey rectangles, and the start of each new day is indicated by
+the dashed lines.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">unified.simulation.results</span><span class="op">)</span></code></pre></div>
 <p><img src="plotting_files/figure-html/unnamed-chunk-3-1.png" width="672"></p>
-<p>Often it will be helpful to restrict the plotting between certain datetimes, and plot additional data such as the model’s time-varying process estimates (e.g., c, s):</p>
+<p>Often it will be helpful to restrict the plotting between certain
+datetimes, and plot additional data such as the model’s time-varying
+process estimates (e.g., c, s):</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">unified.simulation.results</span>, from<span class="op">=</span><span class="st">'2018-05-03 13:30:00'</span>,
                      to <span class="op">=</span> <span class="st">"2018-05-07 18:30:00"</span>, plot_stat<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fatigue"</span>, <span class="st">"s"</span>, <span class="st">"c"</span>, <span class="st">"l"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p><img src="plotting_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
-<p>Observed data can be plotted against the sleep predictions. Below demonstrates by sampling some data points from the previously generated data frame, then adding some random noise to make some ‘pretend’ observed data.</p>
+<p>Observed data can be plotted against the sleep predictions. Below
+demonstrates by sampling some data points from the previously generated
+data frame, then adding some random noise to make some ‘pretend’
+observed data.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R">
 <span class="va">pretend_ratings</span> <span class="op">&lt;-</span> <span class="va">unified.simulation.results</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">wake_status</span><span class="op">)</span> 
@@ -137,7 +148,10 @@
                      to <span class="op">=</span> <span class="st">"2018-05-07 18:30:00"</span>, plot_stat<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"fatigue"</span>, <span class="st">"s"</span>, <span class="st">"c"</span>, <span class="st">"l"</span><span class="op">)</span>,
                      fatigue_CIs <span class="op">=</span> <span class="cn">FALSE</span>, observed<span class="op">=</span><span class="va">pretend_ratings</span>, observed_y<span class="op">=</span><span class="st">"fatigue"</span><span class="op">)</span></code></pre></div>
 <p><img src="plotting_files/figure-html/unnamed-chunk-5-1.png" width="672"></p>
-<p>Below demonstrates an example plotting the three process model. Results are similar except the output is alertness, rather than fatigue. This is automatically handled for you if you are using the generic <code>plot</code> function.</p>
+<p>Below demonstrates an example plotting the three process model.
+Results are similar except the output is alertness, rather than fatigue.
+This is automatically handled for you if you are using the generic
+<code>plot</code> function.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">TPM.simulation.results</span> <span class="op">=</span> <span class="fu"><a href="../reference/FIPS_simulate.html">FIPS_simulate</a></span><span class="op">(</span>
   FIPS_df <span class="op">=</span> <span class="va">simulated.dataframe</span>, <span class="co"># The FIPS_df</span>
@@ -147,7 +161,10 @@
 
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">TPM.simulation.results</span><span class="op">)</span></code></pre></div>
 <p><img src="plotting_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
-<p>It is important to note that the generic <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function is simply calling <code>FIPS_plot</code> under the hood. Users wishing full control may find the <code>FIPS_plot</code> function more intuitive to work with.</p>
+<p>It is important to note that the generic <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code> function
+is simply calling <code>FIPS_plot</code> under the hood. Users wishing
+full control may find the <code>FIPS_plot</code> function more intuitive
+to work with.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/FIPS_plot.html">FIPS_plot</a></span><span class="op">(</span><span class="va">TPM.simulation.results</span>, 
           plot_stat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"alertness"</span>, <span class="st">"c"</span>, <span class="st">"u"</span>, <span class="st">"s"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -169,12 +186,13 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Michael David Wilson, Luke Strickland, Timothy Ballard.</p>
+<p>Developed by Micah Kate Wilson, Luke Strickland, Timothy Ballard.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.9000.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
+2.0.2.9000.</p>
 </div>
 
       </footer>
