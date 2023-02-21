@@ -1,6 +1,7 @@
 Package: FIPS
 Type: Package
 Title: Fatigue Impairment Prediction Suite (FIPS)
+Year: 2023
 Version: 0.2.1
 Authors@R: c(
     person("Micah Kate", "Wilson", email = "micah.d.wilson@curtin.edu.au", role = c("aut", "cre")),
