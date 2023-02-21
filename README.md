@@ -149,7 +149,7 @@ Wilson et al., (2020). FIPS: An R Package for Biomathematical Modelling of Human
   volume = {5},
   number = {51},
   pages = {2340},
-  author = {Michael David Wilson and Luke Strickland and Timothy Ballard},
+  author = {Micah K. Wilson and Luke Strickland and Timothy Ballard},
   title = {FIPS: An R Package for Biomathematical Modelling of Human Fatigue Related Impairment},
   journal = {Journal of Open Source Software}
 }
