@@ -63,12 +63,22 @@ tod_component = function(decimal.time) {
   return(risk)
 }
 
-get_shift_type = function(decimalhour_vector) {
+get_shift_type = function(decimal_hour)) {
 # Case when style return from decinal hours
 # TODO: Note set the shift-type at the start of loop in one go
+
+  if( decimal_hour <= 8) {
+    type = "E"
+  }
+
+  if( decimal_hour > 8 & decimal_hour) {
+    type = "E"
+  }
+
+
 }
 
-risk_C_dutyLevel = function() {
+risk_C_dutyLevel = function(prev_risk_c) {
 
 }
 
@@ -80,10 +90,10 @@ risk_C_dutyLevel = function() {
 
 
 work_df = FIPS_work_df
+work_df$decimal_hours = FIPS::as.decimaltime.POSIXct(work_df$datetime)
 work_df$risk_c <- as.double(0)
 work_df$risk_tod <- as.double(0)
 work_df$risk_hos <- as.double(0)
-
 work_df$risk_tod = tod_component(work_df$time)
 
 
@@ -93,25 +103,58 @@ for (i in 1:nrow(work_df)) {
   # Initialise values
   if (i == 1) {
     work_df$risk_c[i] = CT0
+    # We need to use this to track if this is the first sequence
+    is_first_seq = TRUE
   }
 
-  # Captures first sequence if starts on work
-  if (i > 1 & !is.na(work_df$shift.id[i]) & work_df$shift.id[i] == 1) {
-    work_df$risk_c[i] = work_df$risk_c[i - 1]
+  if (work_df$change_point[i] == 1) {
+    is_first_seq = FALSE
+    # Now, we need to ensure that if it's the end of a work shift, that we are saving
+    # The known previous value
+    if (work_df$switch_direction[i] == "Rest") {
+      last_risk_c_work = work_df$risk_c[i-1]
+    }
+
   }
+
+  # This is used for everything above the first row
+  if (i > 1) {
+
+    # Captures first sequence when it starts on work
+    if (is_first_seq & !is.na(work_df$shift.id[i]) & work_df$shift.id[i] == 1) {
+      work_df$risk_c[i] = CT0 #work_df$risk_c[i - 1]
+    }
+
+    if (is_first_seq & !work_df$work_status[i]) {
+      work_df$risk_c[i] = CT0
+    }
+
+    # If it's not the first in the sequence, then we need to calculate it
+    # For work:
+    if (!is_first_seq & work_df$work_status_int[i] == 1 & work_df$switch_direction[i] == "Work") {
+      # This needs to be the work function thing
+      work_df$risk_c[i] = risk_C_function(
+        prev_risk_c = last_risk_c_work,
+        gap_since_last_work = work_df$total_prev[i],
+        commute_time = 2)
+    }
+
+    if (!is_first_seq & work_df$work_status_int[i] == 1 & work_df$switch_direction[i] == "0") {
+      work_df$risk_c[i] = work_df$risk_c[i-1]
+    }
+
+  }
+}
 
   # Captures first sequence if starts on rest
-  if (i > 1 & !work_df$work_status[i]) {
-    if (work_df$risk_c[i - 1] == 1) {
-      work_df$risk_c[i] = 1
-      # This should actually be T0, not 1
+  if (i > 1  & is_first_seq) {
 
-    # If it's not the first in the sequence, or if the prior value is not 1, then we need to recalculate (i.e., recovery)
+    if (work_df$risk_c[i - 1] == 1) {
+
+
+, or if the prior value is not 1, then we need to recalculate (i.e., recovery)
     } else {
-      work_df$risk_c[i] = risk_C_function(
-        prev_risk_c = work_df$risk_c[i - 1],
-        gap_since_last_work = work_df$status_duration[i],
-        commute_time = 2)
+
     }
   }
 
@@ -122,17 +165,19 @@ for (i in 1:nrow(work_df)) {
     if (work_df$shift.id[i] > 1) {
 
 
+      }
+
       # Main cummulative risk on SHIFT level
-          }
-    if (RSE_data$duty_or_off[i] == "duty" & RSE_data$shift_seq[i] > 1 ) { 
-      
+
+    # if (RSE_data$duty_or_off[i] == "duty" & RSE_data$shift_seq[i] > 1 ) {
+
     #   if (RSE_data$gap_previous[i] >= 9) {
     #     RSE_data$Risk_C_formula[i] = "Sequence"
     #     if (RSE_data$shift_type[i]  == "E") {C_up_exp = v_C_up_exp_E }
     #     if (RSE_data$shift_type[i]  == "L") {C_up_exp = v_C_up_exp_L }
     #     if (RSE_data$shift_type[i]  == "N") {C_up_exp = v_C_up_exp_N }
-    #     # old: RSE_data$Risk_C[i] =   Risk_C_first_in_seq*exp(C_up_exp*(RSE_data$shift_seq[i]-1))    
-    #     RSE_data$Risk_C[i] =   RSE_data$Risk_C[i-1]*exp(C_up_exp)    
+    #     # old: RSE_data$Risk_C[i] =   Risk_C_first_in_seq*exp(C_up_exp*(RSE_data$shift_seq[i]-1))
+    #     RSE_data$Risk_C[i] =   RSE_data$Risk_C[i-1]*exp(C_up_exp)
 
 
 
@@ -141,9 +186,6 @@ for (i in 1:nrow(work_df)) {
         work_df$risk_c[i] = work_df$risk_c[i-1] + v_QR_c*(v_QR_threshold - work_df$total_prev[i])}
     }
   }
-
-
-}
 
 
 
