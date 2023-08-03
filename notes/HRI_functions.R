@@ -10,7 +10,10 @@ FIPSdf_from_bitvec = parse_sleepwake_sequence(
   series.start = start_date,
   epoch = 60)
 
-names(FIPSdf_from_bitvec) <- str_replace(names(FIPSdf_from_bitvec), "wake", "work")
+parse_workrest_sequence(seq = bitvector_sequence,
+                        series.start = start_date,
+                        epoch = 60)
+
 
 FIPS_work_df = FIPSdf_from_bitvec %>%
   rename(shift.id = sleep.id) %>%
@@ -21,6 +24,9 @@ FIPS_work_df = FIPSdf_from_bitvec %>%
   )) %>%
   mutate(work_status_int  = 1 - work_status_int, work_status = !work_status)
 
+
+
+switch_direction(FIPS_work_df$work_status_int, FIPS_work_df$change_point)
 
 # Risk_C = build up of risk
 v_C_up_exp_E =  0.0487
