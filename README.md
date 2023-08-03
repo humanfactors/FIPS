@@ -136,8 +136,7 @@ The FIPS package is in the process of integrating a novel model, the Human Risk 
 
 While the HRI's implementation is in progress, it is not yet automated to the same standard as other models within FIPS. However, the development team is actively working to optimize and integrate the HRI fully.
 
-The HRI pre-alpha implementation can be found on the [https://github.com/humanfactors/FIPS/tree/HRI-implementation](`HRI-implementation` branch). The files under the `R` directory are under active development. A working implementation of the code can be found in https://github.com/humanfactors/FIPS/blob/HRI-implementation/notes/HRI.R in the `HRI-implementation` branch.
-
+The HRI pre-alpha implementation can be found on the [`HRI-implementation` branch](https://github.com/humanfactors/FIPS/blob/HRI-implementation). The files under the `R` directory are under active development. A working implementation of the code can be found in https://github.com/humanfactors/FIPS/blob/HRI-implementation/notes/HRI.R in the `HRI-implementation` branch.
 # Contributing and Support
 
 We welcome contributions great or small from the community. It would incredibly useful to receive feedback via Github Issues for anything regarding the package, including: installation issues, bugs or unexpected behaviour, usability, feature requests or inquiries, or even something you don't understand in the tutorials about this class of models more generally. Please file a Github issue for any general support queries too.
