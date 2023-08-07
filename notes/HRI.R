@@ -217,8 +217,6 @@ staff_IDs
       # --------------------------- 
       
       #  check if same shift 
-      # !!! => DIT NOG VERBTEREN !! is nog te veel om issues in HMY data op te vangen en dus niet generiek
-      # eventueel bij controles vooraf: er mag maar ��n duty record zijn per dag 
       if ((RSE_data_hourly$Duty_ID[i] == RSE_data_hourly$Duty_ID[i-1])  & (RSE_data_hourly$timestamp_begin[i] == RSE_data_hourly$timestamp_begin[i-1])) 
         
       {
@@ -226,7 +224,6 @@ staff_IDs
       }else{
         RSE_data_hourly$HoS[i] = 1
       }
-      # RSE_data_hourly$Risk_HoS[i]  = -0.048  + 0.892*RSE_data_hourly$HoS[i] - 0.203*(RSE_data_hourly$HoS[i]^2) + 0.014*(RSE_data_hourly$HoS[i]^3)
       
       
       # --------------------------- 

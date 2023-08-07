@@ -34,8 +34,7 @@ v_C_up_exp_L =  0.0250
 v_C_up_exp_N =  0.1215
 
 v_QR_threshold = 9
-# Constant: value for Quick return function (value = 0.06)
-v_QR_c = 0.06
+v_QR_c = 0.06 # Constant: value for Quick return function (value = 0.06)
 
 # Risk_C
 # time needed to travel from home to work (in hours)
@@ -46,10 +45,6 @@ v_day_off_time = "15:00"
 
 # Initial Value
 CT0 = 1
-
-
-
-
 
 
 # @ @ @ @ @ @ @ @
