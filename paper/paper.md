@@ -8,7 +8,7 @@ tags:
   - biomathematical modelling
   - dynamic models
 authors:
-  - name: Michael David Wilson
+  - name: Micah K. Wilson
     orcid: 0000-0003-4143-7308
     affiliation: 1
   - name: Luke Strickland

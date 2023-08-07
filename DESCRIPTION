@@ -1,9 +1,10 @@
 Package: FIPS
 Type: Package
 Title: Fatigue Impairment Prediction Suite (FIPS)
+Year: 2023
 Version: 0.2.1
 Authors@R: c(
-    person("Michael David", "Wilson", email = "michael.d.wilson@curtin.edu.au", role = c("aut", "cre")),
+    person("Micah Kate", "Wilson", email = "micah.d.wilson@curtin.edu.au", role = c("aut", "cre")),
     person("Luke", "Strickland", email = "luke.strickland@curtin.edu.au", role = c("aut")),
     person("Timothy", "Ballard", email = "timothy.ballard@uq.edu.au", role = c("aut")))
 Maintainer: Michael David Wilson <michael.d.wilson@curtin.edu.au>
