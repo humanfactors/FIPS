@@ -131,12 +131,15 @@ Critical functions, arguments and outputs for each model are summarised in table
 | Time varying parameter names | s, c, u, w              | s, l, c, w                   |
 | Default prediction outputs   | KSS, alertness          | Fatigue (PVT lapses)         |
 
-## Human Risk Index Implementation
-The FIPS package is in the process of integrating a novel model, the Human Risk Index (HRI), which is currently under pre-alpha testing. This model, developed on the foundation of earlier work by Folkard and Lombardi (2004), Folkard et al. (2006, 2007), and others, offers an estimation of the relative risk of safety incidents tied to different work schedules (Fischer et al., 2017). The HRI improves upon the original Risk Index model by incorporating an hourly detail level, enhancing both its predictive accuracy and application range for risk evaluation and accident analysis (UK Rail Safety and Standards Board, 2015).
+## Hourly Risk Index
+The FIPS package is in the process of integrating a novel model, the Hourly Risk Index (HRI), which is currently under pre-alpha testing. This model, developed on the foundation of earlier work by Folkard and Lombardi (2004), Folkard et al. (2006, 2007), and others, offers an estimation of the relative risk of safety incidents tied to different work schedules (Fischer et al., 2017). The HRI improves upon the original Risk Index model by incorporating an hourly detail level, enhancing both its predictive accuracy and application range for risk evaluation and accident analysis (UK Rail Safety and Standards Board, 2015).
 
 While the HRI's implementation is in progress, it is not yet automated to the same standard as other models within FIPS. However, the development team is actively working to optimize and integrate the HRI fully.
 
 The HRI pre-alpha implementation can be found on the [`HRI-implementation` branch](https://github.com/humanfactors/FIPS/blob/HRI-implementation). The files under the `R` directory are under active development. A working implementation of the code can be found in https://github.com/humanfactors/FIPS/blob/HRI-implementation/notes/HRI.R in the `HRI-implementation` branch.
+
+More about the HRI can be found in Roets and Folkard (2022): [https://www.sciencedirect.com/science/article/abs/pii/S0925753522000972](https://www.sciencedirect.com/science/article/pii/S0925753522000972) , and Roets and Folkard (2023):  [Assessing Railway Traffic Controller Safety with an Hourly Risk Index (taylorfrancis.com)](https://www.taylorfrancis.com/chapters/edit/10.1201/9781003213154-36/assessing-railway-traffic-controller-safety-hourly-risk-index-bart-roets-simon-folkard).
+
 # Contributing and Support
 
 We welcome contributions great or small from the community. It would incredibly useful to receive feedback via Github Issues for anything regarding the package, including: installation issues, bugs or unexpected behaviour, usability, feature requests or inquiries, or even something you don't understand in the tutorials about this class of models more generally. Please file a Github issue for any general support queries too.
